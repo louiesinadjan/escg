@@ -6,6 +6,7 @@
 //
 
 #include "simulation.hpp"
+#include "visualise.hpp"
 
 int main(int argc, const char* argv[]) {
     int MCS = 60000;
@@ -33,6 +34,11 @@ int main(int argc, const char* argv[]) {
     }
 
     for (int mcs = 0; mcs <= MCS; mcs++) { // Monte Carlo Steps
+        if (mcs % 2000 == 0 | mcs % 6000 == 0 | mcs % 20000 == 0 | mcs % 100000 == 0){
+            plot_snapshot(grid, L, mcs);
+        }
+
+
         if (mcs % 1000 == 0) {
             densities(grid, L, mcs);
         } else if (mcs % 100 == 0) {
