@@ -14,7 +14,7 @@
 enum class Species { EMPTY, ROCK, PAPER, SCISSORS, LIZARD, SPOCK };
 
 // Function declarations
-bool dominates(Species specie, Species neighbour);
+bool dominates(int specie, int neighbour);
 int wrap(int index, int L);
-void step(int L, Species grid[200][200], float mu, float sigma, float epsilon);
-void densities(Species grid[200][200], int L, int mcs);
+void step(int L, int grid[200][200], float mu, float sigma, float epsilon);
+void densities(int grid[200][200], int L, int mcs);

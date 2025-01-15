@@ -1,19 +1,18 @@
 #include "simulation.hpp"
 
-bool dominates(Species specie, Species neighbour) {
-    // RPSLS dominance rules
+bool dominates(int specie, int neighbour) {
     switch (specie) {
-        case Species::ROCK: // Crushes SCISSORS, LIZARD
-            return (neighbour == Species::SCISSORS || neighbour == Species::LIZARD);
-        case Species::PAPER: // Covers ROCK, disproves SPOCK
-            return (neighbour == Species::ROCK || neighbour == Species::SPOCK);
-        case Species::SCISSORS: // Cuts PAPER, decapitates LIZARD
-            return (neighbour == Species::PAPER || neighbour == Species::LIZARD);
-        case Species::LIZARD: // Poisons SPOCK, eats PAPER
-            return (neighbour == Species::SPOCK || neighbour == Species::PAPER);
-        case Species::SPOCK: // Smashes SCISSORS, vaporises ROCK
-            return (neighbour == Species::SCISSORS || neighbour == Species::ROCK);
-        default:
+        case 1: // ROCK (crushes 3: SCISSORS, 4: LIZARD)
+            return (neighbour == 3 || neighbour == 4);
+        case 2: // PAPER (covers 1: ROCK, disproves 5: SPOCK)
+            return (neighbour == 1 || neighbour == 5);
+        case 3: // SCISSORS (cuts 2: PAPER, decapitates 4: LIZARD)
+            return (neighbour == 2 || neighbour == 4);
+        case 4: // LIZARD (poisons 5: SPOCK, eats 2: PAPER)
+            return (neighbour == 5 || neighbour == 2);
+        case 5: // SPOCK (smashes 3: SCISSORS, vaporises 1: ROCK)
+            return (neighbour == 3 || neighbour == 1);
+        default: // 0 (EMPTY) or any invalid integer
             return false;
     }
 }
@@ -21,7 +20,7 @@ bool dominates(Species specie, Species neighbour) {
 // Helper function to wrap around the grid when selecting a neighbour
 int wrap(int index, int L) { return (index + L) % L; }
 
-void step(int L, Species grid[200][200], float mu, float sigma, float epsilon) {
+void step(int L, int grid[200][200], float mu, float sigma, float epsilon) {
     static std::random_device rd;
     static std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dist_pos(0, L - 1);     // Random position in grid
@@ -33,12 +32,12 @@ void step(int L, Species grid[200][200], float mu, float sigma, float epsilon) {
 
     int i = dist_pos(gen);
     int j = dist_pos(gen);
-    Species specie = grid[i][j];
+    int specie = grid[i][j];
 
     int dir = dist_dir(gen);
     int ni = wrap(i + dX[dir], L);
     int nj = wrap(j + dY[dir], L);
-    Species neighbour = grid[ni][nj];
+    int neighbour = grid[ni][nj];
 
     float random_action = dist_prob(gen);
 
@@ -48,14 +47,14 @@ void step(int L, Species grid[200][200], float mu, float sigma, float epsilon) {
         } else if (dominates(specie, neighbour)) {
             grid[ni][nj] = specie; // Specie dominates and replaces neighbour
         }
-    } else if (random_action < mu + sigma && neighbour == Species::EMPTY) {
+    } else if (random_action < mu + sigma && neighbour == static_cast<int>(Species::EMPTY)) {
         grid[ni][nj] = specie; // Reproduction
     } else if (random_action < mu + sigma + epsilon) {
         std::swap(grid[i][j], grid[ni][nj]); // Migration
     }
 }
 
-void densities(Species grid[200][200], int L, int mcs) {
+void densities(int grid[200][200], int L, int mcs) {
     int emptyCounter = 0;
     int rockCounter = 0;
     int paperCounter = 0;
@@ -67,22 +66,22 @@ void densities(Species grid[200][200], int L, int mcs) {
     for (int i = 0; i < L; i++) {
         for (int j = 0; j < L; j++) {
             switch (grid[i][j]) {
-                case Species::EMPTY:
+                case 0:
                     emptyCounter++;
                     break;
-                case Species::ROCK:
+                case 1:
                     rockCounter++;
                     break;
-                case Species::PAPER:
+                case 2:
                     paperCounter++;
                     break;
-                case Species::SCISSORS:
+                case 3:
                     scissorsCounter++;
                     break;
-                case Species::LIZARD:
+                case 4:
                     lizardCounter++;
                     break;
-                case Species::SPOCK:
+                case 5:
                     spockCounter++;
                     break;
             }

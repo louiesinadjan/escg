@@ -1,42 +1,23 @@
 #include "visualise.hpp"
 
-// void plot_densities(const std::vector<int>& steps,
-//                     const std::vector<double>& densityRock,
-//                     const std::vector<double>& densityPaper,
-//                     const std::vector<double>& densityScissors,
-//                     const std::vector<double>& densityLizard,
-//                     const std::vector<double>& densitySpock) {
-//     plt::figure();
-//     plt::xscale("log"); // Logarithmic scale for Monte Carlo steps
-//     plt::plot(steps, densityRock, {{"label", "Rock"}, {"color", "red"}});
-//     plt::plot(steps, densityPaper, {{"label", "Paper"}, {"color", "green"}});
-//     plt::plot(steps, densityScissors, {{"label", "Scissors"}, {"color", "blue"}});
-//     plt::plot(steps, densityLizard, {{"label", "Lizard"}, {"color", "yellow"}});
-//     plt::plot(steps, densitySpock, {{"label", "Spock"}, {"color", "cyan"}});
+void plot_densities(const std::vector<int>& steps, const std::vector<double>& densityRock, const std::vector<double>& densityPaper, const std::vector<double>& densityScissors,
+                    const std::vector<double>& densityLizard, const std::vector<double>& densitySpock) {}
 
-//     plt::xlabel("Monte Carlo Steps");
-//     plt::ylabel("Density");
-//     plt::title("Species Densities Over Time");
-//     plt::legend();
-//     plt::grid(true);
-//     plt::show();
-// }
-
-void plot_snapshot(const Species grid[200][200], int L, int mcs) {
-    // Create a 2D vector to hold the grid data for plotting
-    std::vector<std::vector<int>> gridData(L, std::vector<int>(L));
-
-    // Convert the grid to integer representation for plotting
+void plot_snapshot(const int grid[200][200], int L, int mcs) {
+    // Flatten the grid into a 1D vector of floats
+    std::vector<float> flatGrid(L * L);
     for (int i = 0; i < L; i++) {
         for (int j = 0; j < L; j++) {
-            gridData[i][j] = static_cast<int>(grid[i][j]);
+            flatGrid[i * L + j] = static_cast<float>(grid[i][j]);
         }
     }
 
-    // Plot the grid snapshot using imshow with appropriate arguments
+    // Pointer to the flattened grid data
+    const float* gridPtr = &(flatGrid[0]);
+
+    // Plot using imshow
     plt::figure();
-    plt::imshow(reinterpret_cast<const float*>(gridData.data()), L, L, 1, {{"cmap", "jet"}});
+    plt::imshow(gridPtr, L, L, 1);
     plt::title("Snapshot at MCS = " + std::to_string(mcs));
-    plt::colorbar();
     plt::show();
 }

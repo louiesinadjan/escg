@@ -4,7 +4,7 @@
             "name": "Mac",
             "includePath": [
                 "/opt/homebrew/opt/python@3.12/Frameworks/Python.framework/Versions/3.12/include/python3.12",
-                "/Users/louiesinadjan/Library/Python/3.9/lib/python/site-packages/numpy/_core/include",
+                "/Users/louiesinadjan/.pyenv/versions/3.11.11/lib/python3.11/site-packages/numpy/_core/include",
                 "${default}"
             ],
             "defines": [],

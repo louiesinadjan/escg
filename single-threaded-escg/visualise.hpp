@@ -14,5 +14,5 @@ void plot_densities(const std::vector<int>& steps,
                     const std::vector<double>& densitySpock);
 
 // Function to plot a snapshot of the grid at a given Monte Carlo step
-void plot_snapshot(const Species grid[200][200], int L, int mcs);
+void plot_snapshot(const int grid[200][200], int L, int mcs);
 
