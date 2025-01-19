@@ -49,6 +49,7 @@
         "vector": "cpp",
         "__tree": "cpp",
         "charconv": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "iomanip": "cpp"
     }
 }
