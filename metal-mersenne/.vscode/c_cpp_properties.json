@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${default}",
+                "${workspaceFolder}/metal-cpp/AppKit",
+                "${workspaceFolder}/metal-cpp/Metal",
+                "${workspaceFolder}/metal-cpp/MetalKit",
+                "${workspaceFolder}/metal-cpp",
+                "${workspaceFolder}/shaders",
+
+                "external/matplotlib-cpp",
+                "/opt/homebrew/opt/python@3.12/Frameworks/Python.framework/Versions/3.12/include/python3.12",
+                "/Users/louiesinadjan/.pyenv/versions/3.11.11/lib/python3.11/site-packages/numpy/_core/include"
+            ],
+            "defines": [],
+            "macFrameworkPath": [
+                "/System/Library/Frameworks",
+                "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
+            ],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "macos-clang-arm64"
+        }
+    ],
+    "version": 4
+}
