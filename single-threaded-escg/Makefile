@@ -1,6 +1,6 @@
 # Compiler and compilation flags
 CXX       = clang++
-CXXFLAGS  = -std=c++17 -Wall -Wno-deprecated-declarations
+CXXFLAGS  = -std=c++17 -Wall -Wno-deprecated-declarations -pg
 
 # Attempt to use --embed; if unavailable, fallback to normal --ldflags
 EMBED_LDFLAGS = $(shell (python3-config --ldflags --embed 2>/dev/null || python3-config --ldflags))
@@ -19,12 +19,12 @@ INCLUDE_FLAGS = -Isingle-threaded-escg/external/matplotlib-cpp \
 LDFLAGS = $(EMBED_LDFLAGS) -undefined dynamic_lookup
 
 TARGET = escg
-SRCS   = single-threaded-escg.cpp simulation.cpp visualise.cpp
+SRCS   = single-threaded-escg.cpp simulation.cpp visualise.cpp timer.cpp
 
 all: $(TARGET)
 
 $(TARGET): $(SRCS)
-	$(CXX) $(CXXFLAGS) $(INCLUDE_FLAGS) -o $(TARGET) $(SRCS) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(INCLUDE_FLAGS) -o $(TARGET) $(SRCS) $(LDFLAGS) -pg
 
 clean:
 	rm -f $(TARGET)
