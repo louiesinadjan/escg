@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
         // Create command buffer and encoder
         MTL::CommandBuffer* commandBuffer = commandQueue->commandBuffer();
         MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
-        encoder->setComputePipelineState(pipelineState);
+        encoder->setComputePipelineState(pipelineState); //
         encoder->setBuffer(seedBuffer, 0, 0);
         encoder->setBuffer(resultBuffer, 0, 1);
 
