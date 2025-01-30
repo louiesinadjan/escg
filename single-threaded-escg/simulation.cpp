@@ -34,15 +34,15 @@ bool dominates(int specie, int neighbour) {
 // Helper function to wrap around the grid when selecting a neighbour
 int wrap(int index, int L) { return (index + L) % L; }
 
-void step(int L, int grid[200][200], float mu, float sigma, float epsilon) {
+void step(int L, int grid[200][200], float mu, float sigma, float epsilon, int& migration, int& reproduction, int& interaction) {
     static std::random_device rd;
     static std::mt19937 gen(rd());                                              // Random number generator
     std::uniform_int_distribution<int> dist_pos(0, L - 1);                      // Random position in grid
-    std::uniform_int_distribution<int> dist_dir(0, 7);                          // Random neighbour direction
+    std::uniform_int_distribution<int> dist_dir(0, 3);                          // Random neighbour direction (0 to 3 for four neighbours)
     std::uniform_real_distribution<float> dist_prob(0.0, mu + sigma + epsilon); // Random probability for actions
 
-    int dX[8] = {-1, 1, 0, 0, -1, -1, 1, 1}; // Neighbour directions
-    int dY[8] = {0, 0, -1, 1, -1, 1, -1, 1}; // Neighbour directions
+    int dX[4] = {-1, 1, 0, 0}; // Neighbour directions (up, down, left, right)
+    int dY[4] = {0, 0, -1, 1}; // Neighbour directions (up, down, left, right)
 
     int i = dist_pos(gen);   // Random position in grid
     int j = dist_pos(gen);   // Random position in grid
@@ -50,27 +50,28 @@ void step(int L, int grid[200][200], float mu, float sigma, float epsilon) {
 
     int dir = dist_dir(gen);       // Random neighbour direction
     int ni = wrap(i + dX[dir], L); // Neighbour position in grid
-    int nj = wrap(j + dY[dir], L); //    Neighbour position in grid
-    int neighbour = grid[ni][nj];  //    Neighbour specie
+    int nj = wrap(j + dY[dir], L); // Neighbour position in grid
+    int neighbour = grid[ni][nj];  // Neighbour specie
 
     float random_action = dist_prob(gen); // Random probability for actions
 
     // RPSLS Interaction, Reproduction, Migration actions with probabilities mu, sigma, epsilon
     if (random_action < epsilon) { // Migration
         std::swap(grid[i][j], grid[ni][nj]);
-    } else if (specie != 0) {                            // RPSLS Interaction & Reproduction is only possible if the specie is not empty
-        if (random_action < epsilon + mu) {              // RPSLS Interaction selected
-            if (specie != neighbour && neighbour != 0) { // Empty neighbours do not partake in RPSLS interaction
-                if (dominates(specie, neighbour)) {      // Neighbour dominates, specie becomes empty
-                    grid[ni][nj] = 0;
-                } else if (dominates(neighbour, specie)) { // Specie dominates, neighbour becomes empty
-                    grid[i][j] = 0;
-                }
+        migration++;
+    } else if (random_action < epsilon + mu) {       // RPSLS Interaction selected
+        if (specie != neighbour && neighbour != 0) { // Empty neighbours do not partake in RPSLS interaction
+            if (dominates(specie, neighbour)) {      // Neighbour dominates, specie becomes empty
+                grid[ni][nj] = 0;
+            } else if (dominates(neighbour, specie)) { // Specie dominates, neighbour becomes empty
+                grid[i][j] = 0;
             }
-        } else if (random_action < epsilon + mu + sigma) { // Reproduction selected
-            if (neighbour == 0) {                          // Only possible if the neighbour is empty and the specie is not
-                grid[ni][nj] = specie;
-            }
+            interaction++;
+        }
+    } else if (random_action < epsilon + mu + sigma) { // Reproduction selected
+        if (neighbour == 0) {                          // Only possible if the neighbour is empty and the specie is not
+            grid[ni][nj] = specie;
+            reproduction++;
         }
     } else {
         // Do nothing - step completed

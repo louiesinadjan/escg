@@ -41,6 +41,7 @@ void plot_snapshot(const int grid[200][200], int L, int mcs) {
         }
     }
 
+
     // Pointer to the flattened grid data
     const float* gridPtr = &(flatGrid[0]);
 

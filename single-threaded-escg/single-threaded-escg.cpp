@@ -9,7 +9,7 @@
 #include "visualise.hpp"
 
 int main(int argc, const char* argv[]) {
-    int MCS = 20001;
+    int MCS = 100000; // 100,000  Monte Carlo Steps
 
     int L = 200;        // Length of lattice
     int N = L * L;      // Elementary time steps
@@ -20,6 +20,8 @@ int main(int argc, const char* argv[]) {
     float mu = 1;              // RPSLS interaction
     float sigma = 1;           // Reproduction
     float epsilon = 2 * M * N; // Migration
+
+    int migration = 0, reproduction = 0, interaction = 0;
 
     // Set up a random number generator
     std::random_device rd;
@@ -42,17 +44,17 @@ int main(int argc, const char* argv[]) {
             plot_snapshot(grid, L, mcs);
         }
 
-        // if (mcs % 100 == 0) {
-        //     std::cout << "MCS = " << mcs << std::endl;
-        // }
-
         for (int n = 0; n < N; n++) { // Elementary Time Steps
-            step(L, grid, mu, sigma, epsilon);
+            step(L, grid, mu, sigma, epsilon, migration, reproduction, interaction);
         }
     }
 
     show(); // Plot density against steps
 
-    std::cout << "Simulation Complete.";
+    std::cout << "Simulation Complete." << std::endl;
+    std::cout << "Migration count: " << migration << std::endl;
+    std::cout << "Reproduction count: " << reproduction << std::endl;
+    std::cout << "Interaction count: " << interaction << std::endl;
+
     return 0;
 }
