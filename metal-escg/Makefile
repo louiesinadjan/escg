@@ -1,0 +1,68 @@
+# Compiler and flags
+CXX = clang++
+CXXFLAGS = -std=c++17 -Wall -Wextra -I./metal-cpp -fobjc-arc
+
+# Attempt to use --embed; if unavailable, fallback to normal --ldflags
+EMBED_LDFLAGS = $(shell (python3-config --ldflags --embed 2>/dev/null || python3-config --ldflags))
+
+# Dynamically fetch other needed paths
+PYTHON_INCLUDE  := $(shell python3 -c "import sysconfig; print(sysconfig.get_paths()['include'])")
+NUMPY_INCLUDE   := $(shell python3 -c "import numpy; print(numpy.get_include())")
+
+# Additional include paths:
+INCLUDE_FLAGS = -Imetal-escg/external/matplotlib-cpp \
+                -I$(PYTHON_INCLUDE) \
+                -I$(NUMPY_INCLUDE)
+
+# Some systems require -undefined dynamic_lookup to load Python symbols at runtime on macOS
+# We combine that with the embed or fallback flags.
+LDFLAGS = $(EMBED_LDFLAGS) -undefined dynamic_lookup -framework Metal -framework MetalKit -framework AppKit -framework Foundation -framework QuartzCore -framework CoreGraphics
+
+# Directories
+SRC_DIR = .
+BUILD_DIR = build
+OBJ_DIR = $(BUILD_DIR)/objs
+
+# Source files
+SRCS = $(SRC_DIR)/metal-escg.cpp $(SRC_DIR)/timer.cpp $(SRC_DIR)/simulation.cpp $(SRC_DIR)/visualise.cpp
+OBJS = $(OBJ_DIR)/metal-escg.o $(OBJ_DIR)/timer.o $(OBJ_DIR)/simulation.o $(OBJ_DIR)/visualise.o
+
+# Metal Shader
+METAL_SHADER = random.metal
+METAL_LIB = $(BUILD_DIR)/random.metallib
+
+# Output binary
+TARGET = $(BUILD_DIR)/metal
+
+# Default target
+all: $(TARGET)
+
+# Rule to create the output binary
+$(TARGET): $(OBJS) $(METAL_LIB)
+	@mkdir -p $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) $(INCLUDE_FLAGS) -o $@ $(OBJS) $(LDFLAGS)
+	@echo "Built $(TARGET)"
+
+# Rule to compile Metal shader to metallib
+$(METAL_LIB): $(BUILD_DIR)/random.air
+	xcrun -sdk macosx metallib $< -o $@
+	@echo "Compiled Metal shader into $@"
+
+$(BUILD_DIR)/random.air: $(METAL_SHADER)
+	@mkdir -p $(BUILD_DIR)
+	xcrun -sdk macosx metal -c $< -o $@
+	@echo "Compiled Metal shader $< -> $@"
+
+# Rule to compile .cpp files to .o files
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) $(INCLUDE_FLAGS) -c $< -o $@
+	@echo "Compiled $< -> $@"
+
+# Clean build files
+clean:
+	rm -rf $(BUILD_DIR)
+	@echo "Cleaned build directory"
+
+# Phony targets
+.PHONY: all clean

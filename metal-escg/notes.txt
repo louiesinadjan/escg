@@ -1,0 +1,5 @@
+Commands to compile .metal files:
+    xcrun -sdk macosx metal -c mt19937.metal -o mt19937.air
+    xcrun -sdk macosx metallib mt19937.air -o mt19937.metallib
+
+Absolute path is required to link metallib
