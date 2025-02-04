@@ -22,10 +22,6 @@ double Timer::elapsedNanoseconds() const {
     return std::chrono::duration_cast<std::chrono::nanoseconds>(endTimePoint - startTime).count();
 }
 
-double Timer::elapsedMilliseconds() const {
-    return elapsedNanoseconds() / 1000000.0;
-}
+double Timer::elapsedMilliseconds() const { return elapsedNanoseconds() / 1000000.0; }
 
-double Timer::elapsedSeconds() const {
-    return elapsedNanoseconds() / 1000000000.0;
-}
+double Timer::elapsedSeconds() const { return std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime).count(); }

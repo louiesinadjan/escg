@@ -349,11 +349,7 @@ int main(int argc, const char* argv[]) {
         if (mcs == 0 || mcs == 2000 || mcs == 6000 || mcs == 20000 || mcs == 100000) {
             plot_snapshot(grid, L, mcs);
         }
-
-        // if (mcs % 10 == 0) {
-        //     plot_snapshot(grid, L, mcs);
-        // }
-
+        
         for (int n = 0; n < N; n++) { // Elementary Time Steps
 
             int cell = cells[index];                         // Random number 0-39999
@@ -390,7 +386,7 @@ int main(int argc, const char* argv[]) {
         }
     }
 
-    show(); // Plot density against steps
+    show(gridCtx); // Plot density against steps
 
     std::cout << "Simulation Complete.";
 
