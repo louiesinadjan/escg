@@ -11,112 +11,289 @@
 #include <iostream>
 #include <random>
 
-void metal(float*& action_probabilities, uint32_t*& cells, uint32_t*& neighbours) {
-    std::cout << "Refreshing random numbers." << std::endl;
+//------------------------------------------------------------------------------
+// Define a context structure to hold Metal objects and configuration
+//------------------------------------------------------------------------------
+struct MetalContext {
+    NS::AutoreleasePool* autoreleasePool;
+    MTL::Device* device;
+    MTL::CommandQueue* commandQueue;
+    MTL::Library* library;
+    MTL::ComputePipelineState* pipelineStateActions;    // Random action PSO
+    MTL::ComputePipelineState* pipelineStateCells;      // Selected cell PSO
+    MTL::ComputePipelineState* pipelineStateNeighbours; // Neighbour direction PSO
+    MTL::Buffer* seedBuffer;                            // Seeds for random number generation
+    MTL::Buffer* resultBufferActions;
+    MTL::Buffer* resultBufferCells;
+    MTL::Buffer* resultBufferNeighbours;
 
-    NS::AutoreleasePool* autoreleasePool = NS::AutoreleasePool::alloc()->init();
-    MTL::Device* device = MTL::CreateSystemDefaultDevice();
-    MTL::CommandQueue* commandQueue = device->newCommandQueue();
+    MTL::ComputePipelineState* pipelineStateDensities; // Density PSO
+    MTL::Buffer* gridBuffer;                           // GPU buffer for grid data
+    MTL::Buffer* densityBuffer;                        // GPU buffer for density results
 
-    // Load the Metal library from random.metallib
+    int threads;
+    int numRandomNumbers;
+};
+
+struct GridContext {
+    int emptyCounter;
+    int rockCounter;
+    int paperCounter;
+    int scissorsCounter;
+    int lizardCounter;
+    int spockCounter;
+
+    std::vector<double> steps;
+    std::vector<double> densityRock;
+    std::vector<double> densityPaper;
+    std::vector<double> densityScissors;
+    std::vector<double> densityLizard;
+    std::vector<double> densitySpock;
+};
+
+//------------------------------------------------------------------------------
+// Initialisation: Create device, load library, compile pipelines, create buffers
+//------------------------------------------------------------------------------
+bool initMetalContext(MetalContext& ctx) {
+    ctx.numRandomNumbers = 100000000; // 100,000,000  random numbers per shader
+    ctx.threads = ctx.numRandomNumbers / 10000;
+
+    ctx.autoreleasePool = NS::AutoreleasePool::alloc()->init();
+
+    // Create Metal device and command queue
+    ctx.device = MTL::CreateSystemDefaultDevice();
+    if (!ctx.device) {
+        std::cerr << "Error: No Metal device available." << std::endl;
+        return false;
+    }
+    ctx.commandQueue = ctx.device->newCommandQueue();
+
+    // Load the Metal library
     NS::Error* error = nullptr;
-    NS::String* libraryPath = NS::String::string("/Users/louiesinadjan/Documents/dissertation/escg/metal-escg/build/random.metallib", NS::UTF8StringEncoding);
-    MTL::Library* library = device->newLibrary(libraryPath, &error);
-    if (!library) {
-        std::cerr << "Error: Failed to load random.metallib - " << error->localizedDescription()->utf8String() << std::endl;
-        autoreleasePool->release();
-        return;
+    NS::String* libraryPath = NS::String::string("/Users/louiesinadjan/Documents/dissertation/escg/metal-escg/build/escg.metallib", NS::UTF8StringEncoding);
+
+    ctx.library = ctx.device->newLibrary(libraryPath, &error);
+    if (!ctx.library) {
+        std::cerr << "Error: Failed to load escg.metallib - " << error->localizedDescription()->utf8String() << std::endl;
+        return false;
     }
 
-    std::cout << "Metal Library Loaded" << std::endl;
+    // Load the shader functions from the library
+    // Randoms
+    MTL::Function* random_actions = ctx.library->newFunction(NS::String::string("mt_random_actions", NS::UTF8StringEncoding));
+    MTL::Function* random_cells = ctx.library->newFunction(NS::String::string("mt_random_cells", NS::UTF8StringEncoding));
+    MTL::Function* random_neighbours = ctx.library->newFunction(NS::String::string("mt_random_neighbours", NS::UTF8StringEncoding));
 
-    // Load the functions from the Metal library
-    MTL::Function* random_actions = library->newFunction(NS::String::string("mt_random_actions", NS::UTF8StringEncoding));
-    MTL::Function* random_cells = library->newFunction(NS::String::string("mt_random_cells", NS::UTF8StringEncoding));
-    MTL::Function* random_neighbours = library->newFunction(NS::String::string("mt_random_neighbours", NS::UTF8StringEncoding));
+    // Densities
+    MTL::Function* computeDensities = ctx.library->newFunction(NS::String::string("compute_densities", NS::UTF8StringEncoding)); //
 
-    if (!random_actions || !random_cells || !random_neighbours) {
-        std::cerr << "Error: Failed to find one or more functions in random.metallib." << std::endl;
-        autoreleasePool->release();
-        return;
+    if (!random_actions || !random_cells || !random_neighbours || !computeDensities) {
+        std::cerr << "Error: Failed to find one or more functions in Metal library." << std::endl;
+        return false;
     }
 
     // Create compute pipeline states
-    MTL::ComputePipelineState* pipelineStateActions = device->newComputePipelineState(random_actions, &error);
-    MTL::ComputePipelineState* pipelineStateCells = device->newComputePipelineState(random_cells, &error);
-    MTL::ComputePipelineState* pipelineStateNeighbours = device->newComputePipelineState(random_neighbours, &error);
+    // Randoms
+    ctx.pipelineStateActions = ctx.device->newComputePipelineState(random_actions, &error);
+    ctx.pipelineStateCells = ctx.device->newComputePipelineState(random_cells, &error);
+    ctx.pipelineStateNeighbours = ctx.device->newComputePipelineState(random_neighbours, &error);
 
-    if (!pipelineStateActions || !pipelineStateCells || !pipelineStateNeighbours) {
+    // Densities
+    ctx.pipelineStateDensities = ctx.device->newComputePipelineState(computeDensities, &error);
+
+    if (!ctx.pipelineStateActions || !ctx.pipelineStateCells || !ctx.pipelineStateNeighbours || !ctx.pipelineStateDensities) {
         std::cerr << "Error: " << error->localizedDescription()->utf8String() << std::endl;
-        autoreleasePool->release();
-        return;
+        return false;
     }
 
-    // Prepare buffers
-    const int threads = 10000; // Number of threads that work in parallel in metal shader
-    const int numRandomNumbers = 100000000;
-    uint32_t* seeds = new uint32_t[threads];
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<uint32_t> dist(1, UINT32_MAX);
-    for (int i = 0; i < threads; ++i) {
-        seeds[i] = dist(gen);
+    // Prepare the seed buffer
+    uint32_t* seeds = new uint32_t[ctx.threads];
+    // std::random_device rd;
+    // std::mt19937 gen(rd());
+    // std::uniform_int_distribution<uint32_t> dist(1, UINT32_MAX);
+    for (int i = 0; i < ctx.threads; i++) {
+        seeds[i] = i; // dist(gen);
     }
-
-    MTL::Buffer* seedBuffer = device->newBuffer(seeds, sizeof(uint32_t) * threads, MTL::ResourceStorageModeShared);
-    MTL::Buffer* resultBufferActions = device->newBuffer(sizeof(float) * numRandomNumbers, MTL::ResourceStorageModeShared);
-    MTL::Buffer* resultBufferCells = device->newBuffer(sizeof(uint32_t) * numRandomNumbers, MTL::ResourceStorageModeShared);
-    MTL::Buffer* resultBufferNeighbours = device->newBuffer(sizeof(uint32_t) * numRandomNumbers, MTL::ResourceStorageModeShared);
-
-    // Create command buffer and encoder for random actions
-    MTL::CommandBuffer* commandBuffer = commandQueue->commandBuffer();
-    MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
-    encoder->setComputePipelineState(pipelineStateActions);
-    encoder->setBuffer(seedBuffer, 0, 0);
-    encoder->setBuffer(resultBufferActions, 0, 1);
-
-    // Dispatch threads
-    MTL::Size gridSize = MTL::Size(threads, 1, 1); // Set gridSize to the number of threads
-    MTL::Size threadGroupSize = MTL::Size(pipelineStateActions->maxTotalThreadsPerThreadgroup(), 1, 1);
-    encoder->dispatchThreads(gridSize, threadGroupSize);
-    encoder->endEncoding();
-
-    // Commit command buffer and wait for completion
-    commandBuffer->commit();
-    commandBuffer->waitUntilCompleted();
-
-    // Retrieve results
-    std::memcpy(action_probabilities, resultBufferActions->contents(), sizeof(float) * numRandomNumbers);
-
-    // Repeat for random cells
-    commandBuffer = commandQueue->commandBuffer();
-    encoder = commandBuffer->computeCommandEncoder();
-    encoder->setComputePipelineState(pipelineStateCells);
-    encoder->setBuffer(seedBuffer, 0, 0);
-    encoder->setBuffer(resultBufferCells, 0, 1);
-    encoder->dispatchThreads(gridSize, threadGroupSize);
-    encoder->endEncoding();
-    commandBuffer->commit();
-    commandBuffer->waitUntilCompleted();
-    std::memcpy(cells, resultBufferCells->contents(), sizeof(uint32_t) * numRandomNumbers);
-
-    // Repeat for random neighbours
-    commandBuffer = commandQueue->commandBuffer();
-    encoder = commandBuffer->computeCommandEncoder();
-    encoder->setComputePipelineState(pipelineStateNeighbours);
-    encoder->setBuffer(seedBuffer, 0, 0);
-    encoder->setBuffer(resultBufferNeighbours, 0, 1);
-    encoder->dispatchThreads(gridSize, threadGroupSize);
-    encoder->endEncoding();
-    commandBuffer->commit();
-    commandBuffer->waitUntilCompleted();
-    std::memcpy(neighbours, resultBufferNeighbours->contents(), sizeof(uint32_t) * numRandomNumbers);
-
+    ctx.seedBuffer = ctx.device->newBuffer(seeds, sizeof(uint32_t) * ctx.threads, MTL::ResourceStorageModeShared);
     delete[] seeds;
-    autoreleasePool->release();
+
+    // Create result buffers
+    // Randoms
+    ctx.resultBufferActions = ctx.device->newBuffer(sizeof(float) * ctx.numRandomNumbers, MTL::ResourceStorageModeShared);
+    ctx.resultBufferCells = ctx.device->newBuffer(sizeof(uint32_t) * ctx.numRandomNumbers, MTL::ResourceStorageModeShared);
+    ctx.resultBufferNeighbours = ctx.device->newBuffer(sizeof(uint32_t) * ctx.numRandomNumbers, MTL::ResourceStorageModeShared);
+
+    // Densities
+    ctx.gridBuffer = ctx.device->newBuffer(sizeof(int) * 40000, MTL::ResourceStorageModeShared);
+    ctx.densityBuffer = ctx.device->newBuffer(sizeof(int) * 6, MTL::ResourceStorageModeShared); // 6 species counts (RPSLS + E)
+
+    return true;
 }
 
+//------------------------------------------------------------------------------
+// Refresh: Use existing pipeline and buffer objects to generate new random numbers
+//------------------------------------------------------------------------------
+void refreshRandomNumbers(MetalContext& ctx, float* action_probabilities, uint32_t* cells, uint32_t* neighbours) {
+    std::cout << "Refreshing random numbers" << std::endl;
+
+    // Setup common dispatch parameters
+    MTL::Size gridSize = MTL::Size(ctx.threads, 1, 1);
+    MTL::Size threadGroupSize = MTL::Size(ctx.pipelineStateActions->maxTotalThreadsPerThreadgroup(), 1, 1);
+
+    // 1. Refresh random actions
+    MTL::CommandBuffer* commandBuffer = ctx.commandQueue->commandBuffer();
+    MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
+    encoder->setComputePipelineState(ctx.pipelineStateActions);
+    encoder->setBuffer(ctx.seedBuffer, 0, 0);
+    encoder->setBuffer(ctx.resultBufferActions, 0, 1);
+    encoder->dispatchThreads(gridSize, threadGroupSize);
+    encoder->endEncoding();
+    commandBuffer->commit();
+    commandBuffer->waitUntilCompleted();
+    std::memcpy(action_probabilities, ctx.resultBufferActions->contents(), sizeof(float) * ctx.numRandomNumbers);
+
+    // 2. Refresh random cells
+    commandBuffer = ctx.commandQueue->commandBuffer();
+    encoder = commandBuffer->computeCommandEncoder();
+    encoder->setComputePipelineState(ctx.pipelineStateCells);
+    encoder->setBuffer(ctx.seedBuffer, 0, 0);
+    encoder->setBuffer(ctx.resultBufferCells, 0, 1);
+    encoder->dispatchThreads(gridSize, threadGroupSize);
+    encoder->endEncoding();
+    commandBuffer->commit();
+    commandBuffer->waitUntilCompleted();
+    std::memcpy(cells, ctx.resultBufferCells->contents(), sizeof(uint32_t) * ctx.numRandomNumbers);
+
+    // 3. Refresh random neighbours
+    commandBuffer = ctx.commandQueue->commandBuffer();
+    encoder = commandBuffer->computeCommandEncoder();
+    encoder->setComputePipelineState(ctx.pipelineStateNeighbours);
+    encoder->setBuffer(ctx.seedBuffer, 0, 0);
+    encoder->setBuffer(ctx.resultBufferNeighbours, 0, 1);
+    encoder->dispatchThreads(gridSize, threadGroupSize);
+    encoder->endEncoding();
+    commandBuffer->commit();
+    commandBuffer->waitUntilCompleted();
+    std::memcpy(neighbours, ctx.resultBufferNeighbours->contents(), sizeof(uint32_t) * ctx.numRandomNumbers);
+}
+
+//------------------------------------------------------------------------------
+// Cleanup: Release all allocated Metal objects
+//------------------------------------------------------------------------------
+void destroyMetalContext(MetalContext& ctx) {
+    if (ctx.seedBuffer)
+        ctx.seedBuffer->release();
+    if (ctx.resultBufferActions)
+        ctx.resultBufferActions->release();
+    if (ctx.resultBufferCells)
+        ctx.resultBufferCells->release();
+    if (ctx.resultBufferNeighbours)
+        ctx.resultBufferNeighbours->release();
+    if (ctx.pipelineStateActions)
+        ctx.pipelineStateActions->release();
+    if (ctx.pipelineStateCells)
+        ctx.pipelineStateCells->release();
+    if (ctx.pipelineStateNeighbours)
+        ctx.pipelineStateNeighbours->release();
+    if (ctx.library)
+        ctx.library->release();
+    if (ctx.commandQueue)
+        ctx.commandQueue->release();
+    if (ctx.device)
+        ctx.device->release();
+    if (ctx.autoreleasePool)
+        ctx.autoreleasePool->release();
+}
+
+//------------------------------------------------------------------------------
+// Calculate densities of each species and add to vectors for visualisation using metal
+//------------------------------------------------------------------------------
+void computeDensitiesGPU(MetalContext& ctx, int grid[200][200], int* densities) {
+    // Flatten the grid into a 1D array
+    int flattenedGrid[40000]; // 200x200 → 1D array
+    for (int i = 0; i < 200; i++) {
+        for (int j = 0; j < 200; j++) {
+            flattenedGrid[i * 200 + j] = grid[i][j]; // Flatten row-wise
+        }
+    }
+
+    // Copy the flattened grid to the GPU buffer
+    std::memcpy(ctx.gridBuffer->contents(), flattenedGrid, sizeof(int) * 40000);
+    // Reset the density buffer
+    std::memset(ctx.densityBuffer->contents(), 0, sizeof(int) * 6);
+
+    MTL::CommandBuffer* commandBuffer = ctx.commandQueue->commandBuffer();
+    MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
+
+    encoder->setComputePipelineState(ctx.pipelineStateDensities);
+    encoder->setBuffer(ctx.gridBuffer, 0, 0);
+    encoder->setBuffer(ctx.densityBuffer, 0, 1); // Set buffer for atomic operations
+
+    MTL::Size threadsPerGrid = MTL::Size(40000, 1, 1);
+    MTL::Size threadGroupSize = MTL::Size(200, 1, 1); // Adjust for GPU
+
+    encoder->dispatchThreads(threadsPerGrid, threadGroupSize);
+    encoder->endEncoding();
+
+    commandBuffer->commit();
+    commandBuffer->waitUntilCompleted();
+
+    // Copy the results from the GPU buffer to the densities array
+    std::memcpy(densities, ctx.densityBuffer->contents(), sizeof(int) * 6);
+}
+
+//------------------------------------------------------------------------------
+// Calculate densities of each species and add to vectors for visualisation
+//------------------------------------------------------------------------------
+void densities(int grid[200][200], int L, int mcs, GridContext& gridCtx, MetalContext& metalCtx) {
+    int speciesCounts[6] = {0}; // [empty, rock, paper, scissors, lizard, spock]
+
+    // Call Metal shader
+    computeDensitiesGPU(metalCtx, grid, speciesCounts);
+
+    int totalCells = L * L;
+
+    double emptyDensity = (static_cast<double>(speciesCounts[0]) / totalCells) * 100;
+    double rockDensity = (static_cast<double>(speciesCounts[1]) / totalCells) * 100;
+    double paperDensity = (static_cast<double>(speciesCounts[2]) / totalCells) * 100;
+    double scissorsDensity = (static_cast<double>(speciesCounts[3]) / totalCells) * 100;
+    double lizardDensity = (static_cast<double>(speciesCounts[4]) / totalCells) * 100;
+    double spockDensity = (static_cast<double>(speciesCounts[5]) / totalCells) * 100;
+
+    gridCtx.steps.push_back(mcs);
+    gridCtx.densityRock.push_back(rockDensity);
+    gridCtx.densityPaper.push_back(paperDensity);
+    gridCtx.densityScissors.push_back(scissorsDensity);
+    gridCtx.densityLizard.push_back(lizardDensity);
+    gridCtx.densitySpock.push_back(spockDensity);
+
+    // Print the densities
+    if (mcs % 200 == 0) {
+        std::cout << "Population Densities at: " << mcs << std::endl;
+        std::cout << "EMPTY: " << emptyDensity << std::endl;
+        std::cout << "ROCK: " << rockDensity << std::endl;
+        std::cout << "PAPER: " << paperDensity << std::endl;
+        std::cout << "SCISSORS: " << scissorsDensity << std::endl;
+        std::cout << "LIZARD: " << lizardDensity << std::endl;
+        std::cout << "SPOCK: " << spockDensity << std::endl;
+        std::cout << std::endl;
+    }
+}
+
+//------------------------------------------------------------------------------
+// Plot density against steps
+//------------------------------------------------------------------------------
+void show(GridContext& gridCtx) { plot_densities(gridCtx.steps, gridCtx.densityRock, gridCtx.densityPaper, gridCtx.densityScissors, gridCtx.densityLizard, gridCtx.densitySpock); }
+
+//------------------------------------------------------------------------------
+// Main function
+//------------------------------------------------------------------------------
 int main(int argc, const char* argv[]) {
+    // ------------------- Timer -------------------
+
+    Timer timer;
+    timer.start();
+
     // ------------------- Metal Parameters -------------------
 
     const int numRandomNumbers = 100000000;
@@ -124,11 +301,19 @@ int main(int argc, const char* argv[]) {
     uint32_t* cells = new uint32_t[numRandomNumbers];
     uint32_t* neighbours = new uint32_t[numRandomNumbers];
     int index = 0;
-    metal(action_probabilities, cells, neighbours);
+
+    MetalContext metalCtx;
+    if (!initMetalContext(metalCtx)) {
+        std::cerr << "Failed to initialise Metal context." << std::endl;
+        return -1;
+    }
+
+    refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours);
 
     // ------------------- Simulation Parameters -------------------
 
-    int MCS = 2000;
+    int MCS = 100000;
+    GridContext gridCtx;
 
     int L = 200;        // Length of lattice
     int N = L * L;      // Elementary time steps
@@ -152,121 +337,72 @@ int main(int argc, const char* argv[]) {
         }
     }
 
-    int zero = 0, one = 0, two = 0, three = 0;
-    int lastZero = 0, lastOne = 0, lastTwo = 0, lastThree = 0;
-    for (int i = 0; i <= 100000; i++) {
-        if (i % 40 == 0) {
-            std::cout << "Counted: " << i << std::endl;
-            std::cout << "0: " << zero - lastZero << " \t\tTotal: " << zero << std::endl;
-            std::cout << "1: " << one - lastOne << ", \t\tTotal: " << one << std::endl;
-            std::cout << "2: " << two - lastTwo << ", \t\tTotal: " << two << std::endl;
-            std::cout << "3: " << three - lastThree << ", \t\tTotal: " << three << std::endl;
+    // ------------------- Start Simulating -------------------
 
-            lastZero = zero;
-            lastOne = one;
-            lastTwo = two;
-            lastThree = three;
+    for (int mcs = 0; mcs <= MCS; mcs++) { // Monte Carlo Steps
+        if (index >= numRandomNumbers) {
+            refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours); // Fill random numbers
+            index = 0;                                                               // Reset index after refreshing random numbers
         }
-        if (neighbours[i] == 0) {
-            zero++;
-        } else if (neighbours[i] == 1) {
-            one++;
-        } else if (neighbours[i] == 2) {
-            two++;
-        } else if (neighbours[i] == 3) {
-            three++;
-        } else {
-            std::cout << "Invalid neighbour: " << neighbours[i] << std::endl;
+
+        densities(grid, L, mcs, gridCtx, metalCtx); // Every MCS, call densities to add to density vectors for visualisation after simulation
+        if (mcs == 0 || mcs == 2000 || mcs == 6000 || mcs == 20000 || mcs == 100000) {
+            plot_snapshot(grid, L, mcs);
+        }
+
+        // if (mcs % 10 == 0) {
+        //     plot_snapshot(grid, L, mcs);
+        // }
+
+        for (int n = 0; n < N; n++) { // Elementary Time Steps
+
+            int cell = cells[index];                         // Random number 0-39999
+            int neighbour = neighbours[index];               // Random number 0-3
+            float action_prob = action_probabilities[index]; // Random number 0-1
+            index++;
+
+            // static std::random_device rd;
+            // static std::mt19937 gen(rd());                               // Random number generator
+            // std::uniform_int_distribution<int> dist_pos(0, (L * L) - 1); // Random position in grid
+            // std::uniform_int_distribution<int> dist_dir(0, 3);           // Random neighbour direction (0 to 3 for four neighbours)
+            // std::uniform_real_distribution<float> dist_prob(0.0, 1);     // Random probability for actions
+
+            // cell = dist_pos(gen);         // Random cell
+            // neighbour = dist_dir(gen);    // Random neighbour
+            // action_prob = dist_prob(gen); // Random action probability
+
+            // Normalise mu + sigma + epsilon
+            float sum = mu + sigma + epsilon;
+            mu /= sum;
+            sigma /= sum;
+            epsilon /= sum;
+
+            int action;
+            if (action_prob < mu) {
+                action = 1; // Interaction
+            } else if (action_prob < mu + sigma) {
+                action = 2; // Reproduction
+            } else {
+                action = 3; // Migration
+            }
+
+            step(L, grid, cell, neighbour, action);
         }
     }
 
-    // for (int i = 0; i < numRandomNumbers; i++) {
-    //     std::cout << i << ": " << action_probabilities[i] << ",\t" << cells[i] << ",\t" << neighbours[i] << std::endl;
-    // }
+    show(); // Plot density against steps
 
-    // Before starting simulation, calculate average of action_probabilities
-    // double sum = 0.0;
-    // for (int i = 0; i < numRandomNumbers; i++) {
-    //     sum += action_probabilities[i];
-    //     if(action_probabilities[i] < 0 || action_probabilities[i] > 1) {
-    //         std::cout << "Invalid action_probabilities: " << action_probabilities[i] << std::endl;
-    //         return -1;
-    //     }
-    // }
-    // double average = sum / numRandomNumbers;
-    // std::cout << "Average of action_probabilities: " << average << std::endl;
-    // std::cout << "Expected average should be close to 0.5" << std::endl;
+    std::cout << "Simulation Complete.";
 
-    // sum = 0;
-    // for (int i = 0; i < numRandomNumbers; i++) {
-    //     sum += cells[i];
-    //     if(cells[i] < 0 || cells[i] > 39999) {
-    //         std::cout << "Invalid cells: " << cells[i] << std::endl;
-    //         return -1;
-    //     }
-    // }
-    // average = sum / numRandomNumbers;
-    // std::cout << "Average of cells: " << average << std::endl;
+    destroyMetalContext(metalCtx);
+    delete[] action_probabilities;
+    delete[] cells;
+    delete[] neighbours;
 
-    // sum = 0;
-    // for (int i = 0; i < numRandomNumbers; i++) {
-    //     sum += neighbours[i];
-    //     if(neighbours[i] < 0 || neighbours[i] > 3) {
-    //         std::cout << "Invalid neighbours: " << neighbours[i] << std::endl;
-    //         return -1;
-    //     }
-    // }
-    // average = sum / numRandomNumbers;
-    // std::cout << "Average of neighbours: " << average << std::endl;
+    // ------------------- End Timer -------------------
 
-    // ------------------- Start Simulating -------------------
-
-    // for (int mcs = 0; mcs <= MCS; mcs++) { // Monte Carlo Steps
-    //     if (index >= numRandomNumbers) {
-    //         metal(action_probabilities, cells, neighbours); // Refresh random numbers
-    //         index = 0;                                      // Reset index after refreshing random numbers
-    //     }
-
-    //     densities(grid, L, mcs); // Every MCS, call densities to add to density vectors for visualisation after simulation
-    //     // if (mcs == 0 || mcs == 2000 || mcs == 6000 || mcs == 20000 || mcs == 100000) {
-    //     //     plot_snapshot(grid, L, mcs);
-    //     // }
-
-    //     if (mcs % 10 == 0) {
-    //         plot_snapshot(grid, L, mcs);
-    //     }
-
-    //     for (int n = 0; n < N; n++) { // Elementary Time Steps
-    //         int cell = cells[index];
-    //         int neighbour = neighbours[index];
-    //         float action_prob = action_probabilities[index];
-    //         index++;
-
-    //         // normalise mu + sigma + epsilon
-    //         float sum = mu + sigma + epsilon;
-    //         mu /= sum;
-    //         sigma /= sum;
-    //         epsilon /= sum;
-
-    //         int action;
-    //         if (action_prob < mu) {
-    //             action = 1; // Interaction
-    //         } else if (action_prob < mu + sigma) {
-    //             action = 2; // Reproduction
-    //         } else {
-    //             action = 3; // Migration
-    //         }
-
-    //         step(L, grid, cell, neighbour, action);
-    //     }
-    // }
-
-    // show(); // Plot density against steps
-
-    // std::cout << "Simulation Complete.";
-    // delete[] action_probabilities;
-    // delete[] cells;
-    // delete[] neighbours;
+    timer.stop();
+    std::cout << "Time taken: " << timer.elapsedSeconds() << "s" << std::endl;
 
     return 0;
 }

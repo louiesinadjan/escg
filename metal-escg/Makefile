@@ -27,9 +27,10 @@ OBJ_DIR = $(BUILD_DIR)/objs
 SRCS = $(SRC_DIR)/metal-escg.cpp $(SRC_DIR)/timer.cpp $(SRC_DIR)/simulation.cpp $(SRC_DIR)/visualise.cpp
 OBJS = $(OBJ_DIR)/metal-escg.o $(OBJ_DIR)/timer.o $(OBJ_DIR)/simulation.o $(OBJ_DIR)/visualise.o
 
-# Metal Shader
-METAL_SHADER = random.metal
-METAL_LIB = $(BUILD_DIR)/random.metallib
+# Metal Shaders
+METAL_SHADERS = random.metal densities.metal
+METAL_LIB = $(BUILD_DIR)/escg.metallib
+METAL_AIR_FILES = $(patsubst %.metal,$(BUILD_DIR)/%.air,$(METAL_SHADERS))
 
 # Output binary
 TARGET = $(BUILD_DIR)/metal
@@ -43,12 +44,13 @@ $(TARGET): $(OBJS) $(METAL_LIB)
 	$(CXX) $(CXXFLAGS) $(INCLUDE_FLAGS) -o $@ $(OBJS) $(LDFLAGS)
 	@echo "Built $(TARGET)"
 
-# Rule to compile Metal shader to metallib
-$(METAL_LIB): $(BUILD_DIR)/random.air
-	xcrun -sdk macosx metallib $< -o $@
-	@echo "Compiled Metal shader into $@"
+# Rule to compile Metal shaders into metallib
+$(METAL_LIB): $(METAL_AIR_FILES)
+	xcrun -sdk macosx metallib $^ -o $@
+	@echo "Compiled Metal shaders into $@"
 
-$(BUILD_DIR)/random.air: $(METAL_SHADER)
+# Rule to compile each .metal shader into .air
+$(BUILD_DIR)/%.air: %.metal
 	@mkdir -p $(BUILD_DIR)
 	xcrun -sdk macosx metal -c $< -o $@
 	@echo "Compiled Metal shader $< -> $@"

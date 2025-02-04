@@ -1,0 +1,102 @@
+// ------------------- Statistical Analysis -------------------
+    double sum = 0.0;
+    for (int i = 0; i < numRandomNumbers; i++) {
+        sum += action_probabilities[i];
+        if (action_probabilities[i] < 0 || action_probabilities[i] > 1) {
+            std::cout << "Invalid action_probabilities: " << action_probabilities[i] << std::endl;
+            return -1;
+        }
+    }
+    double average = sum / numRandomNumbers;
+    std::cout << "Average of action_probabilities: " << average << std::endl;
+    std::cout << "Expected average should be close to 0.5" << std::endl;
+
+    sum = 0;
+    for (int i = 0; i < numRandomNumbers; i++) {
+        sum += cells[i];
+        if (cells[i] < 0 || cells[i] > 39999) {
+            std::cout << "Invalid cells: " << cells[i] << std::endl;
+            return -1;
+        }
+    }
+    average = sum / numRandomNumbers;
+    std::cout << "Average of cells: " << average << std::endl;
+
+    sum = 0;
+    for (int i = 0; i < numRandomNumbers; i++) {
+        sum += neighbours[i];
+        if (neighbours[i] < 0 || neighbours[i] > 3) {
+            std::cout << "Invalid neighbours: " << neighbours[i] << std::endl;
+            return -1;
+        }
+    }
+    average = sum / numRandomNumbers;
+    std::cout << "Average of neighbours: " << average << std::endl;
+
+    // ------------------- Statistical Tests (Chi-Square) -------------------
+
+    std::cout << "\nPerforming chi-square tests for uniformity:" << std::endl;
+
+    // 1. Test for action_probabilities (expected uniform in [0,1])
+    {
+        int numBins = 10;
+        std::vector<int> hist(numBins, 0);
+        for (int i = 0; i < numRandomNumbers; i++) {
+            int bin = static_cast<int>(action_probabilities[i] * numBins);
+            if (bin < 0)
+                bin = 0;
+            if (bin >= numBins)
+                bin = numBins - 1;
+            hist[bin]++;
+        }
+        double expected = static_cast<double>(numRandomNumbers) / numBins;
+        double chi2 = 0.0;
+        for (int i = 0; i < numBins; i++) {
+            double diff = hist[i] - expected;
+            chi2 += diff * diff / expected;
+        }
+        std::cout << "Chi-square for action_probabilities: " << chi2 << " (df = " << (numBins - 1) << ")" << std::endl;
+    }
+
+    // 2. Test for cells (expected uniform in [0,39999])
+    {
+        int numBins = 100;
+        std::vector<int> hist(numBins, 0);
+        int binSize = 40000 / numBins; // each bin covers 400 numbers
+        for (int i = 0; i < numRandomNumbers; i++) {
+            int bin = cells[i] / binSize;
+            if (bin < 0)
+                bin = 0;
+            if (bin >= numBins)
+                bin = numBins - 1;
+            hist[bin]++;
+        }
+        double expected = static_cast<double>(numRandomNumbers) / numBins;
+        double chi2 = 0.0;
+        for (int i = 0; i < numBins; i++) {
+            double diff = hist[i] - expected;
+            chi2 += diff * diff / expected;
+        }
+        std::cout << "Chi-square for cells: " << chi2 << " (df = " << (numBins - 1) << ")" << std::endl;
+    }
+
+    // 3. Test for neighbours (expected uniform among 0,1,2,3)
+    {
+        int numBins = 4;
+        std::vector<int> hist(numBins, 0);
+        for (int i = 0; i < numRandomNumbers; i++) {
+            int bin = neighbours[i];
+            if (bin < 0)
+                bin = 0;
+            if (bin >= numBins)
+                bin = numBins - 1;
+            hist[bin]++;
+        }
+        double expected = static_cast<double>(numRandomNumbers) / numBins;
+        double chi2 = 0.0;
+        for (int i = 0; i < numBins; i++) {
+            double diff = hist[i] - expected;
+            chi2 += diff * diff / expected;
+        }
+        std::cout << "Chi-square for neighbours: " << chi2 << " (df = " << (numBins - 1) << ")" << std::endl;
+    }

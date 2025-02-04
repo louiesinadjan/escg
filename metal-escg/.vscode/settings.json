@@ -55,6 +55,6 @@
         "random": "cpp",
         "chrono": "cpp"
     },
-    "C_Cpp.errorSquiggles": "disabled",
+    "C_Cpp.errorSquiggles": "enabledIfIncludesResolve",
     "C_Cpp.default.compilerPath": "/usr/bin/g++"
 }
