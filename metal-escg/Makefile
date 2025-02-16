@@ -28,7 +28,7 @@ SRCS = $(SRC_DIR)/metal-escg.cpp $(SRC_DIR)/timer.cpp $(SRC_DIR)/simulation.cpp 
 OBJS = $(OBJ_DIR)/metal-escg.o $(OBJ_DIR)/timer.o $(OBJ_DIR)/simulation.o $(OBJ_DIR)/visualise.o
 
 # Metal Shaders
-METAL_SHADERS = random.metal densities.metal
+METAL_SHADERS = random.metal densities.metal step.metal
 METAL_LIB = $(BUILD_DIR)/escg.metallib
 METAL_AIR_FILES = $(patsubst %.metal,$(BUILD_DIR)/%.air,$(METAL_SHADERS))
 

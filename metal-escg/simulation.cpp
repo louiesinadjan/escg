@@ -26,12 +26,12 @@ bool dominates(int specie, int neighbour) {
 
 // Helper function to wrap around the grid when selecting a neighbour
 int wrap(int index, int L) { return (index + L) % L; }
-
+    
 void step(int L, int grid[200][200], int cell, int neighbourDir, int action) {
     int dX[4] = {-1, 1, 0, 0}; // Neighbour directions (up, down, left, right)
     int dY[4] = {0, 0, -1, 1}; // Neighbour directions (up, down, left, right)
 
-    std::string direction[] = {"UP", "DOWN", "LEFT", "RIGHT"};
+    // std::string direction[] = {"UP", "DOWN", "LEFT", "RIGHT"};
 
     int i = cell / L; // Row in grid
     int j = cell % L; // Column in grid

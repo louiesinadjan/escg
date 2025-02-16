@@ -10,6 +10,8 @@
 #include <chrono>
 #include <iostream>
 #include <random>
+#include <unordered_set>
+#include <vector>
 
 //------------------------------------------------------------------------------
 // Define a context structure to hold Metal objects and configuration
@@ -29,13 +31,20 @@ struct MetalContext {
 
     MTL::ComputePipelineState* pipelineStateDensities; // Density PSO
     MTL::Buffer* gridBuffer;                           // GPU buffer for grid data
-    MTL::Buffer* densityBuffer;                        // GPU buffer for density results
+    MTL::Buffer* densityResultsBuffer;                 // GPU buffer for density results
+
+    MTL::ComputePipelineState* pipelineStateStep; // Step PSO
+    MTL::Buffer* cellsBuffer;                     // Cells to process
+    MTL::Buffer* neighboursDirsBuffer;            // Neighbour directions to process
+    MTL::Buffer* actionProbabilitiesBuffer;       // Actions to take
+    MTL::Buffer* stepGridBuffer;                  // Grid
 
     int threads;
     int numRandomNumbers;
 };
 
 struct GridContext {
+
     int emptyCounter;
     int rockCounter;
     int paperCounter;
@@ -49,6 +58,12 @@ struct GridContext {
     std::vector<double> densityScissors;
     std::vector<double> densityLizard;
     std::vector<double> densitySpock;
+};
+
+struct StepContext {
+    int cells[40000];
+    int neighbour_dirs[40000];
+    float action_probabilities[40000];
 };
 
 //------------------------------------------------------------------------------
@@ -85,7 +100,7 @@ bool initMetalContext(MetalContext& ctx) {
     MTL::Function* random_neighbours = ctx.library->newFunction(NS::String::string("mt_random_neighbours", NS::UTF8StringEncoding));
 
     // Densities
-    MTL::Function* computeDensities = ctx.library->newFunction(NS::String::string("compute_densities", NS::UTF8StringEncoding)); //
+    MTL::Function* computeDensities = ctx.library->newFunction(NS::String::string("compute_densities", NS::UTF8StringEncoding));
 
     if (!random_actions || !random_cells || !random_neighbours || !computeDensities) {
         std::cerr << "Error: Failed to find one or more functions in Metal library." << std::endl;
@@ -125,7 +140,7 @@ bool initMetalContext(MetalContext& ctx) {
 
     // Densities
     ctx.gridBuffer = ctx.device->newBuffer(sizeof(int) * 40000, MTL::ResourceStorageModeShared);
-    ctx.densityBuffer = ctx.device->newBuffer(sizeof(int) * 6, MTL::ResourceStorageModeShared); // 6 species counts (RPSLS + E)
+    ctx.densityResultsBuffer = ctx.device->newBuffer(sizeof(int) * 6, MTL::ResourceStorageModeShared); // 6 species counts (RPSLS + E)
 
     return true;
 }
@@ -208,26 +223,18 @@ void destroyMetalContext(MetalContext& ctx) {
 //------------------------------------------------------------------------------
 // Calculate densities of each species and add to vectors for visualisation using metal
 //------------------------------------------------------------------------------
-void computeDensitiesGPU(MetalContext& ctx, int grid[200][200], int* densities) {
-    // Flatten the grid into a 1D array
-    int flattenedGrid[40000]; // 200x200 → 1D array
-    for (int i = 0; i < 200; i++) {
-        for (int j = 0; j < 200; j++) {
-            flattenedGrid[i * 200 + j] = grid[i][j]; // Flatten row-wise
-        }
-    }
-
+void computeDensitiesGPU(MetalContext& ctx, int* grid, int* densities) {
     // Copy the flattened grid to the GPU buffer
-    std::memcpy(ctx.gridBuffer->contents(), flattenedGrid, sizeof(int) * 40000);
+    std::memcpy(ctx.gridBuffer->contents(), grid, sizeof(int) * 40000);
     // Reset the density buffer
-    std::memset(ctx.densityBuffer->contents(), 0, sizeof(int) * 6);
+    std::memset(ctx.densityResultsBuffer->contents(), 0, sizeof(int) * 6);
 
     MTL::CommandBuffer* commandBuffer = ctx.commandQueue->commandBuffer();
     MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
 
     encoder->setComputePipelineState(ctx.pipelineStateDensities);
     encoder->setBuffer(ctx.gridBuffer, 0, 0);
-    encoder->setBuffer(ctx.densityBuffer, 0, 1); // Set buffer for atomic operations
+    encoder->setBuffer(ctx.densityResultsBuffer, 0, 1); // Set buffer for atomic operations
 
     MTL::Size threadsPerGrid = MTL::Size(40000, 1, 1);
     MTL::Size threadGroupSize = MTL::Size(200, 1, 1); // Adjust for GPU
@@ -239,13 +246,13 @@ void computeDensitiesGPU(MetalContext& ctx, int grid[200][200], int* densities) 
     commandBuffer->waitUntilCompleted();
 
     // Copy the results from the GPU buffer to the densities array
-    std::memcpy(densities, ctx.densityBuffer->contents(), sizeof(int) * 6);
+    std::memcpy(densities, ctx.densityResultsBuffer->contents(), sizeof(int) * 6);
 }
 
 //------------------------------------------------------------------------------
 // Calculate densities of each species and add to vectors for visualisation
 //------------------------------------------------------------------------------
-void densities(int grid[200][200], int L, int mcs, GridContext& gridCtx, MetalContext& metalCtx) {
+void densities(int* grid, int L, int mcs, GridContext& gridCtx, MetalContext& metalCtx) {
     int speciesCounts[6] = {0}; // [empty, rock, paper, scissors, lizard, spock]
 
     // Call Metal shader
@@ -268,7 +275,7 @@ void densities(int grid[200][200], int L, int mcs, GridContext& gridCtx, MetalCo
     gridCtx.densitySpock.push_back(spockDensity);
 
     // Print the densities
-    if (mcs % 200 == 0) {
+    if (mcs % 2 == 0) {
         std::cout << "Population Densities at: " << mcs << std::endl;
         std::cout << "EMPTY: " << emptyDensity << std::endl;
         std::cout << "ROCK: " << rockDensity << std::endl;
@@ -284,6 +291,105 @@ void densities(int grid[200][200], int L, int mcs, GridContext& gridCtx, MetalCo
 // Plot density against steps
 //------------------------------------------------------------------------------
 void show(GridContext& gridCtx) { plot_densities(gridCtx.steps, gridCtx.densityRock, gridCtx.densityPaper, gridCtx.densityScissors, gridCtx.densityLizard, gridCtx.densitySpock); }
+
+//------------------------------------------------------------------------------
+// Initialise metal step buffers and pipelines
+// Computes the step functionality
+//------------------------------------------------------------------------------
+void initMetalStep(MetalContext& ctx, StepContext& stepCtx) {
+    NS::Error* error = nullptr;
+    MTL::Function* stepFunction = ctx.library->newFunction(NS::String::string("step", NS::UTF8StringEncoding));
+    if (!stepFunction) {
+        std::cerr << "Error: Failed to find step function in Metal library." << std::endl;
+        return;
+    }
+
+    ctx.pipelineStateStep = ctx.device->newComputePipelineState(stepFunction, &error);
+    if (!ctx.pipelineStateStep) {
+        std::cerr << "Error: " << error->localizedDescription()->utf8String() << std::endl;
+        return;
+    }
+
+    // Have a size of more than necessary to avoid resizing
+    ctx.cellsBuffer = ctx.device->newBuffer(sizeof(int) * 20000, MTL::ResourceStorageModeShared);
+    ctx.neighboursDirsBuffer = ctx.device->newBuffer(sizeof(int) * 20000, MTL::ResourceStorageModeShared);
+    ctx.actionProbabilitiesBuffer = ctx.device->newBuffer(sizeof(float) * 20000, MTL::ResourceStorageModeShared);
+    ctx.stepGridBuffer = ctx.device->newBuffer(sizeof(int) * 40000, MTL::ResourceStorageModeShared);
+}
+
+void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, float epsilon, int grid[40000]) {
+    MTL::CommandBuffer* commandBuffer = ctx.commandQueue->commandBuffer();
+    MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
+
+    // Assign to the buffers
+    std::memcpy(ctx.cellsBuffer->contents(), stepCtx.cells, sizeof(int) * 40000);
+    std::memcpy(ctx.neighboursDirsBuffer->contents(), stepCtx.neighbour_dirs, sizeof(int) * 40000);
+    std::memcpy(ctx.actionProbabilitiesBuffer->contents(), stepCtx.action_probabilities, sizeof(float) * 40000);
+    std::memcpy(ctx.stepGridBuffer->contents(), grid, sizeof(int) * 40000);
+
+    // Create buffers for cells, neighbour directions, action probabilities
+    encoder->setComputePipelineState(ctx.pipelineStateStep);
+    encoder->setBuffer(ctx.cellsBuffer, 0, 0);
+    encoder->setBuffer(ctx.neighboursDirsBuffer, 0, 1);
+    encoder->setBuffer(ctx.actionProbabilitiesBuffer, 0, 2);
+
+    // Using `setBytes()` for scalar values (floats)
+    encoder->setBytes(&mu, sizeof(float), 3);
+    encoder->setBytes(&sigma, sizeof(float), 4);
+    encoder->setBytes(&epsilon, sizeof(float), 5);
+
+    // Set the grid buffer
+    encoder->setBuffer(ctx.stepGridBuffer, 0, 6);
+
+    MTL::Size threadsPerGrid = MTL::Size(1000, 1, 1); // 40,000 cells, 1,000 threads --> 40 cells per threadgroup
+    MTL::Size threadGroupSize = MTL::Size(ctx.pipelineStateStep->maxTotalThreadsPerThreadgroup(), 1, 1);
+
+    encoder->dispatchThreads(threadsPerGrid, threadGroupSize);
+    encoder->endEncoding();
+
+    commandBuffer->commit();
+    commandBuffer->waitUntilCompleted();
+}
+
+//------------------------------------------------------------------------------
+// Check if a cell does not share future neighbours with any other cell
+// (vector and set are pass by value by default)
+//------------------------------------------------------------------------------
+// bool independentCells(StepContext& stepCtx, int nextCell, int nextNeighbourDir, const std::vector<int>& cells, std::unordered_set<int> neighbours) {
+//     const int L = 200; // Grid width and height
+
+//     std::unordered_set<int> new_neighbours;
+
+//     new_neighbours.insert(nextCell); // Current cell
+
+//     int row = nextCell / L;
+//     int col = nextCell % L;
+
+//     // UP neighbor (wrap to bottom row if at top)
+//     new_neighbours.insert(((row - 1 + L) % L) * L + col);
+
+//     // DOWN neighbor (wrap to top row if at bottom)
+//     new_neighbours.insert(((row + 1) % L) * L + col);
+
+//     // LEFT neighbor (wrap to rightmost column if at left edge)
+//     new_neighbours.insert(row * L + ((col - 1 + L) % L));
+
+//     // RIGHT neighbor (wrap to leftmost column if at right edge)
+//     new_neighbours.insert(row * L + ((col + 1) % L));
+
+//     // If a new neighbour exists in neighbours, then it is not independent
+//     for (int n : new_neighbours) {
+//         if (neighbours.find(n) != neighbours.end()) {
+//             return false;
+//         }
+//     }
+
+//     // Add the new neighbours to the set of neighbours in the step context
+//     std::set_union(neighbours.begin(), neighbours.end(), new_neighbours.begin(), new_neighbours.end(), std::inserter(stepCtx.neighbours, stepCtx.neighbours.begin()));
+
+//     // If the next cell is not in the neighbours set, then it is independent
+//     return true;
+// }
 
 //------------------------------------------------------------------------------
 // Main function
@@ -314,16 +420,25 @@ int main(int argc, const char* argv[]) {
 
     int MCS = 100000;
     GridContext gridCtx;
+    StepContext stepCtx;
 
-    int L = 200;        // Length of lattice
-    int N = L * L;      // Elementary time steps
-    float M = 1e-6f;    // Mobility 'since it is proportional to the typical area
-                        // explored by one mobile individual per unit time'
-    int grid[200][200]; // Grid size = 200 x 200
+    initMetalStep(metalCtx, stepCtx); // Initialise Metal step buffers and pipelines
+
+    int L = 200;     // Length of lattice
+    int N = L * L;   // Elementary time steps
+    float M = 1e-6f; // Mobility 'since it is proportional to the typical area
+                     // explored by one mobile individual per unit time'
+    int grid[40000]; // Flattened grid size = 200 x 200
 
     float mu = 1;              // RPSLS interaction
     float sigma = 1;           // Reproduction
     float epsilon = 2 * M * N; // Migration
+
+    // Normalise the action probabilities
+    float sum = mu + sigma + epsilon;
+    mu /= sum;
+    sigma /= sum;
+    epsilon /= sum;
 
     // Set up a random number generator
     std::random_device rd;
@@ -331,58 +446,62 @@ int main(int argc, const char* argv[]) {
     std::uniform_int_distribution<int> dist(1, 5); // Range: 1 to 5 (RPSLS)
 
     // Randomly initialise the grid with species (stored as int)
-    for (int i = 0; i < L; i++) {
-        for (int j = 0; j < L; j++) {
-            grid[i][j] = dist(gen); // Randomly assign a species (or EMPTY) as an integer
-        }
+    for (int i = 0; i < L * L; i++) {
+        grid[i] = dist(gen); // Randomly assign a species (or EMPTY) as an integer
     }
 
     // ------------------- Start Simulating -------------------
 
-    for (int mcs = 0; mcs <= MCS; mcs++) { // Monte Carlo Steps
-        if (index >= numRandomNumbers) {
-            refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours); // Fill random numbers
-            index = 0;                                                               // Reset index after refreshing random numbers
-        }
-
+    for (int mcs = 0; mcs <= MCS; mcs++) {          // Monte Carlos
         densities(grid, L, mcs, gridCtx, metalCtx); // Every MCS, call densities to add to density vectors for visualisation after simulation
         if (mcs == 0 || mcs == 2000 || mcs == 6000 || mcs == 20000 || mcs == 100000) {
             plot_snapshot(grid, L, mcs);
         }
-        
+
         for (int n = 0; n < N; n++) { // Elementary Time Steps
-
-            int cell = cells[index];                         // Random number 0-39999
-            int neighbour = neighbours[index];               // Random number 0-3
-            float action_prob = action_probabilities[index]; // Random number 0-1
-            index++;
-
-            // static std::random_device rd;
-            // static std::mt19937 gen(rd());                               // Random number generator
-            // std::uniform_int_distribution<int> dist_pos(0, (L * L) - 1); // Random position in grid
-            // std::uniform_int_distribution<int> dist_dir(0, 3);           // Random neighbour direction (0 to 3 for four neighbours)
-            // std::uniform_real_distribution<float> dist_prob(0.0, 1);     // Random probability for actions
-
-            // cell = dist_pos(gen);         // Random cell
-            // neighbour = dist_dir(gen);    // Random neighbour
-            // action_prob = dist_prob(gen); // Random action probability
-
-            // Normalise mu + sigma + epsilon
-            float sum = mu + sigma + epsilon;
-            mu /= sum;
-            sigma /= sum;
-            epsilon /= sum;
-
-            int action;
-            if (action_prob < mu) {
-                action = 1; // Interaction
-            } else if (action_prob < mu + sigma) {
-                action = 2; // Reproduction
-            } else {
-                action = 3; // Migration
+            if (index >= numRandomNumbers) {
+                refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours); // Fill random numbers
+                index = 0;                                                               // Reset index after refreshing random numbers
             }
 
-            step(L, grid, cell, neighbour, action);
+            // Compute as many random, sequential, indepent cells as possible in parallel using GPU
+            // int vecIndex = 0;
+            // stepCtx.cells = {};                // vector
+            // stepCtx.neighbour_dirs = {};       // vector
+            // stepCtx.action_probabilities = {}; // vector
+            // stepCtx.neighbours = {};           // set
+
+            // std::cout << "Reached before loop" << std::endl;
+
+            // independentCells function checks for independent cells and assigns to neighbours set if true
+            // while (independentCells(stepCtx, cells[index], neighbours[index], stepCtx.cells, stepCtx.neighbours) && n < N) {
+            //     stepCtx.cells.push_back(cells[index]);
+            //     stepCtx.neighbour_dirs.push_back(neighbours[index]);
+            //     stepCtx.action_probabilities.push_back(action_probabilities[index]);
+
+            //     index++;
+            //     vecIndex++;
+            // }
+
+            // Fill the arrays with the next 40,000 cells, neighbour directions, and action probabilities
+            for (int i = 0; i < 40000; i++) {
+                stepCtx.cells[i] = cells[index];
+                stepCtx.neighbour_dirs[i] = neighbours[index];
+                stepCtx.action_probabilities[i] = action_probabilities[index];
+
+                index++;
+            }
+
+            // index += 40000;
+            // vecIndex += 40000;
+
+            std::memcpy(metalCtx.stepGridBuffer->contents(), grid, sizeof(int) * 40000);
+
+            metalStep(metalCtx, stepCtx, mu, sigma, epsilon, grid);
+
+            std::memcpy(grid, metalCtx.stepGridBuffer->contents(), sizeof(int) * 40000);
+
+            n += 40000; // Increment n by the number of cells processed in the step
         }
     }
 

@@ -29,16 +29,14 @@ void plot_densities(const std::vector<double>& steps, const std::vector<double>&
 }
 
 // https://github.com/lava/matplotlib-cpp/blob/master/examples/imshow.cpp
-void plot_snapshot(const int grid[200][200], int L, int mcs) {
+void plot_snapshot(const int grid[40000], int L, int mcs) {
     plt::figure_size(2000, 2000);
     plt::tight_layout();
 
     // Flatten the grid into a 1D vector of floats
     std::vector<float> flatGrid(L * L);
-    for (int i = 0; i < L; i++) {
-        for (int j = 0; j < L; j++) {
-            flatGrid[i * L + j] = static_cast<float>(grid[i][j]);
-        }
+    for (int i = 0; i < L * L; i++) {
+        flatGrid[i] = static_cast<float>(grid[i]);
     }
 
     // Pointer to the flattened grid data
