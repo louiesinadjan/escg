@@ -3,7 +3,7 @@
 #include <vector>
 #include <cmath>
 #include <filesystem> 
-#include "simulation.hpp" // Include for Species and grid data
+
 
 namespace plt = matplotlibcpp;
 

@@ -24,8 +24,8 @@ BUILD_DIR = build
 OBJ_DIR = $(BUILD_DIR)/objs
 
 # Source files
-SRCS = $(SRC_DIR)/metal-escg.cpp $(SRC_DIR)/timer.cpp $(SRC_DIR)/simulation.cpp $(SRC_DIR)/visualise.cpp
-OBJS = $(OBJ_DIR)/metal-escg.o $(OBJ_DIR)/timer.o $(OBJ_DIR)/simulation.o $(OBJ_DIR)/visualise.o
+SRCS = $(SRC_DIR)/metal-escg.cpp $(SRC_DIR)/timer.cpp $(SRC_DIR)/visualise.cpp
+OBJS = $(OBJ_DIR)/metal-escg.o $(OBJ_DIR)/timer.o $(OBJ_DIR)/visualise.o
 
 # Metal Shaders
 METAL_SHADERS = random.metal densities.metal step.metal
