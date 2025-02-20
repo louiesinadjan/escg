@@ -53,7 +53,9 @@
         "vector": "cpp",
         "numeric": "cpp",
         "random": "cpp",
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "set": "cpp",
+        "unordered_set": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabledIfIncludesResolve",
     "C_Cpp.default.compilerPath": "/usr/bin/g++"

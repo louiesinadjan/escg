@@ -1,6 +1,6 @@
 # Compiler and flags
 CXX = clang++
-CXXFLAGS = -std=c++17 -Wall -Wextra -I./metal-cpp -fobjc-arc
+CXXFLAGS = -std=c++17 -Wall -Wextra -I./metal-cpp -fobjc-arc -fsanitize=address -g
 
 # Attempt to use --embed; if unavailable, fallback to normal --ldflags
 EMBED_LDFLAGS = $(shell (python3-config --ldflags --embed 2>/dev/null || python3-config --ldflags))
@@ -24,8 +24,8 @@ BUILD_DIR = build
 OBJ_DIR = $(BUILD_DIR)/objs
 
 # Source files
-SRCS = $(SRC_DIR)/metal-escg.cpp $(SRC_DIR)/timer.cpp $(SRC_DIR)/visualise.cpp
-OBJS = $(OBJ_DIR)/metal-escg.o $(OBJ_DIR)/timer.o $(OBJ_DIR)/visualise.o
+SRCS = $(SRC_DIR)/metal-escg.cpp $(SRC_DIR)/visualise.cpp
+OBJS = $(OBJ_DIR)/metal-escg.o $(OBJ_DIR)/visualise.o
 
 # Metal Shaders
 METAL_SHADERS = random.metal densities.metal step.metal
@@ -41,8 +41,8 @@ all: $(TARGET)
 # Rule to create the output binary
 $(TARGET): $(OBJS) $(METAL_LIB)
 	@mkdir -p $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) $(INCLUDE_FLAGS) -o $@ $(OBJS) $(LDFLAGS)
-	@echo "Built $(TARGET)"
+	$(CXX) $(CXXFLAGS) $(INCLUDE_FLAGS) -fsanitize=address -g -o $@ $(OBJS) $(LDFLAGS)
+	@echo "Built $(TARGET) with AddressSanitizer"
 
 # Rule to compile Metal shaders into metallib
 $(METAL_LIB): $(METAL_AIR_FILES)
