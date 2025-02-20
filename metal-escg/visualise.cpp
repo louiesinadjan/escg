@@ -29,7 +29,7 @@ void plot_densities(const std::vector<double>& steps, const std::vector<double>&
 }
 
 // https://github.com/lava/matplotlib-cpp/blob/master/examples/imshow.cpp
-void plot_snapshot(const int grid[40000], int L, int mcs) {
+void plot_snapshot(const int* grid, int L, int mcs) {
     plt::figure_size(2000, 2000);
     plt::tight_layout();
 

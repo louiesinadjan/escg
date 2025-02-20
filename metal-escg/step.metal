@@ -36,12 +36,12 @@ kernel void step(
     const device float *action_probabilities [[ buffer(2) ]],
     constant float &mu [[ buffer(3) ]], 
     constant float &sigma [[ buffer(4) ]], 
-    constant float &epsilon [[ buffer(5) ]], 
+    constant int &L [[ buffer(5) ]], 
     device atomic_int *grid [[ buffer(6) ]],
     uint id [[ thread_position_in_grid ]]) {
 
     // Precompute the offsets for each direction
-    const int L = 200;
+    const int N = L * L;
 
     const int offsets[4][2] = {
         {-1, 0}, // Up
@@ -50,11 +50,14 @@ kernel void step(
         {0, 1}   // Right
     };
 
-    for (int i = 0; i < 40; i++) {
-        // Get the flattened index of the current cell.
-        int cell_index = cells[id * 40 + i];
+    int cellsPerThread = N / 1000;
 
-        if (cell_index == -1 || cell_index >= L * L) {
+    for (int i = 0; i < cellsPerThread; i++) {
+
+        // Get the flattened index of the current cell.
+        int cell_index = cells[id * cellsPerThread + i];
+
+        if (cell_index == -1 || cell_index >= N) {
             return;
         }
 
@@ -63,11 +66,11 @@ kernel void step(
         
         // Compute the action based on the action probability.
         // (Assume an 'action' function exists that returns an int (e.g. 1,2,3))
-        int act = action(action_probabilities[id * 40 + i], mu, sigma);
+        int act = action(action_probabilities[id * cellsPerThread + i], mu, sigma);
         
         // Get the neighbor direction:
         // 0 = up, 1 = down, 2 = left, 3 = right.
-        int n_dir = neighbour_dirs[id * 40 + i];
+        int n_dir = neighbour_dirs[id * cellsPerThread + i];
         
         // Convert the 1D cell index to 2D coordinates.
         int row = cell_index / L;

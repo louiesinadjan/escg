@@ -75,9 +75,9 @@ uint extract(thread MT19937 &mt) {
     return y;
 }
 
-/// Returns a random integer in [0, 39999]
-uint random_int_0_39999(thread MT19937 &mt) {
-    return extract(mt) % 40000;
+/// Returns a random integer in [0, N - 1]
+uint random_cell(thread MT19937 &mt, int N) {
+    return extract(mt) % N;
 }
 
 /// Returns a random integer in [0, 3]
@@ -94,6 +94,7 @@ float random_float_0_1(thread MT19937 &mt) {
 /// Kernel for generating random cell indices
 kernel void mt_random_cells(const device uint *seeds [[ buffer(0) ]],
                             device uint *results [[ buffer(1) ]],
+                            constant int &N [[ buffer(2) ]], 
                             uint id [[ thread_position_in_grid ]]) {
     thread MT19937 mt;
     seed_mt(mt, seeds[id], id);
@@ -102,7 +103,7 @@ kernel void mt_random_cells(const device uint *seeds [[ buffer(0) ]],
     for (uint i = 0; i < 50000; ++i) { extract(mt); }
 
     for (uint i = 0; i < 10000; ++i) {
-        results[id * 10000 + i] = random_int_0_39999(mt);
+        results[id * 10000 + i] = random_cell(mt, N);
     }
 }
 
