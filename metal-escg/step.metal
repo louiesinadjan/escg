@@ -37,17 +37,22 @@ kernel void step(
     constant float &mu [[ buffer(3) ]], 
     constant float &sigma [[ buffer(4) ]], 
     constant int &L [[ buffer(5) ]], 
-    device atomic_int *grid [[ buffer(6) ]],
+    constant int &H [[ buffer(6) ]], 
+    device atomic_int *grid [[ buffer(7) ]],
     uint id [[ thread_position_in_grid ]]) {
 
     // Precompute the offsets for each direction
-    const int N = L * L;
+    const int N = L * H;
 
-    const int offsets[4][2] = {
+    const int offsets[8][2] = {
         {-1, 0}, // Up
         {1, 0},  // Down
         {0, -1}, // Left
-        {0, 1}   // Right
+        {0, 1},   // Right
+        {-1, -1}, // Up-Left
+        {-1, 1}, // Up-Right 
+        {1, -1}, // Down-Left
+        {1, 1} // Down-Right
     };
 
     int cellsPerThread = N / 1000;
@@ -77,7 +82,7 @@ kernel void step(
         int col = cell_index % L;
         
         // Compute the new row and column based on the neighbor direction with wrapping.
-        int n_row = (row + offsets[n_dir][0] + L) % L;
+        int n_row = (row + offsets[n_dir][0] + H) % H;  // Wrap within height H
         int n_col = (col + offsets[n_dir][1] + L) % L;
         
         // Convert the new row and column back into a 1D index.

@@ -85,6 +85,11 @@ uint random_int_0_3(thread MT19937 &mt) {
     return extract(mt) % 4;
 }
 
+/// Returns a random integer in [0, 7]
+uint random_int_0_7(thread MT19937 &mt) {
+    return extract(mt) % 8;
+}
+
 /// Returns a random float in [0, 1]
 float random_float_0_1(thread MT19937 &mt) {
     return static_cast<float>(extract(mt)) / 4294967295.0f;
@@ -92,10 +97,11 @@ float random_float_0_1(thread MT19937 &mt) {
 
 
 /// Kernel for generating random cell indices
-kernel void mt_random_cells(const device uint *seeds [[ buffer(0) ]],
-                            device uint *results [[ buffer(1) ]],
-                            constant int &N [[ buffer(2) ]], 
-                            uint id [[ thread_position_in_grid ]]) {
+kernel void mt_random_cells(
+    const device uint *seeds [[ buffer(0) ]],
+    device uint *results [[ buffer(1) ]],
+    constant int &N [[ buffer(2) ]], 
+    uint id [[ thread_position_in_grid ]]) {
     thread MT19937 mt;
     seed_mt(mt, seeds[id], id);
 
@@ -108,25 +114,36 @@ kernel void mt_random_cells(const device uint *seeds [[ buffer(0) ]],
 }
 
 /// Kernel for generating random neighbour directions
-kernel void mt_random_neighbours(const device uint *seeds [[ buffer(0) ]],
-                                 device uint *results [[ buffer(1) ]],
-                                 uint id [[ thread_position_in_grid ]]) {
+kernel void mt_random_neighbours(
+    const device uint *seeds [[ buffer(0) ]],
+    device uint *results [[ buffer(1) ]],
+    constant bool &moore [[ buffer(2) ]],
+    uint id [[ thread_position_in_grid ]]) {
+
     thread MT19937 mt;
     seed_mt(mt, seeds[id], id);
-
     // Burn-in of 1,000,000 iterations
     // Lower degrees of freedom (0-3) so more burn-in is required
     for (uint i = 0; i < 1000000; ++i) { extract(mt); }
 
-    for (uint i = 0; i < 10000; ++i) {
-        results[id * 10000 + i] = random_int_0_3(mt);
+    if(!moore){
+        for (uint i = 0; i < 10000; ++i) {
+            results[id * 10000 + i] = random_int_0_3(mt);
+        }
+    } else {
+        for (uint i = 0; i < 10000; ++i) {
+            results[id * 10000 + i] = random_int_0_7(mt);
+        }
     }
+    
 }
 
 /// Kernel for generating random floating-point numbers in [0, 1]
-kernel void mt_random_actions(const device uint *seeds [[ buffer(0) ]],
-                              device float *results [[ buffer(1) ]],
-                              uint id [[ thread_position_in_grid ]]) {
+kernel void mt_random_actions(
+    const device uint *seeds [[ buffer(0) ]],                          
+    device float *results [[ buffer(1) ]],
+    uint id [[ thread_position_in_grid ]]) {
+
     thread MT19937 mt;
     seed_mt(mt, seeds[id], id);
 

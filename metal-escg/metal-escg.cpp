@@ -138,7 +138,7 @@ Params parseArgs(int argc, char* argv[]) {
 // Initialisation: Create device, load library, compile pipelines, create buffers
 //------------------------------------------------------------------------------
 bool initMetalContext(MetalContext& ctx, int N, int randomNums) {
-    ctx.numRandomNumbers = randomNums;           // 100,000,000  random numbers per shader
+    ctx.numRandomNumbers = randomNums;          // 100,000,000  random numbers per shader
     ctx.threads = ctx.numRandomNumbers / 10000; // 10,000 numbers per thread
 
     ctx.autoreleasePool = NS::AutoreleasePool::alloc()->init();
@@ -218,7 +218,7 @@ bool initMetalContext(MetalContext& ctx, int N, int randomNums) {
 //------------------------------------------------------------------------------
 // Refresh: Use existing pipeline and buffer objects to generate new random numbers
 //------------------------------------------------------------------------------
-void refreshRandomNumbers(MetalContext& ctx, float* action_probabilities, uint32_t* cells, uint32_t* neighbours, int N) {
+void refreshRandomNumbers(MetalContext& ctx, float* action_probabilities, uint32_t* cells, uint32_t* neighbours, int N, bool moore) {
     std::cout << "Refreshing random numbers" << std::endl;
 
     // Setup common dispatch parameters
@@ -256,6 +256,7 @@ void refreshRandomNumbers(MetalContext& ctx, float* action_probabilities, uint32
     encoder->setComputePipelineState(ctx.pipelineStateNeighbours);
     encoder->setBuffer(ctx.seedBuffer, 0, 0);
     encoder->setBuffer(ctx.resultBufferNeighbours, 0, 1);
+    encoder->setBytes(&moore, sizeof(bool), 2); // Moore or Von Neumann neighbourhood
     encoder->dispatchThreads(gridSize, threadGroupSize);
     encoder->endEncoding();
     commandBuffer->commit();
@@ -384,6 +385,8 @@ void show(GridContext& gridCtx) { plot_densities(gridCtx.steps, gridCtx.densityR
 //------------------------------------------------------------------------------
 void initMetalStep(MetalContext& ctx, StepContext& stepCtx, int N) {
     NS::Error* error = nullptr;
+
+    // Load the step function from the library
     MTL::Function* stepFunction = ctx.library->newFunction(NS::String::string("step", NS::UTF8StringEncoding));
     if (!stepFunction) {
         std::cerr << "Error: Failed to find step function in Metal library." << std::endl;
@@ -402,7 +405,7 @@ void initMetalStep(MetalContext& ctx, StepContext& stepCtx, int N) {
     ctx.stepGridBuffer = ctx.device->newBuffer(sizeof(int) * N, MTL::ResourceStorageModeShared);
 }
 
-void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, int N, int L, int* grid) {
+void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, int N, Params& p, int* grid) {
     MTL::CommandBuffer* commandBuffer = ctx.commandQueue->commandBuffer();
     MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
 
@@ -421,10 +424,11 @@ void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, i
     // Using `setBytes()` for scalar values (floats)
     encoder->setBytes(&mu, sizeof(float), 3);
     encoder->setBytes(&sigma, sizeof(float), 4);
-    encoder->setBytes(&L, sizeof(int), 5);
+    encoder->setBytes(&p.L, sizeof(int), 5);
+    encoder->setBytes(&p.H, sizeof(int), 6);
 
     // Set the grid buffer
-    encoder->setBuffer(ctx.stepGridBuffer, 0, 6);
+    encoder->setBuffer(ctx.stepGridBuffer, 0, 7);
 
     MTL::Size threadsPerGrid = MTL::Size(1000, 1, 1); // 40,000 cells, 1,000 threads --> 40 cells per thread
     MTL::Size threadGroupSize = MTL::Size(ctx.pipelineStateStep->maxTotalThreadsPerThreadgroup(), 1, 1);
@@ -492,8 +496,10 @@ int main(int argc, const char* argv[]) {
     std::cout << "Print Frequency: " << params.printFrequency << "\n";
 
     int MCS = params.MCS;
-    int L = params.L; // Length of lattice
-    int N = L * L;    // Elementary time steps = total number of cells
+    int L = params.L;                                      // Length of lattice
+    int H = params.H;                                      // Height of lattice
+    int N = L * H;                                         // Elementary time steps = total number of cells
+    bool moore = params.neighbourhood == 8 ? true : false; // Moore neighbourhood if true, Von Neumann if false
 
     // ------------------- Metal Parameters -------------------
 
@@ -509,7 +515,7 @@ int main(int argc, const char* argv[]) {
         return -1;
     }
 
-    refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours, N);
+    refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours, N, moore);
 
     // ------------------- Simulation Parameters -------------------
 
@@ -552,14 +558,14 @@ int main(int argc, const char* argv[]) {
     for (int mcs = 0; mcs <= MCS; mcs++) {                                 // Monte Carlos
         densities(grid, N, mcs, gridCtx, metalCtx, params.printFrequency); // Every MCS, call densities to add to density vectors for visualisation after simulation
         if (mcs == 0 || mcs == 2000 || mcs == 6000 || mcs == 20000 || mcs == 100000) {
-            plot_snapshot(grid, L, mcs);
+            plot_snapshot(grid, L, H, moore, mcs);
         }
 
         // Fill the arrays with the next N cells, neighbour directions, and action probabilities
         for (int i = 0; i < N; i++) {
             if (index >= numRandomNumbers) {
-                refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours, N); // Fill random numbers
-                index = 0;                                                                  // Reset index after refreshing random numbers
+                refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours, N, moore); // Fill random numbers
+                index = 0;                                                                         // Reset index after refreshing random numbers
             }
 
             stepCtx.cells[i] = cells[index];
@@ -570,7 +576,7 @@ int main(int argc, const char* argv[]) {
         }
 
         std::memcpy(metalCtx.stepGridBuffer->contents(), grid, sizeof(int) * N);
-        metalStep(metalCtx, stepCtx, mu, sigma, N, L, grid);
+        metalStep(metalCtx, stepCtx, mu, sigma, N, params, grid);
         std::memcpy(grid, metalCtx.stepGridBuffer->contents(), sizeof(int) * N);
     }
 
