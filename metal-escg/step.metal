@@ -107,4 +107,3 @@ kernel void step(
         }
     }
 }
-
