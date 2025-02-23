@@ -34,7 +34,7 @@ bool dominates(int specie, int neighbour) {
 // Helper function to wrap around the grid when selecting a neighbour
 int wrap(int index, int L) { return (index + L) % L; }
 
-void step(int L, int grid[200][200], float mu, float sigma, float epsilon, int& migration, int& reproduction, int& interaction) {
+void step(int L, int grid[200][200], float mu, float sigma, float epsilon) {
     static std::random_device rd;
     static std::mt19937 gen(rd());                                              // Random number generator
     std::uniform_int_distribution<int> dist_pos(0, L - 1);                      // Random position in grid
@@ -58,7 +58,6 @@ void step(int L, int grid[200][200], float mu, float sigma, float epsilon, int& 
     // RPSLS Interaction, Reproduction, Migration actions with probabilities mu, sigma, epsilon
     if (random_action < epsilon) { // Migration
         std::swap(grid[i][j], grid[ni][nj]);
-        migration++;
     } else if (random_action < epsilon + mu) {       // RPSLS Interaction selected
         if (specie != neighbour && neighbour != 0) { // Empty neighbours do not partake in RPSLS interaction
             if (dominates(specie, neighbour)) {      // Neighbour dominates, specie becomes empty
@@ -66,12 +65,10 @@ void step(int L, int grid[200][200], float mu, float sigma, float epsilon, int& 
             } else if (dominates(neighbour, specie)) { // Specie dominates, neighbour becomes empty
                 grid[i][j] = 0;
             }
-            interaction++;
         }
     } else if (random_action < epsilon + mu + sigma) { // Reproduction selected
         if (neighbour == 0) {                          // Only possible if the neighbour is empty and the specie is not
             grid[ni][nj] = specie;
-            reproduction++;
         }
     } else {
         // Do nothing - step completed

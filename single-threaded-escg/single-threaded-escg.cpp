@@ -21,7 +21,7 @@ int main(int argc, const char* argv[]) {
     float sigma = 1;           // Reproduction
     float epsilon = 2 * M * N; // Migration
 
-    int migration = 0, reproduction = 0, interaction = 0;
+
 
     // Set up a random number generator
     std::random_device rd;
@@ -45,16 +45,13 @@ int main(int argc, const char* argv[]) {
         }
 
         for (int n = 0; n < N; n++) { // Elementary Time Steps
-            step(L, grid, mu, sigma, epsilon, migration, reproduction, interaction);
+            step(L, grid, mu, sigma, epsilon);
         }
     }
 
     show(); // Plot density against steps
 
     std::cout << "Simulation Complete." << std::endl;
-    std::cout << "Migration count: " << migration << std::endl;
-    std::cout << "Reproduction count: " << reproduction << std::endl;
-    std::cout << "Interaction count: " << interaction << std::endl;
 
     return 0;
 }

@@ -29,13 +29,13 @@ void plot_densities(const std::vector<double>& steps, const std::vector<double>&
 }
 
 // https://github.com/lava/matplotlib-cpp/blob/master/examples/imshow.cpp
-void plot_snapshot(const int grid[40000], int L, int mcs) {
+void plot_snapshot(const int* grid, int L, int H, bool moore, int mcs) {
     plt::figure_size(2000, 2000);
     plt::tight_layout();
 
     // Flatten the grid into a 1D vector of floats
-    std::vector<float> flatGrid(L * L);
-    for (int i = 0; i < L * L; i++) {
+    std::vector<float> flatGrid(L * H);
+    for (int i = 0; i < H * L; i++) {
         flatGrid[i] = static_cast<float>(grid[i]);
     }
 
@@ -44,11 +44,16 @@ void plot_snapshot(const int grid[40000], int L, int mcs) {
 
     // Plot using imshow
     plt::figure();
-    plt::imshow(gridPtr, L, L, 1);
+    plt::imshow(gridPtr, H, L, 1);
 
-    plt::title("Snapshot at MCS = " + std::to_string(mcs));
+    // plt::title("Snapshot at MCS = " + std::to_string(mcs));
 
     // plt::show();
+    std::string length = "l" + std::to_string(L);
+    std::string height = "h" + std::to_string(H);
+    std::string neighbourhood = moore ? "moore" : "vonNeumann";
+    std::string mcs_str = "mcs" + std::to_string(mcs);
 
-    plt::save("snapshot_" + std::to_string(mcs) + ".png");
+    plt::title("Length = " + std::to_string(L) + ", Height = " + std::to_string(H) + ", Neighbourhood = " + neighbourhood + ", MCS = " + std::to_string(mcs));
+    plt::save("snapshot_" + length + "_" + height + "_" + neighbourhood + "_" + mcs_str + ".png");
 }
