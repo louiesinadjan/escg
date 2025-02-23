@@ -16,6 +16,6 @@ enum class Species { EMPTY, ROCK, PAPER, SCISSORS, LIZARD, SPOCK };
 // Function declarations
 bool dominates(int specie, int neighbour);                                                                                       // RPSLS interaction
 int wrap(int index, int L);                                                                                                      // Helper function to make the grid like a torus
-void step(int L, int grid[200][200], float mu, float sigma, float epsilon, int& migration, int& reproduction, int& interaction); // Elementary time step
+void step(int L, int grid[200][200], float mu, float sigma, float epsilon); // Elementary time step
 void densities(int grid[200][200], int L, int mcs);                                                                              // RPSLS densities
 void show();                                                                                                                     // Show visualisations
