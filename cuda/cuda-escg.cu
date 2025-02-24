@@ -131,7 +131,7 @@ int main(int argc, const char* argv[]) {
 
     // Allocate memory on GPU
     uint index = 0;
-    const uint numRandomNumbers = 1e9;
+    const uint numRandomNumbers = 1e7;
     float* d_action_probabilities;
     uint32_t* d_cells;
     uint32_t* d_neighbours;
