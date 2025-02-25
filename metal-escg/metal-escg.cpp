@@ -9,8 +9,7 @@
 #include <getopt.h>
 #include <iostream>
 #include <random>
-// #include <unordered_set>
-// #include <vector>
+#include <vector>
 
 //------------------------------------------------------------------------------
 // Structure to hold the input parameters of the simulation
@@ -85,7 +84,6 @@ struct StepContext {
 //------------------------------------------------------------------------------
 // Parse command line arguments
 //------------------------------------------------------------------------------
-
 Params parseArgs(int argc, char* argv[]) {
     Params params; // Uses default values
 
@@ -405,6 +403,9 @@ void initMetalStep(MetalContext& ctx, StepContext& stepCtx, int N) {
     ctx.stepGridBuffer = ctx.device->newBuffer(sizeof(int) * N, MTL::ResourceStorageModeShared);
 }
 
+// ------------------------------------------------------------------------------
+// Metal step shader
+// ------------------------------------------------------------------------------
 void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, int N, Params& p, int* grid) {
     MTL::CommandBuffer* commandBuffer = ctx.commandQueue->commandBuffer();
     MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();

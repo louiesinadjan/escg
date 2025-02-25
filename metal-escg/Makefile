@@ -16,7 +16,8 @@ INCLUDE_FLAGS = -Imetal-escg/external/matplotlib-cpp \
 
 # Some systems require -undefined dynamic_lookup to load Python symbols at runtime on macOS
 # We combine that with the embed or fallback flags.
-LDFLAGS = $(EMBED_LDFLAGS) -undefined dynamic_lookup -framework Metal -framework MetalKit -framework AppKit -framework Foundation -framework QuartzCore -framework CoreGraphics
+# LDFLAGS = $(EMBED_LDFLAGS) -undefined dynamic_lookup -framework Metal -framework MetalKit -framework AppKit -framework Foundation -framework QuartzCore -framework CoreGraphics
+LDFLAGS = $(EMBED_LDFLAGS) -undefined dynamic_lookup -framework Metal -framework Foundation -framework CoreGraphics
 
 # Directories
 SRC_DIR = .
