@@ -6,8 +6,9 @@
 //
 
 #pragma once
-#include <AppKit/AppKit.hpp>
-#include <Metal/Metal.hpp>
-#include <MetalKit/MetalKit.hpp>
-#include <Foundation/Foundation.hpp>
-#include <QuartzCore/QuartzCore.hpp>
+#include <Foundation/Foundation.hpp> // For NS::String
+#include <Metal/Metal.hpp>           // For MTL::Device, MTL::CommandQueue, MTL::Library, MTL::ComputePipelineState, MTL::Buffer
+
+// Include CoreGraphics in Makefile or else the following error will occur:
+//      Error: No Metal device available.
+//      Failed to initialise Metal context.
