@@ -4,7 +4,7 @@ CXX = g++
 
 # Compiler Flags
 CXXFLAGS = -std=c++17 -Wall -Wextra -Werror
-NVCCFLAGS = -std=c++14 -Xcompiler "-Wall -Wextra -Werror"
+NVCCFLAGS = -std=c++14 -Xcompiler "-Wall -Wextra -Werror" -G
 
 # Executable Name
 TARGET = cuda-escg
