@@ -7,9 +7,6 @@
 #include <sstream>
 #include <vector>
 
-//------------------------------------------------------------------------------
-// Structure to hold the input parameters of the simulation
-//------------------------------------------------------------------------------
 struct Params {
     int MCS = 100000;         // Monte Carlo Steps
     int L = 200;              // Length of lattice
@@ -19,9 +16,6 @@ struct Params {
     int printFrequency = 200; // MCS frequency to print snapshots
 };
 
-//------------------------------------------------------------------------------
-// Structure to hold the grid data and visualisation vectors
-//------------------------------------------------------------------------------
 struct GridContext {
     int emptyCounter;
     int rockCounter;
@@ -38,18 +32,12 @@ struct GridContext {
     std::vector<double> densitySpock;
 };
 
-//------------------------------------------------------------------------------
-// Structure to hold the step data to pass into the CUDA Kernel
-//------------------------------------------------------------------------------
 struct StepContext {
     int* cells;
     int* neighbour_dirs;
     float* action_probabilities;
 };
 
-//------------------------------------------------------------------------------
-// Parse command line arguments
-//------------------------------------------------------------------------------
 Params parseArgs(int argc, char* argv[]) {
     Params params; // Uses default values
 
@@ -98,9 +86,21 @@ Params parseArgs(int argc, char* argv[]) {
     return params;
 }
 
-//------------------------------------------------------------------------------
-// Exports the grid to a CSV file for visualisation in Python
-//------------------------------------------------------------------------------
+void exportDensitiesToCSV(GridContext& gridCtx) {
+    std::ofstream file("densities.csv");
+    if (!file) {
+        std::cerr << "Error: Could not open file densities.csv for writing." << std::endl;
+        return;
+    }
+
+    file << "MCS,ROCK,PAPER,SCISSORS,LIZARD,SPOCK\n";
+    for (uint i = 0; i < gridCtx.steps.size(); i++) {
+        file << gridCtx.steps[i] << "," << gridCtx.densityRock[i] << "," << gridCtx.densityPaper[i] << "," << gridCtx.densityScissors[i] << "," << gridCtx.densityLizard[i] << "," << gridCtx.densitySpock[i] << "\n";
+    }
+
+    file.close();
+}
+
 void exportGridToCSV(int* h_grid, Params p, int mcs) {
     std::ostringstream filename;
     std::string nbrhd = p.neighbourhood == 4 ? "nbrhdVN" : "nbrhdM";
@@ -155,7 +155,7 @@ __global__ void refreshRandomNumbers(float* action_probabilities, int* cells, in
 // Host function to call the CUDA kernel - Copies random numbers from device to host arrays
 //------------------------------------------------------------------------------
 void generateRandomNumbers(float* h_action_probabilities, int* h_cells, int* h_neighbours, float* d_action_probabilities, int* d_cells, int* d_neighbours, int N, int numRandomNumbers, bool moore) {
-    std::cout<< "\nRefreshing random numbers..." << std::endl;
+    std::cout << "\nRefreshing random numbers..." << std::endl;
 
     int numThreads = numRandomNumbers / 10000;                                // Reduced thread count
     int threadsPerBlock = 256;                                                // Recommended block size
@@ -385,21 +385,9 @@ __global__ void cuda_step(int* grid, int* cells, int* neighbour_dirs, float* act
     }
 }
 
-void step(int* h_grid, int* d_grid, int* step_cells, int* step_neighbour_dirs, float*& step_action_probabilities, float mu, float sigma, int L, int H) {
+void step(int* h_grid, int* d_grid, int* d_cells, int* d_neighbour_dirs, float* d_action_probabilities, float mu, float sigma, int L, int H) {
     int N = L * H;
     cudaMemcpy(d_grid, h_grid, N * sizeof(int), cudaMemcpyHostToDevice);
-
-    int *d_cells, *d_neighbour_dirs;
-    float* d_action_probabilities;
-
-    // Allocate in GPU memory to be used in kernel
-    cudaMalloc(&d_cells, N * sizeof(int));
-    cudaMalloc(&d_neighbour_dirs, N * sizeof(int));
-    cudaMalloc(&d_action_probabilities, N * sizeof(float));
-
-    cudaMemcpy(d_cells, step_cells, N * sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_neighbour_dirs, step_neighbour_dirs, N * sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_action_probabilities, step_action_probabilities, N * sizeof(float), cudaMemcpyHostToDevice);
 
     int threadsPerBlock = 256;
     int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
@@ -418,11 +406,6 @@ void step(int* h_grid, int* d_grid, int* step_cells, int* step_neighbour_dirs, f
 
     // Copy from device to host
     cudaMemcpy(h_grid, d_grid, N * sizeof(int), cudaMemcpyDeviceToHost);
-
-    // Free memory
-    cudaFree(d_cells);
-    cudaFree(d_neighbour_dirs);
-    cudaFree(d_action_probabilities);
 }
 
 int main(int argc, const char* argv[]) {
@@ -445,7 +428,9 @@ int main(int argc, const char* argv[]) {
     // Allocate memory on GPU
     int index = 0;
     // const int numRandomNumbers = 5e7; // 50 million random numbers - lowest value the the GPU does not time out
-    const int numRandomNumbers = 1e6;
+    // const int numRandomNumbers = 5e7; // this is possible with -G off
+    const int numRandomNumbers = 5e7; // 100 million random numbers
+
     // Device pointers
     float* d_action_probabilities;
     int* d_cells;
@@ -499,6 +484,15 @@ int main(int argc, const char* argv[]) {
     stepContext.neighbour_dirs = new int[N];
     stepContext.action_probabilities = new float[N];
 
+    int* d_step_cells;
+    int* d_step_neighbour_dirs;
+    float* d_step_action_probabilities;
+
+    // Allocate in GPU memory to be used in kernel
+    cudaMalloc(&d_step_cells, N * sizeof(int));
+    cudaMalloc(&d_step_neighbour_dirs, N * sizeof(int));
+    cudaMalloc(&d_step_action_probabilities, N * sizeof(float));
+
     GridContext gridContext;
 
     float M = 1e-6f; // Mobility 'since it is proportional to the typical area
@@ -542,9 +536,13 @@ int main(int argc, const char* argv[]) {
             index++;
         }
 
-        step(h_grid, d_grid, stepContext.cells, stepContext.neighbour_dirs, stepContext.action_probabilities, mu, sigma, params.L, params.H);
-        // initialiseGrid(d_grid, h_grid, N); // this works fine and doesn't cause CUDA errors
+        cudaMemcpy(d_step_cells, stepContext.cells, N * sizeof(int), cudaMemcpyHostToDevice);
+        cudaMemcpy(d_step_neighbour_dirs, stepContext.neighbour_dirs, N * sizeof(int), cudaMemcpyHostToDevice);
+        cudaMemcpy(d_step_action_probabilities, stepContext.action_probabilities, N * sizeof(float), cudaMemcpyHostToDevice);
+        step(h_grid, d_grid, d_step_cells, d_step_neighbour_dirs, d_step_action_probabilities, mu, sigma, params.L, params.H);
     }
+    exportDensitiesToCSV(gridContext);
+
     // ------------------- Free Memory -------------------
 
     // Grids
@@ -563,6 +561,9 @@ int main(int argc, const char* argv[]) {
     delete[] stepContext.cells;
     delete[] stepContext.neighbour_dirs;
     delete[] stepContext.action_probabilities;
+    cudaFree(d_step_cells);
+    cudaFree(d_step_neighbour_dirs);
+    cudaFree(d_step_action_probabilities);
 
     // Densities
     cudaFree(d_speciesCounts);
