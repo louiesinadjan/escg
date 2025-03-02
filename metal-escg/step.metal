@@ -37,13 +37,13 @@ kernel void step(
     constant float &mu [[ buffer(3) ]], 
     constant float &sigma [[ buffer(4) ]], 
     constant int &L [[ buffer(5) ]], 
-    constant int &H [[ buffer(6) ]], 
+    constant int &H [[ buffer(6) ]],
     device atomic_int *grid [[ buffer(7) ]],
     uint id [[ thread_position_in_grid ]]) {
 
-    // Precompute the offsets for each direction
     const int N = L * H;
 
+    // Precompute the offsets for each direction
     const int offsets[8][2] = {
         {-1, 0}, // Up
         {1, 0},  // Down
