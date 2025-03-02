@@ -1,1 +1,85 @@
-/Users/louiesinadjan/Documents/dissertation/buggy csvs/when 1e6
+MCS: 3
+Lattice Length: 200
+Lattice Height: 200
+Dimensions: 2
+Neighbourhood: 4
+Print Frequency: 1
+
+
+GPU Memory Available: 1269 MB
+Launching populateGrid with 157 blocks and 256 threads per block
+(h_grid in export) Grid[0]: 4,		mcs: 0
+
+Grid snapshot saved: l200_h200_nbrhdVN_mcs0.csv
+(before densities) Grid[0]: 4
+(in densities) Grid[0]: 4
+
+Population Densities at: 0
+EMPTY: 0
+ROCK: 20.155
+PAPER: 20.22
+SCISSORS: 19.4975
+LIZARD: 20.245
+SPOCK: 19.8825
+
+(before export) Grid[0]: 4
+(h_grid in export) Grid[0]: 4,		mcs: 0
+
+Grid snapshot saved: l200_h200_nbrhdVN_mcs0.csv
+(before step) Grid[0]: 4
+Launching cuda_step with 157 blocks and 256 threads per block
+(h_grid in step) Grid[0]: 4
+(before densities) Grid[0]: 4
+(in densities) Grid[0]: 4
+
+Population Densities at: 1
+EMPTY: 3.99684e+06
+ROCK: 0.2125
+PAPER: 3.99604e+06
+SCISSORS: 0.2125
+LIZARD: 3.99684e+06
+SPOCK: 0.2125
+
+(before export) Grid[0]: 4
+(h_grid in export) Grid[0]: 4,		mcs: 1
+
+Grid snapshot saved: l200_h200_nbrhdVN_mcs1.csv
+(before step) Grid[0]: 4
+Launching cuda_step with 157 blocks and 256 threads per block
+(h_grid in step) Grid[0]: 4
+(before densities) Grid[0]: 4
+(in densities) Grid[0]: 4
+
+Population Densities at: 2
+EMPTY: 3.99684e+06
+ROCK: 0.2125
+PAPER: 3.99604e+06
+SCISSORS: 0.2125
+LIZARD: 3.99684e+06
+SPOCK: 0.2125
+
+(before export) Grid[0]: 4
+(h_grid in export) Grid[0]: 4,		mcs: 2
+
+Grid snapshot saved: l200_h200_nbrhdVN_mcs2.csv
+(before step) Grid[0]: 4
+Launching cuda_step with 157 blocks and 256 threads per block
+(h_grid in step) Grid[0]: 4
+(before densities) Grid[0]: 4
+(in densities) Grid[0]: 4
+
+Population Densities at: 3
+EMPTY: 3.99684e+06
+ROCK: 0.2125
+PAPER: 3.99604e+06
+SCISSORS: 0.2125
+LIZARD: 3.99684e+06
+SPOCK: 0.2125
+
+(before export) Grid[0]: 4
+(h_grid in export) Grid[0]: 4,		mcs: 3
+
+Grid snapshot saved: l200_h200_nbrhdVN_mcs3.csv
+(before step) Grid[0]: 4
+Launching cuda_step with 157 blocks and 256 threads per block
+(h_grid in step) Grid[0]: 4

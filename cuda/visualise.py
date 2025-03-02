@@ -50,7 +50,7 @@ def visualise(directory=None):
 
         # Display the matrix with imshow
         im = ax.imshow(matrix, cmap=cmap, vmin=0, vmax=5)
-        ax.set_title("Matrix from {}".format(csv_file), fontsize=12)
+        ax.set_title("{}".format(csv_file), fontsize=12)
         ax.set_xlabel("Column Index")
         ax.set_ylabel("Row Index")
 
