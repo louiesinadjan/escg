@@ -6,6 +6,7 @@ bool dominates(int specie, int neighbour) {
     switch (specie) {
         case 1: // ROCK (crushes 3: SCISSORS, crushes 4: LIZARD)
             return neighbour == 4; // Absence of Rock - Scissors interaction
+            // return (neighbour == 3 || neighbour == 4);
         case 2: // PAPER (covers 1: ROCK, disproves 5: SPOCK)
             return (neighbour == 1 || neighbour == 5);
         case 3: // SCISSORS (cuts 2: PAPER, decapitates 4: LIZARD)
