@@ -1,0 +1,1 @@
+./run_trials.sh  844.57s user 3.72s system 732% cpu 1:55.88 total
