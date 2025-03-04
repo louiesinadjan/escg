@@ -16,5 +16,5 @@ void plot_densities(const std::vector<double>& steps,
                     const std::vector<double>& densitySpock);
 
 // Function to plot a snapshot of the grid at a given Monte Carlo step
-void plot_snapshot(const int* grid, int L, int H, bool moore, int mcs);
+void plot_snapshot(const int* grid, int L, int H, bool moore, int mcs, float mobility);
 

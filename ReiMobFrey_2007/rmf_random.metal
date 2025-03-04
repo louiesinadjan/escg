@@ -97,9 +97,9 @@ float random_float_0_1(thread MT19937 &mt) {
 
 
 /// Kernel for generating random cell indices
-kernel void mt_random_cells(
-    const device uint *seeds [[ buffer(0) ]],
-    device uint *results [[ buffer(1) ]],
+kernel void rmf_mt_random_cells(
+    const device uint32_t *seeds [[ buffer(0) ]],
+    device uint32_t *results [[ buffer(1) ]],
     constant int &N [[ buffer(2) ]], 
     uint id [[ thread_position_in_grid ]]) {
     thread MT19937 mt;
@@ -114,9 +114,9 @@ kernel void mt_random_cells(
 }
 
 /// Kernel for generating random neighbour directions
-kernel void mt_random_neighbours(
-    const device uint *seeds [[ buffer(0) ]],
-    device uint *results [[ buffer(1) ]],
+kernel void rmf_mt_random_neighbours(
+    const device uint32_t *seeds [[ buffer(0) ]],
+    device uint32_t *results [[ buffer(1) ]],
     constant bool &moore [[ buffer(2) ]],
     uint id [[ thread_position_in_grid ]]) {
 
@@ -139,8 +139,8 @@ kernel void mt_random_neighbours(
 }
 
 /// Kernel for generating random floating-point numbers in [0, 1]
-kernel void mt_random_actions(
-    const device uint *seeds [[ buffer(0) ]],                          
+kernel void rmf_mt_random_actions(
+    const device uint32_t *seeds [[ buffer(0) ]],                          
     device float *results [[ buffer(1) ]],
     uint id [[ thread_position_in_grid ]]) {
 

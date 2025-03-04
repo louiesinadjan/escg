@@ -2,10 +2,10 @@
 using namespace metal;
 
  // Species dominates neighbour? 
-bool dominates(int specie, int neighbour) {
+bool rmf_dominates(int specie, int neighbour) {
     switch (specie) {
         case 1: // ROCK (crushes 3: SCISSORS, crushes 4: LIZARD)
-            return neighbour == 4; // Absence of Rock - Scissors interaction
+            return (neighbour == 3 || neighbour == 4); // Absence of Rock - Scissors interaction
         case 2: // PAPER (covers 1: ROCK, disproves 5: SPOCK)
             return (neighbour == 1 || neighbour == 5);
         case 3: // SCISSORS (cuts 2: PAPER, decapitates 4: LIZARD)
@@ -30,7 +30,7 @@ int action(float action_prob, float mu, float sigma) {
 }
 
 // cells[i] will be processed with neighbour_dirs[i] and action_probabilities[i]
-kernel void step(
+kernel void rmf_step(
     const device int *cells [[ buffer(0) ]], 
     const device int *neighbour_dirs [[ buffer(1) ]],
     const device float *action_probabilities [[ buffer(2) ]],
@@ -90,9 +90,9 @@ kernel void step(
         int neighbour_specie = atomic_load_explicit(&grid[neighbour_index], memory_order_relaxed);
         
         if (act == 1) { // Interaction: apply the dominance rules
-            if (dominates(specie, neighbour_specie)) {
+            if (rmf_dominates(specie, neighbour_specie)) {
                 atomic_store_explicit(&grid[neighbour_index], 0, memory_order_relaxed); // Remove neighbour
-            } else if (dominates(neighbour_specie, specie)) {
+            } else if (rmf_dominates(neighbour_specie, specie)) {
                 atomic_store_explicit(&grid[cell_index], 0, memory_order_relaxed); // Remove self
             }
         } else if (act == 2) { // Reproduction: if one of the cells is empty, copy the nonempty specie

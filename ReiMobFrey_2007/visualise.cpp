@@ -1,4 +1,5 @@
 #include "visualise.hpp"
+#include <sstream>
 
 void plot_densities(const std::vector<double>& steps, const std::vector<double>& densityRock, const std::vector<double>& densityPaper, const std::vector<double>& densityScissors,
                     const std::vector<double>& densityLizard, const std::vector<double>& densitySpock) {
@@ -29,7 +30,7 @@ void plot_densities(const std::vector<double>& steps, const std::vector<double>&
 }
 
 // https://github.com/lava/matplotlib-cpp/blob/master/examples/imshow.cpp
-void plot_snapshot(const int* grid, int L, int H, bool moore, int mcs) {
+void plot_snapshot(const int* grid, int L, int H, bool moore, int mcs, float mobility) {
     plt::figure_size(2000, 2000);
     plt::tight_layout();
 
@@ -51,9 +52,15 @@ void plot_snapshot(const int* grid, int L, int H, bool moore, int mcs) {
     // plt::show();
     std::string length = "l" + std::to_string(L);
     std::string height = "h" + std::to_string(H);
-    std::string neighbourhood = moore ? "moore" : "vonNeumann";
+    std::string neighbourhood = moore ? "Moore" : "VN";
     std::string mcs_str = "mcs" + std::to_string(mcs);
 
-    plt::title("Length = " + std::to_string(L) + ", Height = " + std::to_string(H) + ", Neighbourhood = " + neighbourhood + ", MCS = " + std::to_string(mcs));
-    plt::save("snapshot_" + length + "_" + height + "_" + neighbourhood + "_" + mcs_str + ".png");
+    // Convert to scientific notation
+    std::ostringstream oss;
+    oss.precision(2);
+    oss << std::scientific << mobility;
+    std::string mobility_str = "M" + oss.str();
+
+    plt::title(length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + mcs_str);
+    plt::save("snapshot_" + length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + mcs_str + ".png");
 }

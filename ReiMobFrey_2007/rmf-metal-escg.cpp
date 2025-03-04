@@ -11,9 +11,6 @@
 #include <random>
 #include <vector>
 
-//------------------------------------------------------------------------------
-// Structure to hold the input parameters of the simulation
-//------------------------------------------------------------------------------
 struct Params {
     int MCS = 100000;         // Monte Carlo Steps
     int L = 200;              // Length of lattice
@@ -21,11 +18,9 @@ struct Params {
     int dimensions = 2;       // 1D, 2D, 3D
     int neighbourhood = 4;    // Von Neumann (4-way), Moore (8-way)
     int printFrequency = 200; // MCS frequency to print snapshots
+    float mobility = 3e-6;    // Mobility
 };
 
-//------------------------------------------------------------------------------
-// Structure to hold Metal objects and configuration
-//------------------------------------------------------------------------------
 struct MetalContext {
     NS::AutoreleasePool* autoreleasePool;
     MTL::Device* device;
@@ -53,9 +48,6 @@ struct MetalContext {
     int numRandomNumbers;
 };
 
-//------------------------------------------------------------------------------
-// Structure to hold the grid data and visualisation vectors
-//------------------------------------------------------------------------------
 struct GridContext {
     int emptyCounter;
     int rockCounter;
@@ -72,22 +64,15 @@ struct GridContext {
     std::vector<double> densitySpock;
 };
 
-//------------------------------------------------------------------------------
-// Structure to hold the step data to pass into the Metal shader
-//------------------------------------------------------------------------------
 struct StepContext {
     int* cells;
     int* neighbour_dirs;
     float* action_probabilities;
 };
 
-//------------------------------------------------------------------------------
-// Parse command line arguments
-//------------------------------------------------------------------------------
 Params parseArgs(int argc, char* argv[]) {
     Params params; // Uses default values
 
-    // Define long options
     static struct option long_options[] = {
         {"mcs", required_argument, 0, 'm'},
         {"length", required_argument, 0, 'l'},
@@ -95,13 +80,14 @@ Params parseArgs(int argc, char* argv[]) {
         {"dimensions", required_argument, 0, 'd'},
         {"printFrequency", required_argument, 0, 'p'},
         {"neighbourhood", required_argument, 0, 'n'},
-        {0, 0, 0, 0} // Terminate options
+        {"mobility", required_argument, 0, 'M'},
+        {0, 0, 0, 0} // End of options
     };
 
     int opt;
     int option_index = 0;
 
-    while ((opt = getopt_long(argc, argv, "m:l:h:d:p:n:", long_options, &option_index)) != -1) {
+    while ((opt = getopt_long(argc, argv, "m:l:h:d:p:n:M:", long_options, &option_index)) != -1) {
         switch (opt) {
             case 'm':
                 params.MCS = std::stoi(optarg);
@@ -121,10 +107,14 @@ Params parseArgs(int argc, char* argv[]) {
             case 'n':
                 params.neighbourhood = std::stoi(optarg);
                 break;
+            case 'M':
+                params.mobility = std::stof(optarg); // **Allows scientific notation input**
+                break;
             default:
                 std::cerr << "Usage: " << argv[0]
                           << " [--mcs <MCS>] [--length <Lattice Length>] [--height <Lattice Height>] "
-                             "[--boundary <Boundary Type>] [--neighbourhood <Neighbourhood Type>]\n";
+                             "[--dimensions <Dimensions>] [--printFrequency <Print Frequency>] "
+                             "[--neighbourhood <Neighbourhood>] [--mobility <Mobility>]\n";
                 exit(EXIT_FAILURE);
         }
     }
@@ -132,9 +122,6 @@ Params parseArgs(int argc, char* argv[]) {
     return params;
 }
 
-//------------------------------------------------------------------------------
-// Initialisation: Create device, load library, compile pipelines, create buffers
-//------------------------------------------------------------------------------
 bool initMetalContext(MetalContext& ctx, int N, int randomNums) {
     ctx.numRandomNumbers = randomNums;          // 100,000,000  random numbers per shader
     ctx.threads = ctx.numRandomNumbers / 10000; // 10,000 numbers per thread
@@ -151,7 +138,9 @@ bool initMetalContext(MetalContext& ctx, int N, int randomNums) {
 
     // Load the Metal library
     NS::Error* error = nullptr;
-    NS::String* libraryPath = NS::String::string("/Users/louiesinadjan/Documents/dissertation/escg/metal-escg/build/escg.metallib", NS::UTF8StringEncoding);
+
+    // Needs the full path to the .metallib file
+    NS::String* libraryPath = NS::String::string("/Users/louiesinadjan/Documents/dissertation/escg/ReiMobFrey_2007/build/escg.metallib", NS::UTF8StringEncoding);
 
     ctx.library = ctx.device->newLibrary(libraryPath, &error);
     if (!ctx.library) {
@@ -161,15 +150,19 @@ bool initMetalContext(MetalContext& ctx, int N, int randomNums) {
 
     // Load the shader functions from the library
     // Randoms
-    MTL::Function* random_actions = ctx.library->newFunction(NS::String::string("mt_random_actions", NS::UTF8StringEncoding));
-    MTL::Function* random_cells = ctx.library->newFunction(NS::String::string("mt_random_cells", NS::UTF8StringEncoding));
-    MTL::Function* random_neighbours = ctx.library->newFunction(NS::String::string("mt_random_neighbours", NS::UTF8StringEncoding));
+    MTL::Function* random_actions = ctx.library->newFunction(NS::String::string("rmf_mt_random_actions", NS::UTF8StringEncoding));
+    MTL::Function* random_cells = ctx.library->newFunction(NS::String::string("rmf_mt_random_cells", NS::UTF8StringEncoding));
+    MTL::Function* random_neighbours = ctx.library->newFunction(NS::String::string("rmf_mt_random_neighbours", NS::UTF8StringEncoding));
 
     // Densities
-    MTL::Function* computeDensities = ctx.library->newFunction(NS::String::string("compute_densities", NS::UTF8StringEncoding));
+    MTL::Function* computeDensities = ctx.library->newFunction(NS::String::string("rmf_compute_densities", NS::UTF8StringEncoding));
 
     if (!random_actions || !random_cells || !random_neighbours || !computeDensities) {
         std::cerr << "Error: Failed to find one or more functions in Metal library." << std::endl;
+        std::cout << random_actions << std::endl;
+        std::cout << random_cells << std::endl;
+        std::cout << random_neighbours << std::endl;
+        std::cout << computeDensities << std::endl;
         return false;
     }
 
@@ -213,9 +206,6 @@ bool initMetalContext(MetalContext& ctx, int N, int randomNums) {
     return true;
 }
 
-//------------------------------------------------------------------------------
-// Refresh: Use existing pipeline and buffer objects to generate new random numbers
-//------------------------------------------------------------------------------
 void refreshRandomNumbers(MetalContext& ctx, float* action_probabilities, uint32_t* cells, uint32_t* neighbours, int N, bool moore) {
     std::cout << "Refreshing random numbers" << std::endl;
 
@@ -262,9 +252,6 @@ void refreshRandomNumbers(MetalContext& ctx, float* action_probabilities, uint32
     std::memcpy(neighbours, ctx.resultBufferNeighbours->contents(), sizeof(uint32_t) * ctx.numRandomNumbers);
 }
 
-//------------------------------------------------------------------------------
-// Cleanup: Release all allocated Metal objects
-//------------------------------------------------------------------------------
 void destroyMetalContext(MetalContext& ctx) {
     if (ctx.seedBuffer)
         ctx.seedBuffer->release();
@@ -306,9 +293,6 @@ void destroyMetalContext(MetalContext& ctx) {
         ctx.autoreleasePool->release();
 }
 
-//------------------------------------------------------------------------------
-// Calculate densities of each species and add to vectors for visualisation using metal
-//------------------------------------------------------------------------------
 void computeDensitiesGPU(MetalContext& ctx, int* grid, int* densities, int N) {
     // Copy the flattened grid to the GPU buffer
     std::memcpy(ctx.gridBuffer->contents(), grid, sizeof(int) * N);
@@ -335,9 +319,6 @@ void computeDensitiesGPU(MetalContext& ctx, int* grid, int* densities, int N) {
     std::memcpy(densities, ctx.densityResultsBuffer->contents(), sizeof(int) * 6);
 }
 
-//------------------------------------------------------------------------------
-// Calculate densities of each species and add to vectors for visualisation
-//------------------------------------------------------------------------------
 void densities(int* grid, int N, int mcs, GridContext& gridCtx, MetalContext& metalCtx, int printFrequency) {
     int speciesCounts[6] = {0}; // [empty, rock, paper, scissors, lizard, spock]
 
@@ -372,20 +353,13 @@ void densities(int* grid, int N, int mcs, GridContext& gridCtx, MetalContext& me
     }
 }
 
-//------------------------------------------------------------------------------
-// Plot density against steps
-//------------------------------------------------------------------------------
 void show(GridContext& gridCtx) { plot_densities(gridCtx.steps, gridCtx.densityRock, gridCtx.densityPaper, gridCtx.densityScissors, gridCtx.densityLizard, gridCtx.densitySpock); }
 
-//------------------------------------------------------------------------------
-// Initialise metal step buffers and pipelines
-// Computes the step functionality
-//------------------------------------------------------------------------------
 void initMetalStep(MetalContext& ctx, StepContext& stepCtx, int N) {
     NS::Error* error = nullptr;
 
     // Load the step function from the library
-    MTL::Function* stepFunction = ctx.library->newFunction(NS::String::string("step", NS::UTF8StringEncoding));
+    MTL::Function* stepFunction = ctx.library->newFunction(NS::String::string("rmf_step", NS::UTF8StringEncoding));
     if (!stepFunction) {
         std::cerr << "Error: Failed to find step function in Metal library." << std::endl;
         return;
@@ -403,9 +377,6 @@ void initMetalStep(MetalContext& ctx, StepContext& stepCtx, int N) {
     ctx.stepGridBuffer = ctx.device->newBuffer(sizeof(int) * N, MTL::ResourceStorageModeShared);
 }
 
-// ------------------------------------------------------------------------------
-// Metal step shader
-// ------------------------------------------------------------------------------
 void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, int N, Params& p, int* grid) {
     MTL::CommandBuffer* commandBuffer = ctx.commandQueue->commandBuffer();
     MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
@@ -441,49 +412,6 @@ void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, i
     commandBuffer->waitUntilCompleted();
 }
 
-//------------------------------------------------------------------------------
-// Check if a cell does not share future neighbours with any other cell
-// (vector and set are pass by value by default)
-//------------------------------------------------------------------------------
-// bool independentCells(StepContext& stepCtx, int nextCell, int nextNeighbourDir, const std::vector<int>& cells, std::unordered_set<int> neighbours) {
-//     const int L = 200; // Grid width and height
-
-//     std::unordered_set<int> new_neighbours;
-
-//     new_neighbours.insert(nextCell); // Current cell
-
-//     int row = nextCell / L;
-//     int col = nextCell % L;
-
-//     // UP neighbor (wrap to bottom row if at top)
-//     new_neighbours.insert(((row - 1 + L) % L) * L + col);
-
-//     // DOWN neighbor (wrap to top row if at bottom)
-//     new_neighbours.insert(((row + 1) % L) * L + col);
-
-//     // LEFT neighbor (wrap to rightmost column if at left edge)
-//     new_neighbours.insert(row * L + ((col - 1 + L) % L));
-
-//     // RIGHT neighbor (wrap to leftmost column if at right edge)
-//     new_neighbours.insert(row * L + ((col + 1) % L));
-
-//     // If a new neighbour exists in neighbours, then it is not independent
-//     for (int n : new_neighbours) {
-//         if (neighbours.find(n) != neighbours.end()) {
-//             return false;
-//         }
-//     }
-
-//     // Add the new neighbours to the set of neighbours in the step context
-//     std::set_union(neighbours.begin(), neighbours.end(), new_neighbours.begin(), new_neighbours.end(), std::inserter(stepCtx.neighbours, stepCtx.neighbours.begin()));
-
-//     // If the next cell is not in the neighbours set, then it is independent
-//     return true;
-// }
-
-//------------------------------------------------------------------------------
-// Main function
-//------------------------------------------------------------------------------
 int main(int argc, const char* argv[]) {
 
     // ------------------- Parse Command Line Arguments -------------------
@@ -495,6 +423,7 @@ int main(int argc, const char* argv[]) {
     std::cout << "Dimensions: " << params.dimensions << "\n";
     std::cout << "Neighbourhood: " << params.neighbourhood << "\n";
     std::cout << "Print Frequency: " << params.printFrequency << "\n";
+    std::cout << "Mobility: " << params.mobility << "\n";
 
     int MCS = params.MCS;
     int L = params.L;                                      // Length of lattice
@@ -529,14 +458,15 @@ int main(int argc, const char* argv[]) {
 
     initMetalStep(metalCtx, stepCtx, N); // Initialise Metal step buffers and pipelines
 
-    float M = 1e-6f; // Mobility 'since it is proportional to the typical area
-                     // explored by one mobile individual per unit time'
+    float M = params.mobility; // Mobility 'since it is proportional to the typical area
+                               // explored by one mobile individual per unit time'
 
     int* grid = new int[N]; // Flattened grid size = L x L
 
-    float mu = 1;              // RPSLS interaction
-    float sigma = 1;           // Reproduction
-    float epsilon = 2 * M * N; // Migration
+    float mu = 1;    // RPSLS interaction
+    float sigma = 1; // Reproduction
+
+    float epsilon = M / (2.0f * N); // Epsilon definition in RMF 2007
 
     // Normalise the action probabilities
     float sum = mu + sigma + epsilon;
@@ -547,7 +477,7 @@ int main(int argc, const char* argv[]) {
     // Set up a random number generator
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dist(1, 5); // Range: 1 to 5 (RPSLS)
+    std::uniform_int_distribution<int> dist(1, 3); // Range: 1 to 5 (RPSLS)
 
     // Randomly initialise the grid with species (stored as int)
     for (int i = 0; i < N; i++) {
@@ -558,8 +488,8 @@ int main(int argc, const char* argv[]) {
 
     for (int mcs = 0; mcs <= MCS; mcs++) {                                 // Monte Carlos
         densities(grid, N, mcs, gridCtx, metalCtx, params.printFrequency); // Every MCS, call densities to add to density vectors for visualisation after simulation
-        if (mcs == 0 || mcs == 2000 || mcs == 6000 || mcs == 20000 || mcs == 100000) {
-            plot_snapshot(grid, L, H, moore, mcs);
+        if (mcs == 0 || mcs == 2000 || mcs == 6000 || mcs % 10000 == 0) {
+            plot_snapshot(grid, L, H, moore, mcs, M); // Plot snapshots of the grid at given MCS
         }
 
         // Fill the arrays with the next N cells, neighbour directions, and action probabilities
