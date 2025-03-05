@@ -1,0 +1,1 @@
+This project compares the execution speed of 100 IID trials of generating 1,000,000 random numbers with curand vs mersenne twister

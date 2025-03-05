@@ -1,36 +1,43 @@
 # Compiler and flags
 CXX = clang++
 CXXFLAGS = -std=c++17 -Wall -Wextra -I./metal-cpp -fobjc-arc
-LDFLAGS = -framework Metal -framework MetalKit -framework AppKit -framework Foundation -framework QuartzCore -framework CoreGraphics
+LDFLAGS = -framework Metal -framework Foundation -framework CoreGraphics
 
 # Directories
 SRC_DIR = .
-CONTROL_DIR = ./control
-VIEW_DIR = ./view
 BUILD_DIR = build
 OBJ_DIR = $(BUILD_DIR)/objs
-CONTROL_OBJ_DIR = $(OBJ_DIR)/control
-VIEW_OBJ_DIR = $(OBJ_DIR)/view
 
 # Source files
-SRCS = $(SRC_DIR)/main.cpp $(SRC_DIR)/timer.cpp 
-OBJS = $(OBJ_DIR)/main.o $(OBJ_DIR)/timer.o 
+SERIAL_SRC = $(SRC_DIR)/serial-mersenne.cpp
+METAL_SRC = $(SRC_DIR)/metal-mersenne.cpp
+
+# Object files
+SERIAL_OBJ = $(OBJ_DIR)/serial-mersenne.o
+METAL_OBJ = $(OBJ_DIR)/metal-mersenne.o
+
+# Executables
+SERIAL_TARGET = $(BUILD_DIR)/serial-mersenne
+METAL_TARGET = $(BUILD_DIR)/metal-mersenne
 
 # Metal Shader
 METAL_SHADER = mt19937.metal
 METAL_LIB = $(BUILD_DIR)/mt19937.metallib
 
-# Output binary
-TARGET = $(BUILD_DIR)/metal
+# Default target: Build both executables
+all: $(SERIAL_TARGET) $(METAL_TARGET)
 
-# Default target
-all: $(TARGET)
-
-# Rule to create the output binary
-$(TARGET): $(OBJS) $(METAL_LIB)
+# Rule to create Serial Mersenne executable
+$(SERIAL_TARGET): $(SERIAL_OBJ)
 	@mkdir -p $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LDFLAGS)
-	@echo "Built $(TARGET)"
+	$(CXX) $(CXXFLAGS) -o $@ $(SERIAL_OBJ)
+	@echo "Built $(SERIAL_TARGET)"
+
+# Rule to create Metal Mersenne executable
+$(METAL_TARGET): $(METAL_OBJ) $(METAL_LIB)
+	@mkdir -p $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -o $@ $(METAL_OBJ) $(LDFLAGS)
+	@echo "Built $(METAL_TARGET)"
 
 # Rule to compile Metal shader to metallib
 $(METAL_LIB): $(METAL_SHADER)
@@ -40,12 +47,7 @@ $(METAL_LIB): $(METAL_SHADER)
 	@echo "Compiled Metal shader $< -> $@"
 
 # Rule to compile .cpp files to .o files
-$(OBJ_DIR)/main.o: $(SRC_DIR)/main.cpp
-	@mkdir -p $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-	@echo "Compiled $< -> $@"
-
-$(OBJ_DIR)/timer.o: $(SRC_DIR)/timer.cpp
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Compiled $< -> $@"

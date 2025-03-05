@@ -1,0 +1,185 @@
+Starting benchmark trials...
+Running CURAND trials...
+Trial 1
+
+real	0m19.934s
+user	0m1.360s
+sys	0m0.820s
+------------------------------
+Trial 2
+
+real	0m19.185s
+user	0m0.856s
+sys	0m0.768s
+------------------------------
+Trial 3
+
+real	0m18.975s
+user	0m0.664s
+sys	0m0.772s
+------------------------------
+Trial 4
+
+real	0m19.165s
+user	0m0.816s
+sys	0m0.800s
+------------------------------
+Trial 5
+
+real	0m19.109s
+user	0m0.864s
+sys	0m0.740s
+------------------------------
+Trial 6
+
+real	0m19.190s
+user	0m0.864s
+sys	0m0.784s
+------------------------------
+Trial 7
+
+real	0m19.167s
+user	0m0.880s
+sys	0m0.764s
+------------------------------
+Trial 8
+
+real	0m19.097s
+user	0m0.752s
+sys	0m0.816s
+------------------------------
+Trial 9
+
+real	0m19.096s
+user	0m0.844s
+sys	0m0.728s
+------------------------------
+Trial 10
+
+real	0m19.122s
+user	0m0.872s
+sys	0m0.724s
+------------------------------
+Running Cuda-Mersenne Twister trials...
+Trial 1
+
+real	0m5.592s
+user	0m0.400s
+sys	0m0.884s
+------------------------------
+Trial 2
+
+real	0m5.613s
+user	0m0.508s
+sys	0m0.764s
+------------------------------
+Trial 3
+
+real	0m5.645s
+user	0m0.548s
+sys	0m0.784s
+------------------------------
+Trial 4
+
+real	0m5.615s
+user	0m0.508s
+sys	0m0.780s
+------------------------------
+Trial 5
+
+real	0m5.643s
+user	0m0.512s
+sys	0m0.812s
+------------------------------
+Trial 6
+
+real	0m5.717s
+user	0m0.604s
+sys	0m0.768s
+------------------------------
+Trial 7
+
+real	0m5.669s
+user	0m0.488s
+sys	0m0.816s
+------------------------------
+Trial 8
+
+real	0m5.655s
+user	0m0.464s
+sys	0m0.844s
+------------------------------
+Trial 9
+
+real	0m5.676s
+user	0m0.536s
+sys	0m0.796s
+------------------------------
+Trial 10
+
+real	0m5.608s
+user	0m0.516s
+sys	0m0.768s
+------------------------------
+Running Serial Mersenne trials...
+Trial 1
+
+real	0m11.244s
+user	0m11.200s
+sys	0m0.000s
+------------------------------
+Trial 2
+
+real	0m11.242s
+user	0m11.200s
+sys	0m0.008s
+------------------------------
+Trial 3
+
+real	0m11.234s
+user	0m11.200s
+sys	0m0.004s
+------------------------------
+Trial 4
+
+real	0m11.245s
+user	0m11.192s
+sys	0m0.012s
+------------------------------
+Trial 5
+
+real	0m11.252s
+user	0m11.208s
+sys	0m0.004s
+------------------------------
+Trial 6
+
+real	0m11.230s
+user	0m11.200s
+sys	0m0.000s
+------------------------------
+Trial 7
+
+real	0m11.248s
+user	0m11.204s
+sys	0m0.000s
+------------------------------
+Trial 8
+
+real	0m11.239s
+user	0m11.208s
+sys	0m0.004s
+------------------------------
+Trial 9
+
+real	0m11.245s
+user	0m11.200s
+sys	0m0.000s
+------------------------------
+Trial 10
+
+real	0m11.248s
+user	0m11.208s
+sys	0m0.004s
+------------------------------
+All trials completed.
