@@ -1,0 +1,39 @@
+------------------------------------------------------------------------------
+Check if a cell does not share future neighbours with any other cell
+(vector and set are pass by value by default)
+------------------------------------------------------------------------------
+bool independentCells(StepContext& stepCtx, int nextCell, int nextNeighbourDir, const std::vector<int>& cells, std::unordered_set<int> neighbours) {
+    const int L = 200; // Grid width and height
+
+    std::unordered_set<int> new_neighbours;
+
+    new_neighbours.insert(nextCell); // Current cell
+
+    int row = nextCell / L;
+    int col = nextCell % L;
+
+    // UP neighbor (wrap to bottom row if at top)
+    new_neighbours.insert(((row - 1 + L) % L) * L + col);
+
+    // DOWN neighbor (wrap to top row if at bottom)
+    new_neighbours.insert(((row + 1) % L) * L + col);
+
+    // LEFT neighbor (wrap to rightmost column if at left edge)
+    new_neighbours.insert(row * L + ((col - 1 + L) % L));
+
+    // RIGHT neighbor (wrap to leftmost column if at right edge)
+    new_neighbours.insert(row * L + ((col + 1) % L));
+
+    // If a new neighbour exists in neighbours, then it is not independent
+    for (int n : new_neighbours) {
+        if (neighbours.find(n) != neighbours.end()) {
+            return false;
+        }
+    }
+
+    // Add the new neighbours to the set of neighbours in the step context
+    std::set_union(neighbours.begin(), neighbours.end(), new_neighbours.begin(), new_neighbours.end(), std::inserter(stepCtx.neighbours, stepCtx.neighbours.begin()));
+
+    // If the next cell is not in the neighbours set, then it is independent
+    return true;
+}
