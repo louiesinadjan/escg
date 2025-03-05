@@ -95,7 +95,8 @@ void exportDensitiesToCSV(GridContext& gridCtx) {
 
     file << "MCS,ROCK,PAPER,SCISSORS,LIZARD,SPOCK\n";
     for (uint i = 0; i < gridCtx.steps.size(); i++) {
-        file << gridCtx.steps[i] << "," << gridCtx.densityRock[i] << "," << gridCtx.densityPaper[i] << "," << gridCtx.densityScissors[i] << "," << gridCtx.densityLizard[i] << "," << gridCtx.densitySpock[i] << "\n";
+        file << gridCtx.steps[i] << "," << gridCtx.densityRock[i] << "," << gridCtx.densityPaper[i] << "," << gridCtx.densityScissors[i] << "," << gridCtx.densityLizard[i] << ","
+             << gridCtx.densitySpock[i] << "\n";
     }
 
     file.close();
@@ -157,9 +158,13 @@ __global__ void refreshRandomNumbers(float* action_probabilities, int* cells, in
 void generateRandomNumbers(float* h_action_probabilities, int* h_cells, int* h_neighbours, float* d_action_probabilities, int* d_cells, int* d_neighbours, int N, int numRandomNumbers, bool moore) {
     std::cout << "\nRefreshing random numbers..." << std::endl;
 
-    int numThreads = numRandomNumbers / 10000;                                // Reduced thread count
-    int threadsPerBlock = 256;                                                // Recommended block size
-    int blocksPerGrid = (numThreads + threadsPerBlock - 1) / threadsPerBlock; // Compute number of blocks
+    int minGridSize = 0, bestBlockSize = 0;
+    cudaOccupancyMaxPotentialBlockSize(&minGridSize, &bestBlockSize, refreshRandomNumbers, 0, 0);
+
+    // Adjust the block size to fit within totalThreads
+    int totalThreads = numRandomNumbers / 10000;
+    int threadsPerBlock = std::min(bestBlockSize, totalThreads);
+    int blocksPerGrid = (totalThreads + threadsPerBlock - 1) / threadsPerBlock;
 
     refreshRandomNumbers<<<blocksPerGrid, threadsPerBlock>>>(d_action_probabilities, d_cells, d_neighbours, numRandomNumbers, N, moore);
 
@@ -202,8 +207,6 @@ void initialiseGrid(int* d_grid, int* h_grid, int N) {
     int threadsPerBlock = 256;
     int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
 
-    // Launch the kernel
-    std::cout << "Launching populateGrid with " << blocksPerGrid << " blocks and " << threadsPerBlock << " threads per block" << std::endl;
     populateGrid<<<blocksPerGrid, threadsPerBlock>>>(d_grid, N, seed);
     cudaError_t err = cudaGetLastError();
     if (err != cudaSuccess) {
@@ -281,7 +284,7 @@ void densities(int* grid, int* d_grid, int* d_speciesCounts, int N, int mcs, int
     // Print the densities
     if (mcs % printFrequency == 0) {
         // Raw counts
-        // std::cout << "Population Densities at: " << mcs << std::endl;
+        // std::cout << "Population at: " << mcs << std::endl;
         // std::cout << "EMPTY: " << speciesCounts[0] << std::endl;
         // std::cout << "ROCK: " << speciesCounts[1] << std::endl;
         // std::cout << "PAPER: " << speciesCounts[2] << std::endl;
@@ -347,7 +350,11 @@ __global__ void cuda_step(int* grid, int* cells, int* neighbour_dirs, float* act
         {1, 1}    // Down-Right
     };
 
+    // int cellsPerThread = N / (blockDim.x * gridDim.x);
+    // for (int i = 0; i < cellsPerThread; i++) {
+    // int cell_index = cells[id + i];
     int cell_index = cells[id];
+
     if (cell_index < 0 || cell_index >= N) {
         printf("Error: Invalid cell index: %d,  at index: %d\n", cell_index, id);
     }
@@ -383,14 +390,20 @@ __global__ void cuda_step(int* grid, int* cells, int* neighbour_dirs, float* act
         int temp = atomicExch(&grid[cell_index], neighbour_specie);
         atomicExch(&grid[neighbour_index], temp);
     }
+    // }
 }
 
 void step(int* h_grid, int* d_grid, int* d_cells, int* d_neighbour_dirs, float* d_action_probabilities, float mu, float sigma, int L, int H) {
     int N = L * H;
     cudaMemcpy(d_grid, h_grid, N * sizeof(int), cudaMemcpyHostToDevice);
 
+    // int totalThreads = N / 1000; // Number of threads the process the step
+    // int threadsPerBlock = 256;
+    // int blocksPerGrid = (totalThreads + threadsPerBlock - 1) / threadsPerBlock;
+
     int threadsPerBlock = 256;
     int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
+
     cuda_step<<<blocksPerGrid, threadsPerBlock>>>(d_grid, d_cells, d_neighbour_dirs, d_action_probabilities, mu, sigma, L, H);
 
     cudaError_t err = cudaGetLastError();
