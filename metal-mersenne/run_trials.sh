@@ -3,7 +3,7 @@
 # Clear the results file before starting
 echo "Starting benchmark trials..." > results.txt
 
-# Run 10 IID trials for CURAND
+# Run 10 IID trials for Serial Mersenne Twister
 echo "Running Serial Mersenne trials..." | tee -a results.txt
 for i in {1..10}
 do
@@ -12,7 +12,7 @@ do
     echo "------------------------------" | tee -a results.txt
 done
 
-# Run 10 IID trials for Cuda-Mersenne Twister
+# Run 10 IID trials for Metal Mersenne Twister
 echo "Running Metal Mersenne trials..." | tee -a results.txt
 for i in {1..10}
 do
