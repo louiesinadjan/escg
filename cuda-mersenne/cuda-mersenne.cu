@@ -142,7 +142,7 @@ int main() {
     for (int i = 0; i < 100; i++) {
         generateRandomNumbers(totalNumbers, h_results);
     }
-    // generateRandomNumbers(totalNumbers, h_results);
+
     // validateRandomNumbers(h_results, totalNumbers);
     // printNumbers(h_results, totalNumbers);
 
