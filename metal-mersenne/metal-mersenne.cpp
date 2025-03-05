@@ -4,33 +4,26 @@
 #define CA_PRIVATE_IMPLEMENTATION
 
 #include "config.hpp"
-#include "timer.hpp"
 #include <chrono>
-#include <cstdlib>
 #include <iostream>
-#include <numeric>
 #include <random>
 
-int main(int argc, char* argv[]) {
-    // Serial Mersenne Twister
-    static std::random_device rd;                        // Random number generator
-    static std::mt19937 gen(rd());                       // Mersenne Twister
-    std::uniform_int_distribution<int> dist(4294967295); // Uniform distribution
-
-    double serialTimes[100];
-    for (int run = 0; run < 100; ++run) {
-        Timer timer;
-        timer.start();                      // Start the timer for serial Mersenne Twister
-        int x[1000000];                     // Array to store random numbers
-        for (int j = 0; j < 1000000; j++) { // Generate 1,000,000 random numbers
-            x[j] = dist(gen);
+void validateRandomNumbers(uint* numbers, int totalNumbers) {
+    // Check there are no 0s in the results
+    for (int i = 0; i < totalNumbers; i++) {
+        if (numbers[i] == 0) {
+            std::cerr << "Zero found at index [" << i << "]" << std::endl;
         }
-        timer.stop(); // Stop the timer
-        serialTimes[run] = timer.elapsedMilliseconds();
     }
-    double avgSerialTime = std::accumulate(serialTimes, serialTimes + 100, 0.0) / 100.0;
-    std::cout << "Serial Completed" << std::endl;
+}
 
+void printNumbers(uint* numbers, int totalNumbers) {
+    for (int i = 0; i < totalNumbers; i++) {
+        std::cout << numbers[i] << std::endl;
+    }
+}
+
+int main() {
     // Metal Mersenne Twister
     NS::AutoreleasePool* autoreleasePool = NS::AutoreleasePool::alloc()->init();
     MTL::Device* device = MTL::CreateSystemDefaultDevice();
@@ -44,7 +37,6 @@ int main(int argc, char* argv[]) {
         std::cerr << "Error: Failed to load mt19937.metallib - " << error->localizedDescription()->utf8String() << std::endl;
         return -1;
     }
-    std::cout << "Metal Library Loaded" << std::endl;
 
     // Load the mersenne_twister function
     MTL::Function* mersenne_twister = library->newFunction(NS::String::string("mersenne_twister", NS::UTF8StringEncoding));
@@ -63,16 +55,28 @@ int main(int argc, char* argv[]) {
     // Prepare buffers
     const int numThreads = 2000;
     const int numRandomNumbers = 1000000;
+
     uint32_t seeds[numThreads];
+
+    // Use system time as a seed
+    // auto now = std::chrono::system_clock::now();
+    // auto duration = now.time_since_epoch();
+    // uint32_t timeSeed = static_cast<uint32_t>(duration.count());
+    // std::mt19937 rng(timeSeed);
+    // std::uniform_int_distribution<uint32_t> dist(1, 4294967295);
+    // for (int i = 0; i < numThreads; ++i) {
+    //     seeds[i] = dist(rng); // Use time-based random numbers as seeds
+    // }
+
     for (int i = 0; i < numThreads; ++i) {
         seeds[i] = i + 1;
     }
 
     MTL::Buffer* seedBuffer = device->newBuffer(seeds, sizeof(seeds), MTL::ResourceStorageModeShared);
+    uint32_t* results = new uint32_t[numRandomNumbers];
     MTL::Buffer* resultBuffer = device->newBuffer(sizeof(uint32_t) * numRandomNumbers, MTL::ResourceStorageModeShared);
 
-    double metalTimes[100];
-    for (int run = 0; run < 100; ++run) {
+    for (int run = 0; run < 100; run++) {
         // Create command buffer and encoder
         MTL::CommandBuffer* commandBuffer = commandQueue->commandBuffer();
         MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
@@ -86,43 +90,18 @@ int main(int argc, char* argv[]) {
         encoder->dispatchThreads(gridSize, threadGroupSize);
         encoder->endEncoding();
 
-        // Start timer
-        Timer t2;
-        t2.start();
-
         // Commit command buffer and wait for completion
         commandBuffer->commit();
         commandBuffer->waitUntilCompleted();
 
-        // Stop timer
-        t2.stop();
-        metalTimes[run] = t2.elapsedMilliseconds();
-
         // Retrieve results
-        uint32_t* results = static_cast<uint32_t*>(resultBuffer->contents());
+        results = static_cast<uint32_t*>(resultBuffer->contents());
 
-        // Verify the number of generated random numbers
-        bool valid = true;
-        for (int i = 0; i < numRandomNumbers; ++i) {
-            if (results[i] == 0) {
-                valid = false;
-                break;
-            }
-        }
-        if (!valid) {
-            std::cerr << "Error: Not all random numbers were generated correctly in run " << run << std::endl;
-        }
-    }
-    double avgMetalTime = std::accumulate(metalTimes, metalTimes + 100, 0.0) / 100.0;
-
-    for (int run = 0; run < 100; ++run) {
-        std::cout << run << ": Serial = " << serialTimes[run] << " ms, Metal = " << metalTimes[run] << std::endl;
+        // validateRandomNumbers(results, numRandomNumbers);
     }
 
-    std::cout << "Average Serial Mersenne Twister: " << avgSerialTime << " ms" << std::endl;
-    std::cout << "Average Metal Mersenne Twister: " << avgMetalTime << " ms" << std::endl;
+    // printNumbers(results, numRandomNumbers);
 
-    // Clean up
     autoreleasePool->release();
 
     return 0;

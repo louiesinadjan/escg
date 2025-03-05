@@ -37,23 +37,12 @@ uint extract(thread MT19937 &mt) {
     return y;
 }
 
-/* 
-First, the function adds the kernel keyword, which declares that the function is:
-
-A public GPU function. 
-Public functions are the only functions that your app can see. 
-Public functions also can’t be called by other shader functions.
-
-A compute function (also known as a compute kernel)
-    which performs a parallel calculation using a grid of threads.
-
- */
 kernel void mersenne_twister(const device uint *seeds [[ buffer(0) ]],
                              device uint *results [[ buffer(1) ]],
                              uint id [[ thread_position_in_grid ]]) {
     thread MT19937 mt; // Each thread has its own MT19937 state
     initialise(mt, seeds[id]); // Initialise the state with the seed
-    for (uint i = 0; i < 500; ++i) { // Generate 1000 random numbers per thread
+    for (uint i = 0; i < 500; ++i) { // Generate 500 random numbers per thread
         results[id * 500 + i] = extract(mt);
     }
 }

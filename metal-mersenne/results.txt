@@ -1,0 +1,124 @@
+Starting benchmark trials...
+Running Serial Mersenne trials...
+Trial 1
+
+real	0m0.888s
+user	0m0.698s
+sys	0m0.004s
+------------------------------
+Trial 2
+
+real	0m0.708s
+user	0m0.698s
+sys	0m0.003s
+------------------------------
+Trial 3
+
+real	0m0.707s
+user	0m0.697s
+sys	0m0.003s
+------------------------------
+Trial 4
+
+real	0m0.711s
+user	0m0.698s
+sys	0m0.003s
+------------------------------
+Trial 5
+
+real	0m0.712s
+user	0m0.698s
+sys	0m0.003s
+------------------------------
+Trial 6
+
+real	0m0.710s
+user	0m0.698s
+sys	0m0.003s
+------------------------------
+Trial 7
+
+real	0m0.710s
+user	0m0.698s
+sys	0m0.003s
+------------------------------
+Trial 8
+
+real	0m0.707s
+user	0m0.697s
+sys	0m0.002s
+------------------------------
+Trial 9
+
+real	0m0.707s
+user	0m0.697s
+sys	0m0.002s
+------------------------------
+Trial 10
+
+real	0m0.707s
+user	0m0.697s
+sys	0m0.002s
+------------------------------
+Running Metal Mersenne trials...
+Trial 1
+
+real	0m0.489s
+user	0m0.009s
+sys	0m0.028s
+------------------------------
+Trial 2
+
+real	0m0.204s
+user	0m0.010s
+sys	0m0.017s
+------------------------------
+Trial 3
+
+real	0m0.214s
+user	0m0.010s
+sys	0m0.022s
+------------------------------
+Trial 4
+
+real	0m0.207s
+user	0m0.010s
+sys	0m0.020s
+------------------------------
+Trial 5
+
+real	0m0.208s
+user	0m0.010s
+sys	0m0.013s
+------------------------------
+Trial 6
+
+real	0m0.215s
+user	0m0.011s
+sys	0m0.016s
+------------------------------
+Trial 7
+
+real	0m0.210s
+user	0m0.010s
+sys	0m0.017s
+------------------------------
+Trial 8
+
+real	0m0.211s
+user	0m0.010s
+sys	0m0.017s
+------------------------------
+Trial 9
+
+real	0m0.213s
+user	0m0.010s
+sys	0m0.015s
+------------------------------
+Trial 10
+
+real	0m0.244s
+user	0m0.011s
+sys	0m0.021s
+------------------------------
+All trials completed.
