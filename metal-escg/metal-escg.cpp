@@ -12,96 +12,25 @@
 #include <vector>
 
 //------------------------------------------------------------------------------
-// Structure to hold the input parameters of the simulation
-//------------------------------------------------------------------------------
-struct Params {
-    int MCS = 100000;         // Monte Carlo Steps
-    int L = 200;              // Length of lattice
-    int H = 200;              // Height of lattice
-    int dimensions = 2;       // 1D, 2D, 3D
-    int neighbourhood = 4;    // Von Neumann (4-way), Moore (8-way)
-    int printFrequency = 200; // MCS frequency to print snapshots
-};
-
-//------------------------------------------------------------------------------
-// Structure to hold Metal objects and configuration
-//------------------------------------------------------------------------------
-struct MetalContext {
-    NS::AutoreleasePool* autoreleasePool;
-    MTL::Device* device;
-    MTL::CommandQueue* commandQueue;
-    MTL::Library* library;
-    MTL::ComputePipelineState* pipelineStateActions;    // Random action PSO
-    MTL::ComputePipelineState* pipelineStateCells;      // Selected cell PSO
-    MTL::ComputePipelineState* pipelineStateNeighbours; // Neighbour direction PSO
-    MTL::Buffer* seedBuffer;                            // Seeds for random number generation
-    MTL::Buffer* resultBufferActions;
-    MTL::Buffer* resultBufferCells;
-    MTL::Buffer* resultBufferNeighbours;
-
-    MTL::ComputePipelineState* pipelineStateDensities; // Density PSO
-    MTL::Buffer* gridBuffer;                           // GPU buffer for grid data
-    MTL::Buffer* densityResultsBuffer;                 // GPU buffer for density results
-
-    MTL::ComputePipelineState* pipelineStateStep; // Step PSO
-    MTL::Buffer* cellsBuffer;                     // Cells to process
-    MTL::Buffer* neighboursDirsBuffer;            // Neighbour directions to process
-    MTL::Buffer* actionProbabilitiesBuffer;       // Actions to take
-    MTL::Buffer* stepGridBuffer;                  // Grid
-
-    int threads;
-    int numRandomNumbers;
-};
-
-//------------------------------------------------------------------------------
-// Structure to hold the grid data and visualisation vectors
-//------------------------------------------------------------------------------
-struct GridContext {
-    int emptyCounter;
-    int rockCounter;
-    int paperCounter;
-    int scissorsCounter;
-    int lizardCounter;
-    int spockCounter;
-
-    std::vector<double> steps;
-    std::vector<double> densityRock;
-    std::vector<double> densityPaper;
-    std::vector<double> densityScissors;
-    std::vector<double> densityLizard;
-    std::vector<double> densitySpock;
-};
-
-//------------------------------------------------------------------------------
-// Structure to hold the step data to pass into the Metal shader
-//------------------------------------------------------------------------------
-struct StepContext {
-    int* cells;
-    int* neighbour_dirs;
-    float* action_probabilities;
-};
-
-//------------------------------------------------------------------------------
 // Parse command line arguments
 //------------------------------------------------------------------------------
 Params parseArgs(int argc, char* argv[]) {
     Params params; // Uses default values
 
-    // Define long options
     static struct option long_options[] = {
-        {"mcs", required_argument, 0, 'm'},
-        {"length", required_argument, 0, 'l'},
-        {"height", required_argument, 0, 'h'},
-        {"dimensions", required_argument, 0, 'd'},
-        {"printFrequency", required_argument, 0, 'p'},
-        {"neighbourhood", required_argument, 0, 'n'},
-        {0, 0, 0, 0} // Terminate options
+        {"mcs", required_argument, 0, 'm'},        {"length", required_argument, 0, 'l'},         {"height", required_argument, 0, 'h'},
+        {"dimensions", required_argument, 0, 'd'}, {"printFrequency", required_argument, 0, 'p'}, {"neighbourhood", required_argument, 0, 'n'},
+        {"species", required_argument, 0, 's'},    {"mobility", required_argument, 0, 'M'},       {0, 0, 0, 0} // End of options
     };
 
     int opt;
     int option_index = 0;
 
-    while ((opt = getopt_long(argc, argv, "m:l:h:d:p:n:", long_options, &option_index)) != -1) {
+    std::string usage = " [--mcs <MCS>] [--length <Lattice Length>] [--height <Lattice Height>] "
+                        "[--dimensions <Dimensions>] [--printFrequency <Print Frequency>] "
+                        "[--neighbourhood <Neighbourhood 4/8>] [--mobility <Mobility>] [--species <Number of Species 3/5>]";
+
+    while ((opt = getopt_long(argc, argv, "m:l:h:d:p:n:M:s:", long_options, &option_index)) != -1) {
         switch (opt) {
             case 'm':
                 params.MCS = std::stoi(optarg);
@@ -120,11 +49,24 @@ Params parseArgs(int argc, char* argv[]) {
                 break;
             case 'n':
                 params.neighbourhood = std::stoi(optarg);
+                if (params.neighbourhood != 4 && params.neighbourhood != 8) {
+                    std::cerr << "Error: Neighbourhood must be 4 or 8." << std::endl;
+                    exit(EXIT_FAILURE);
+                }
                 break;
+            case 's':
+                params.species = std::stoi(optarg);
+                if (params.species != 3 && params.species != 5) {
+                    std::cerr << "Error: Number of species must be 3 or 5." << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+                break;
+            case 'M':
+                params.mobility = std::stof(optarg); // **Allows scientific notation input**
+                break;
+
             default:
-                std::cerr << "Usage: " << argv[0]
-                          << " [--mcs <MCS>] [--length <Lattice Length>] [--height <Lattice Height>] "
-                             "[--boundary <Boundary Type>] [--neighbourhood <Neighbourhood Type>]\n";
+                std::cerr << "Usage: " << argv[0] << usage << std::endl;
                 exit(EXIT_FAILURE);
         }
     }
@@ -217,7 +159,7 @@ bool initMetalContext(MetalContext& ctx, int N, int randomNums) {
 // Refresh: Use existing pipeline and buffer objects to generate new random numbers
 //------------------------------------------------------------------------------
 void refreshRandomNumbers(MetalContext& ctx, float* action_probabilities, uint32_t* cells, uint32_t* neighbours, int N, bool moore) {
-    std::cout << "Refreshing random numbers" << std::endl;
+    std::cout << "Refreshing random numbers\n" << std::endl;
 
     // Setup common dispatch parameters
     MTL::Size gridSize = MTL::Size(ctx.threads, 1, 1);
@@ -375,13 +317,13 @@ void densities(int* grid, int N, int mcs, GridContext& gridCtx, MetalContext& me
 //------------------------------------------------------------------------------
 // Plot density against steps
 //------------------------------------------------------------------------------
-void show(GridContext& gridCtx) { plot_densities(gridCtx.steps, gridCtx.densityRock, gridCtx.densityPaper, gridCtx.densityScissors, gridCtx.densityLizard, gridCtx.densitySpock); }
+void show(GridContext& gridCtx, Params params) { plot_densities(gridCtx, params); }
 
 //------------------------------------------------------------------------------
 // Initialise metal step buffers and pipelines
 // Computes the step functionality
 //------------------------------------------------------------------------------
-void initMetalStep(MetalContext& ctx, StepContext& stepCtx, int N) {
+void initMetalStep(MetalContext& ctx, int N) {
     NS::Error* error = nullptr;
 
     // Load the step function from the library
@@ -442,49 +384,10 @@ void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, i
 }
 
 //------------------------------------------------------------------------------
-// Check if a cell does not share future neighbours with any other cell
-// (vector and set are pass by value by default)
-//------------------------------------------------------------------------------
-// bool independentCells(StepContext& stepCtx, int nextCell, int nextNeighbourDir, const std::vector<int>& cells, std::unordered_set<int> neighbours) {
-//     const int L = 200; // Grid width and height
-
-//     std::unordered_set<int> new_neighbours;
-
-//     new_neighbours.insert(nextCell); // Current cell
-
-//     int row = nextCell / L;
-//     int col = nextCell % L;
-
-//     // UP neighbor (wrap to bottom row if at top)
-//     new_neighbours.insert(((row - 1 + L) % L) * L + col);
-
-//     // DOWN neighbor (wrap to top row if at bottom)
-//     new_neighbours.insert(((row + 1) % L) * L + col);
-
-//     // LEFT neighbor (wrap to rightmost column if at left edge)
-//     new_neighbours.insert(row * L + ((col - 1 + L) % L));
-
-//     // RIGHT neighbor (wrap to leftmost column if at right edge)
-//     new_neighbours.insert(row * L + ((col + 1) % L));
-
-//     // If a new neighbour exists in neighbours, then it is not independent
-//     for (int n : new_neighbours) {
-//         if (neighbours.find(n) != neighbours.end()) {
-//             return false;
-//         }
-//     }
-
-//     // Add the new neighbours to the set of neighbours in the step context
-//     std::set_union(neighbours.begin(), neighbours.end(), new_neighbours.begin(), new_neighbours.end(), std::inserter(stepCtx.neighbours, stepCtx.neighbours.begin()));
-
-//     // If the next cell is not in the neighbours set, then it is independent
-//     return true;
-// }
-
-//------------------------------------------------------------------------------
 // Main function
 //------------------------------------------------------------------------------
 int main(int argc, const char* argv[]) {
+    // Debug prints to check argc and argv
 
     // ------------------- Parse Command Line Arguments -------------------
     Params params = parseArgs(argc, const_cast<char**>(argv));
@@ -495,6 +398,8 @@ int main(int argc, const char* argv[]) {
     std::cout << "Dimensions: " << params.dimensions << "\n";
     std::cout << "Neighbourhood: " << params.neighbourhood << "\n";
     std::cout << "Print Frequency: " << params.printFrequency << "\n";
+    std::cout << "Mobility: " << params.mobility << "\n";
+    std::cout << "Species: " << params.species << "\n";
 
     int MCS = params.MCS;
     int L = params.L;                                      // Length of lattice
@@ -527,10 +432,10 @@ int main(int argc, const char* argv[]) {
     stepCtx.neighbour_dirs = new int[N];
     stepCtx.action_probabilities = new float[N];
 
-    initMetalStep(metalCtx, stepCtx, N); // Initialise Metal step buffers and pipelines
+    initMetalStep(metalCtx, N); // Initialise Metal step buffers and pipelines
 
-    float M = 1e-6f; // Mobility 'since it is proportional to the typical area
-                     // explored by one mobile individual per unit time'
+    float M = params.mobility; // Mobility 'since it is proportional to the typical area
+                               // explored by one mobile individual per unit time'
 
     int* grid = new int[N]; // Flattened grid size = L x L
 
@@ -547,7 +452,7 @@ int main(int argc, const char* argv[]) {
     // Set up a random number generator
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dist(1, 5); // Range: 1 to 5 (RPSLS)
+    std::uniform_int_distribution<int> dist(1, params.species); // Range: 1 to 5 (RPSLS)
 
     // Randomly initialise the grid with species (stored as int)
     for (int i = 0; i < N; i++) {
@@ -559,7 +464,7 @@ int main(int argc, const char* argv[]) {
     for (int mcs = 0; mcs <= MCS; mcs++) {                                 // Monte Carlos
         densities(grid, N, mcs, gridCtx, metalCtx, params.printFrequency); // Every MCS, call densities to add to density vectors for visualisation after simulation
         if (mcs == 0 || mcs == 2000 || mcs == 6000 || mcs == 20000 || mcs == 100000) {
-            plot_snapshot(grid, L, H, moore, mcs);
+            plot_snapshot(grid, mcs, params); // Plot snapshots at specific MCS
         }
 
         // Fill the arrays with the next N cells, neighbour directions, and action probabilities
@@ -581,7 +486,7 @@ int main(int argc, const char* argv[]) {
         std::memcpy(grid, metalCtx.stepGridBuffer->contents(), sizeof(int) * N);
     }
 
-    show(gridCtx); // Plot density against steps
+    show(gridCtx, params); // Plot density against steps
 
     std::cout << "Simulation Complete.";
 

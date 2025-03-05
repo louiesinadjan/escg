@@ -1,17 +1,17 @@
 #include "visualise.hpp"
+#include <sstream>
 
-void plot_densities(const std::vector<double>& steps, const std::vector<double>& densityRock, const std::vector<double>& densityPaper, const std::vector<double>& densityScissors,
-                    const std::vector<double>& densityLizard, const std::vector<double>& densitySpock) {
+void plot_densities(GridContext g, Params p) {
 
     plt::figure_size(2000, 800);
     plt::tight_layout();
 
     // Plot each density with a different color
-    plt::semilogx(steps, densityRock, "r-");
-    plt::semilogx(steps, densityPaper, "g-");
-    plt::semilogx(steps, densityScissors, "b-");
-    plt::semilogx(steps, densityLizard, "y-");
-    plt::semilogx(steps, densitySpock, "m-");
+    plt::semilogx(g.steps, g.densityRock, "b-");
+    plt::semilogx(g.steps, g.densityPaper, "c-");
+    plt::semilogx(g.steps, g.densityScissors, "g-");
+    plt::semilogx(g.steps, g.densityLizard, "y-");
+    plt::semilogx(g.steps, g.densitySpock, "r-");
 
     // Add legend (labels in the same order as plots)
     plt::legend();
@@ -21,21 +21,34 @@ void plot_densities(const std::vector<double>& steps, const std::vector<double>&
     plt::ylabel("$\\rho_i$"); // LaTeX style for rho_i
     plt::title("Density Evolution Over Time");
 
-    // Display the plot
+    bool moore = p.neighbourhood == 8;
+    std::string length = "l" + std::to_string(p.L);
+    std::string height = "h" + std::to_string(p.H);
+    std::string neighbourhood = moore ? "Moore" : "VN";
 
-    // plt::show();
+    // Convert to scientific notation
+    std::ostringstream oss;
+    oss.precision(2);
+    oss << std::scientific << p.mobility;
+    std::string mobility_str = "M" + oss.str();
 
-    plt::save("densities.png");
+    std::string species = std::to_string(p.species) + " species";
+
+    plt::save("densities_" + length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + species + ".png");
 }
 
 // https://github.com/lava/matplotlib-cpp/blob/master/examples/imshow.cpp
-void plot_snapshot(const int* grid, int L, int H, bool moore, int mcs) {
+void plot_snapshot(const int* grid, int mcs, Params p) {
+    bool moore = p.neighbourhood == 8;
+
     plt::figure_size(2000, 2000);
     plt::tight_layout();
 
+    plt::axis("off"); // disables the axis labels and ticks
+
     // Flatten the grid into a 1D vector of floats
-    std::vector<float> flatGrid(L * H);
-    for (int i = 0; i < H * L; i++) {
+    std::vector<float> flatGrid(p.L * p.H);
+    for (int i = 0; i < p.H * p.L; i++) {
         flatGrid[i] = static_cast<float>(grid[i]);
     }
 
@@ -44,16 +57,24 @@ void plot_snapshot(const int* grid, int L, int H, bool moore, int mcs) {
 
     // Plot using imshow
     plt::figure();
-    plt::imshow(gridPtr, H, L, 1);
+    plt::imshow(gridPtr, p.H, p.L, 1);
 
     // plt::title("Snapshot at MCS = " + std::to_string(mcs));
 
     // plt::show();
-    std::string length = "l" + std::to_string(L);
-    std::string height = "h" + std::to_string(H);
-    std::string neighbourhood = moore ? "moore" : "vonNeumann";
+    std::string length = "l" + std::to_string(p.L);
+    std::string height = "h" + std::to_string(p.H);
+    std::string neighbourhood = moore ? "Moore" : "VN";
     std::string mcs_str = "mcs" + std::to_string(mcs);
 
-    plt::title("Length = " + std::to_string(L) + ", Height = " + std::to_string(H) + ", Neighbourhood = " + neighbourhood + ", MCS = " + std::to_string(mcs));
-    plt::save("snapshot_" + length + "_" + height + "_" + neighbourhood + "_" + mcs_str + ".png");
+    // Convert to scientific notation
+    std::ostringstream oss;
+    oss.precision(2);
+    oss << std::scientific << p.mobility;
+    std::string mobility_str = "M" + oss.str();
+
+    std::string species = std::to_string(p.species) + " species";
+
+    plt::title(length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + mcs_str);
+    plt::save("snapshot_" + length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + mcs_str + "_" + species + ".png");
 }
