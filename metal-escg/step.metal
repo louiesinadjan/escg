@@ -38,7 +38,8 @@ kernel void step(
     constant float &sigma [[ buffer(4) ]], 
     constant int &L [[ buffer(5) ]], 
     constant int &H [[ buffer(6) ]],
-    device atomic_int *grid [[ buffer(7) ]],
+    constant bool &flux [[ buffer(7) ]],
+    device atomic_int *grid [[ buffer(8) ]],
     uint id [[ thread_position_in_grid ]]) {
 
     const int N = L * H;
@@ -81,10 +82,22 @@ kernel void step(
         int row = cell_index / L;
         int col = cell_index % L;
         
-        // Compute the new row and column based on the neighbor direction with wrapping.
-        int n_row = (row + offsets[n_dir][0] + H) % H;  // Wrap within height H
-        int n_col = (col + offsets[n_dir][1] + L) % L;
-        
+        // Compute the new row and column based on the direction.
+        int n_row, n_col;
+        if (flux) {
+            n_row = (row + offsets[n_dir][0] + H) % H;
+            n_col = (col + offsets[n_dir][1] + L) % L;
+        } else {
+            n_row = row + offsets[n_dir][0];
+            if(n_row < 0 || n_row >= H) {
+                n_row = row - offsets[n_dir][0];
+            }
+            n_col = col + offsets[n_dir][1];
+            if(n_col < 0 || n_col >= L) {
+                n_col = col - offsets[n_dir][1];
+            }
+        }
+
         // Convert the new row and column back into a 1D index.
         int neighbour_index = n_row * L + n_col;
         int neighbour_specie = atomic_load_explicit(&grid[neighbour_index], memory_order_relaxed);
