@@ -21,6 +21,7 @@ struct Params {
     int printFrequency = 200; // MCS frequency to print snapshots
     float mobility = 1e-6;    // Mobility
     int species = 5;          // Number of species (Rock, Paper, Scissors, Lizard, Spock)
+    bool flux = true;         // Flux boundary conditions
 };
 
 //------------------------------------------------------------------------------

@@ -18,9 +18,16 @@ Params parseArgs(int argc, char* argv[]) {
     Params params; // Uses default values
 
     static struct option long_options[] = {
-        {"mcs", required_argument, 0, 'm'},        {"length", required_argument, 0, 'l'},         {"height", required_argument, 0, 'h'},
-        {"dimensions", required_argument, 0, 'd'}, {"printFrequency", required_argument, 0, 'p'}, {"neighbourhood", required_argument, 0, 'n'},
-        {"species", required_argument, 0, 's'},    {"mobility", required_argument, 0, 'M'},       {0, 0, 0, 0} // End of options
+        {"mcs", required_argument, 0, 'm'},
+        {"length", required_argument, 0, 'l'},
+        {"height", required_argument, 0, 'h'},
+        {"dimensions", required_argument, 0, 'd'},
+        {"printFrequency", required_argument, 0, 'p'},
+        {"neighbourhood", required_argument, 0, 'n'},
+        {"species", required_argument, 0, 's'},
+        {"mobility", required_argument, 0, 'M'},
+        {"flux", required_argument, 0, 'f'}, // flux now takes an argument
+        {0, 0, 0, 0}                         // End of options
     };
 
     int opt;
@@ -28,9 +35,11 @@ Params parseArgs(int argc, char* argv[]) {
 
     std::string usage = " [--mcs <MCS>] [--length <Lattice Length>] [--height <Lattice Height>] "
                         "[--dimensions <Dimensions>] [--printFrequency <Print Frequency>] "
-                        "[--neighbourhood <Neighbourhood 4/8>] [--mobility <Mobility>] [--species <Number of Species 3/5>]";
+                        "[--neighbourhood <Neighbourhood 4/8>] [--mobility <Mobility>] "
+                        "[--species <Number of Species 3/5>] [--flux <true|false>]";
 
-    while ((opt = getopt_long(argc, argv, "m:l:h:d:p:n:M:s:", long_options, &option_index)) != -1) {
+    // Updated short options string; note that 'f' now requires an argument
+    while ((opt = getopt_long(argc, argv, "m:l:h:d:p:n:M:s:f:", long_options, &option_index)) != -1) {
         switch (opt) {
             case 'm':
                 params.MCS = std::stoi(optarg);
@@ -62,9 +71,19 @@ Params parseArgs(int argc, char* argv[]) {
                 }
                 break;
             case 'M':
-                params.mobility = std::stof(optarg); // **Allows scientific notation input**
+                params.mobility = std::stof(optarg); // Allows scientific notation input
                 break;
-
+            case 'f': {
+                std::string fluxStr(optarg);
+                // Convert the argument to lowercase for easier comparison
+                for (auto& c : fluxStr)
+                    c = tolower(c);
+                if (fluxStr == "false" || fluxStr == "0" || fluxStr == "no")
+                    params.flux = false;
+                else
+                    params.flux = true;
+                break;
+            }
             default:
                 std::cerr << "Usage: " << argv[0] << usage << std::endl;
                 exit(EXIT_FAILURE);
@@ -73,7 +92,6 @@ Params parseArgs(int argc, char* argv[]) {
 
     return params;
 }
-
 //------------------------------------------------------------------------------
 // Initialisation: Create device, load library, compile pipelines, create buffers
 //------------------------------------------------------------------------------
@@ -369,9 +387,10 @@ void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, i
     encoder->setBytes(&sigma, sizeof(float), 4);
     encoder->setBytes(&p.L, sizeof(int), 5);
     encoder->setBytes(&p.H, sizeof(int), 6);
+    encoder->setBytes(&p.flux, sizeof(bool), 7);
 
     // Set the grid buffer
-    encoder->setBuffer(ctx.stepGridBuffer, 0, 7);
+    encoder->setBuffer(ctx.stepGridBuffer, 0, 8);
 
     MTL::Size threadsPerGrid = MTL::Size(1000, 1, 1); // 40,000 cells, 1,000 threads --> 40 cells per thread
     MTL::Size threadGroupSize = MTL::Size(ctx.pipelineStateStep->maxTotalThreadsPerThreadgroup(), 1, 1);
@@ -392,14 +411,17 @@ int main(int argc, const char* argv[]) {
     // ------------------- Parse Command Line Arguments -------------------
     Params params = parseArgs(argc, const_cast<char**>(argv));
 
+    std::cout << "------------------- Parameters -------------------\n";
     std::cout << "MCS: " << params.MCS << "\n";
     std::cout << "Lattice Length: " << params.L << "\n";
     std::cout << "Lattice Height: " << params.H << "\n";
     std::cout << "Dimensions: " << params.dimensions << "\n";
     std::cout << "Neighbourhood: " << params.neighbourhood << "\n";
-    std::cout << "Print Frequency: " << params.printFrequency << "\n";
     std::cout << "Mobility: " << params.mobility << "\n";
     std::cout << "Species: " << params.species << "\n";
+    std::cout << "Flux: " << params.flux << "\n";
+    std::cout << "Print Frequency: " << params.printFrequency << "\n";
+    std::cout << "-------------------------------------------------\n";
 
     int MCS = params.MCS;
     int L = params.L;                                      // Length of lattice
