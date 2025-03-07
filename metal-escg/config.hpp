@@ -13,15 +13,16 @@
 // Structure to hold the input parameters of the simulation
 // ------------------------------------------------------------------------------
 struct Params {
-    int MCS = 100000;         // Monte Carlo Steps
-    int L = 200;              // Length of lattice
-    int H = 200;              // Height of lattice
-    int dimensions = 2;       // 1D, 2D, 3D
-    int neighbourhood = 4;    // Von Neumann (4-way), Moore (8-way)
-    int printFrequency = 200; // MCS frequency to print snapshots
-    float mobility = 1e-6;    // Mobility
-    int species = 5;          // Number of species (Rock, Paper, Scissors, Lizard, Spock)
-    bool flux = true;         // Flux boundary conditions
+    int MCS = 100000;             // Monte Carlo Steps
+    int L = 200;                  // Length of lattice
+    int H = 200;                  // Height of lattice
+    int dimensions = 2;           // 1D, 2D, 3D
+    int neighbourhood = 4;        // Von Neumann (4-way), Moore (8-way)
+    int printFrequency = 200;     // MCS frequency to print snapshots
+    float mobility = 1e-6;        // Mobility
+    int species = 5;              // Number of species (Rock, Paper, Scissors, Lizard, Spock)
+    bool flux = true;             // Flux boundary conditions
+    float emptyProbability = 0; // Initial empty cell probability
 };
 
 //------------------------------------------------------------------------------
