@@ -4,11 +4,14 @@
 #define CA_PRIVATE_IMPLEMENTATION
 
 #include "config.hpp"
+#include "io.hpp"
 #include "visualise.hpp"
 #include <chrono>
+#include <fstream>
 #include <getopt.h>
 #include <iostream>
 #include <random>
+#include <sstream>
 #include <vector>
 
 //------------------------------------------------------------------------------
@@ -29,12 +32,13 @@ Params parseArgs(int argc, char* argv[]) {
     int option_index = 0;
 
     std::string usage = " [--mcs <MCS>] [--length <Lattice Length>] [--height <Lattice Height>] "
-                        " [--printFrequency <Print Frequency>] [--empty <Initial Empty Cell Probability>] "
+                        " [--printFrequency <Print Frequency>] [--empty <Initial Empty Cell Probability >] "
                         "[--neighbourhood <Neighbourhood 4/8>] [--mobility <Mobility>] "
-                        "[--species <Number of Species 3/5>] [--flux <true|false>]";
+                        "[--species <Number of Species 3/5>] [--flux <true|false>]"
+                        " [--resume <true|false>]";
 
     // Parse the command line arguments
-    while ((opt = getopt_long(argc, argv, "m:l:h:p:n:M:s:f:e:", long_options, &option_index)) != -1) {
+    while ((opt = getopt_long(argc, argv, "m:l:h:p:n:M:s:f:e:r:", long_options, &option_index)) != -1) {
         switch (opt) {
             case 'm':
                 params.MCS = std::stoi(optarg);
@@ -85,6 +89,19 @@ Params parseArgs(int argc, char* argv[]) {
                     exit(EXIT_FAILURE);
                 }
                 break;
+            case 'r': {
+                std::string resumeStr(optarg);
+                // Convert the argument to lowercase for easier comparison
+                for (auto& c : resumeStr) {
+                    c = tolower(c);
+                }
+                if (resumeStr == "true" || resumeStr == "1" || resumeStr == "yes") {
+                    params.resume = true;
+                } else {
+                    params.resume = false;
+                }
+                break;
+            }
             default:
                 std::cerr << "Usage: " << argv[0] << usage << std::endl;
                 exit(EXIT_FAILURE);
@@ -321,7 +338,7 @@ void densities(int* grid, int N, int mcs, GridContext& gridCtx, MetalContext& me
     gridCtx.densitySpock.push_back(spockDensity);
 
     // Print the densities
-    if (mcs % printFrequency == 0) {
+    if (mcs % printFrequency == 0 && mcs != 0) {
         std::cout << "Population Densities at: " << mcs << std::endl;
         std::cout << "EMPTY: " << emptyDensity << std::endl;
         std::cout << "ROCK: " << rockDensity << std::endl;
@@ -403,6 +420,23 @@ void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, i
     commandBuffer->waitUntilCompleted();
 }
 
+void initialiseGrid(int* grid, Params p) {
+    // Set up a random number generator
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(1, p.species);     // Range: 1 to 5 (RPSLS)
+    std::uniform_real_distribution<float> emptyCellProb(0, 1); // Range: 0 to 1
+
+    // Randomly initialise the grid with species (stored as int)
+    for (int i = 0; i < p.L * p.H; i++) {
+        if (emptyCellProb(gen) < p.emptyProbability) {
+            grid[i] = 0; // Randomly assign an empty cell as an integer
+        } else {
+            grid[i] = dist(gen); // Randomly assign a species (or EMPTY) as an integer
+        }
+    }
+}
+
 //------------------------------------------------------------------------------
 // Main function
 //------------------------------------------------------------------------------
@@ -411,6 +445,71 @@ int main(int argc, const char* argv[]) {
 
     // ------------------- Parse Command Line Arguments -------------------
     Params params = parseArgs(argc, const_cast<char**>(argv));
+
+    int currentMCS = 0;
+    int MCS = params.MCS;
+    int L;      // Length of lattice
+    int H;      // Height of lattice
+    int N;      // Elementary time steps = total number of cells
+    bool moore; // Moore neighbourhood if true, Von Neumann if false
+    int* grid;  // Flattened grid size = L x H
+
+    if (params.resume) {
+        std::cout << "Resuming simulation from previous state." << std::endl;
+        importCSVToParams(params); // Doesn't rewrite target MCS
+
+        // MCS = params.MCS;
+        L = params.L;
+        H = params.H;
+        N = L * H;
+        moore = params.neighbourhood == 8;
+        grid = new int[N];
+
+        currentMCS = importCSVToGrid(grid, N); // Assigns to grid and returns the current MCS
+
+        // Creating output directory
+        std::string length = "l" + std::to_string(L);
+        std::string height = "h" + std::to_string(H);
+        std::string neighbourhood = moore ? "Moore" : "VN";
+        std::ostringstream oss;
+        oss.precision(2);
+        oss << std::scientific << params.mobility;
+        std::string mobility_str = "M" + oss.str();
+        std::string flux = params.flux ? "flux" : "noflux";
+        std::string species = std::to_string(params.species) + "species";
+        params.outputDir = length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species;
+    } else {
+        std::cout << "Starting new simulation.\n" << std::endl;
+
+        L = params.L;
+        H = params.H;
+        N = L * H;
+        MCS = params.MCS;
+        moore = params.neighbourhood == 8;
+        grid = new int[N];
+
+        // Creating output directory
+        std::string length = "l" + std::to_string(L);
+        std::string height = "h" + std::to_string(H);
+        std::string neighbourhood = moore ? "Moore" : "VN";
+        std::ostringstream oss;
+        oss.precision(2);
+        oss << std::scientific << params.mobility;
+        std::string mobility_str = "M" + oss.str();
+        std::string flux = params.flux ? "flux" : "noflux";
+        std::string species = std::to_string(params.species) + "species";
+        params.outputDir = length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species;
+    }
+
+    // Create the directory
+    if (std::filesystem::create_directory(params.outputDir)) {
+        std::cout << "Directory created: " << params.outputDir << std::endl;
+    } else {
+        std::cout << "Failed to create or already exists: " << params.outputDir << std::endl;
+    }
+
+    exportParamsToCSV(params);                 // Export the parameters to a csv file
+    exportGridToCSV(grid, params, currentMCS); // Export the grid to a csv file
 
     std::cout << "------------------- Parameters -------------------\n";
     std::cout << "MCS: " << params.MCS << "\n";
@@ -422,13 +521,8 @@ int main(int argc, const char* argv[]) {
     std::cout << "Species: " << params.species << "\n";
     std::cout << "Flux: " << params.flux << "\n";
     std::cout << "Print Frequency: " << params.printFrequency << "\n";
+    std::cout << "Resume: " << params.resume << "\n";
     std::cout << "-------------------------------------------------\n";
-
-    int MCS = params.MCS;
-    int L = params.L;                                      // Length of lattice
-    int H = params.H;                                      // Height of lattice
-    int N = L * H;                                         // Elementary time steps = total number of cells
-    bool moore = params.neighbourhood == 8 ? true : false; // Moore neighbourhood if true, Von Neumann if false
 
     // ------------------- Metal Parameters -------------------
 
@@ -460,8 +554,6 @@ int main(int argc, const char* argv[]) {
     float M = params.mobility; // Mobility 'since it is proportional to the typical area
                                // explored by one mobile individual per unit time'
 
-    int* grid = new int[N]; // Flattened grid size = L x L
-
     float mu = 1;              // RPSLS interaction
     float sigma = 1;           // Reproduction
     float epsilon = 2 * M * N; // Migration
@@ -472,27 +564,23 @@ int main(int argc, const char* argv[]) {
     sigma /= sum;
     epsilon /= sum;
 
-    // Set up a random number generator
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dist(1, params.species); // Range: 1 to 5 (RPSLS)
-    std::uniform_real_distribution<float> emptyCellProb(0, 1);  // Range: 0 to 1
-
-    // Randomly initialise the grid with species (stored as int)
-    for (int i = 0; i < N; i++) {
-        if (emptyCellProb(gen) < params.emptyProbability) {
-            grid[i] = 0; // Randomly assign an empty cell as an integer
-        } else {
-            grid[i] = dist(gen); // Randomly assign a species (or EMPTY) as an integer
-        }
+    if (params.resume) {
+        std::cout << "Resuming simulation from MCS: " << currentMCS << std::endl;
+    } else {
+        initialiseGrid(grid, params); // Initialise the grid
     }
 
     // ------------------- Start Simulating -------------------
 
-    for (int mcs = 0; mcs <= MCS; mcs++) {                                 // Monte Carlos
+    plot_snapshot(grid, currentMCS, params);              // Plot snapshots at specific MCS
+    exportGridToCSV(grid, params, currentMCS);            // Export the grid to a csv file
+    densities(grid, N, currentMCS, gridCtx, metalCtx, 1); // Print initial densities
+
+    for (int mcs = currentMCS; mcs <= MCS; mcs++) {                        // Monte Carlos
         densities(grid, N, mcs, gridCtx, metalCtx, params.printFrequency); // Every MCS, call densities to add to density vectors for visualisation after simulation
-        if (mcs == 0 || mcs == 2000 || mcs == 6000 || mcs == 20000 || mcs == 100000) {
-            plot_snapshot(grid, mcs, params); // Plot snapshots at specific MCS
+        if (mcs == 2000 || mcs == 6000 || mcs == 20000 || mcs == 100000) {
+            plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
+            exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
         }
 
         // Fill the arrays with the next N cells, neighbour directions, and action probabilities
