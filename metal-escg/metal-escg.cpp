@@ -18,28 +18,23 @@ Params parseArgs(int argc, char* argv[]) {
     Params params; // Uses default values
 
     static struct option long_options[] = {
-        {"mcs", required_argument, 0, 'm'},
-        {"length", required_argument, 0, 'l'},
-        {"height", required_argument, 0, 'h'},
-        {"dimensions", required_argument, 0, 'd'},
-        {"printFrequency", required_argument, 0, 'p'},
-        {"neighbourhood", required_argument, 0, 'n'},
-        {"species", required_argument, 0, 's'},
-        {"mobility", required_argument, 0, 'M'},
-        {"flux", required_argument, 0, 'f'}, // flux now takes an argument
-        {0, 0, 0, 0}                         // End of options
+        {"mcs", required_argument, 0, 'm'},           {"length", required_argument, 0, 'l'},
+        {"height", required_argument, 0, 'h'},        {"printFrequency", required_argument, 0, 'p'},
+        {"neighbourhood", required_argument, 0, 'n'}, {"species", required_argument, 0, 's'},
+        {"mobility", required_argument, 0, 'M'},      {"flux", required_argument, 0, 'f'},
+        {"empty", required_argument, 0, 'w'},         {0, 0, 0, 0} // End of options
     };
 
     int opt;
     int option_index = 0;
 
     std::string usage = " [--mcs <MCS>] [--length <Lattice Length>] [--height <Lattice Height>] "
-                        "[--dimensions <Dimensions>] [--printFrequency <Print Frequency>] "
+                        " [--printFrequency <Print Frequency>] [--empty <Initial Empty Cell Probability>] "
                         "[--neighbourhood <Neighbourhood 4/8>] [--mobility <Mobility>] "
                         "[--species <Number of Species 3/5>] [--flux <true|false>]";
 
-    // Updated short options string; note that 'f' now requires an argument
-    while ((opt = getopt_long(argc, argv, "m:l:h:d:p:n:M:s:f:", long_options, &option_index)) != -1) {
+    // Parse the command line arguments
+    while ((opt = getopt_long(argc, argv, "m:l:h:p:n:M:s:f:e:", long_options, &option_index)) != -1) {
         switch (opt) {
             case 'm':
                 params.MCS = std::stoi(optarg);
@@ -49,9 +44,6 @@ Params parseArgs(int argc, char* argv[]) {
                 break;
             case 'h':
                 params.H = std::stoi(optarg);
-                break;
-            case 'd':
-                params.dimensions = std::stoi(optarg);
                 break;
             case 'p':
                 params.printFrequency = std::stoi(optarg);
@@ -76,14 +68,23 @@ Params parseArgs(int argc, char* argv[]) {
             case 'f': {
                 std::string fluxStr(optarg);
                 // Convert the argument to lowercase for easier comparison
-                for (auto& c : fluxStr)
+                for (auto& c : fluxStr) {
                     c = tolower(c);
-                if (fluxStr == "false" || fluxStr == "0" || fluxStr == "no")
+                }
+                if (fluxStr == "false" || fluxStr == "0" || fluxStr == "no") {
                     params.flux = false;
-                else
+                } else {
                     params.flux = true;
+                }
                 break;
             }
+            case 'e':
+                params.emptyProbability = std::stof(optarg);
+                if (params.emptyProbability <= 0 || params.emptyProbability > 1) {
+                    std::cerr << "Error: Initial empty cell probability must be 0 <= p < 1." << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+                break;
             default:
                 std::cerr << "Usage: " << argv[0] << usage << std::endl;
                 exit(EXIT_FAILURE);
@@ -415,7 +416,7 @@ int main(int argc, const char* argv[]) {
     std::cout << "MCS: " << params.MCS << "\n";
     std::cout << "Lattice Length: " << params.L << "\n";
     std::cout << "Lattice Height: " << params.H << "\n";
-    std::cout << "Dimensions: " << params.dimensions << "\n";
+    std::cout << "Initial Empty Cell Probability: " << params.emptyProbability << "\n";
     std::cout << "Neighbourhood: " << params.neighbourhood << "\n";
     std::cout << "Mobility: " << params.mobility << "\n";
     std::cout << "Species: " << params.species << "\n";
@@ -475,10 +476,15 @@ int main(int argc, const char* argv[]) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dist(1, params.species); // Range: 1 to 5 (RPSLS)
+    std::uniform_real_distribution<float> emptyCellProb(0, 1);  // Range: 0 to 1
 
     // Randomly initialise the grid with species (stored as int)
     for (int i = 0; i < N; i++) {
-        grid[i] = dist(gen); // Randomly assign a species (or EMPTY) as an integer
+        if (emptyCellProb(gen) < params.emptyProbability) {
+            grid[i] = 0; // Randomly assign an empty cell as an integer
+        } else {
+            grid[i] = dist(gen); // Randomly assign a species (or EMPTY) as an integer
+        }
     }
 
     // ------------------- Start Simulating -------------------
