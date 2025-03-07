@@ -54,7 +54,7 @@ int main() {
 
     // Prepare buffers
     const int numThreads = 2000;
-    const int numRandomNumbers = 1000000;
+    const int numRandomNumbers = 1000000000;
 
     uint32_t seeds[numThreads];
 
@@ -76,29 +76,27 @@ int main() {
     uint32_t* results = new uint32_t[numRandomNumbers];
     MTL::Buffer* resultBuffer = device->newBuffer(sizeof(uint32_t) * numRandomNumbers, MTL::ResourceStorageModeShared);
 
-    for (int run = 0; run < 100; run++) {
-        // Create command buffer and encoder
-        MTL::CommandBuffer* commandBuffer = commandQueue->commandBuffer();
-        MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
-        encoder->setComputePipelineState(pipelineState); //
-        encoder->setBuffer(seedBuffer, 0, 0);
-        encoder->setBuffer(resultBuffer, 0, 1);
+    // Create command buffer and encoder
+    MTL::CommandBuffer* commandBuffer = commandQueue->commandBuffer();
+    MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
+    encoder->setComputePipelineState(pipelineState); //
+    encoder->setBuffer(seedBuffer, 0, 0);
+    encoder->setBuffer(resultBuffer, 0, 1);
 
-        // Dispatch threads
-        MTL::Size gridSize = MTL::Size(numThreads, 1, 1);
-        MTL::Size threadGroupSize = MTL::Size(pipelineState->maxTotalThreadsPerThreadgroup(), 1, 1);
-        encoder->dispatchThreads(gridSize, threadGroupSize);
-        encoder->endEncoding();
+    // Dispatch threads
+    MTL::Size gridSize = MTL::Size(numThreads, 1, 1);
+    MTL::Size threadGroupSize = MTL::Size(pipelineState->maxTotalThreadsPerThreadgroup(), 1, 1);
+    encoder->dispatchThreads(gridSize, threadGroupSize);
+    encoder->endEncoding();
 
-        // Commit command buffer and wait for completion
-        commandBuffer->commit();
-        commandBuffer->waitUntilCompleted();
+    // Commit command buffer and wait for completion
+    commandBuffer->commit();
+    commandBuffer->waitUntilCompleted();
 
-        // Retrieve results
-        results = static_cast<uint32_t*>(resultBuffer->contents());
+    // Retrieve results
+    results = static_cast<uint32_t*>(resultBuffer->contents());
 
-        // validateRandomNumbers(results, numRandomNumbers);
-    }
+    // validateRandomNumbers(results, numRandomNumbers);
 
     // printNumbers(results, numRandomNumbers);
 

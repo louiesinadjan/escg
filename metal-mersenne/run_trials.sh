@@ -2,6 +2,8 @@
 
 # Clear the results file before starting
 echo "Starting benchmark trials..." > results.txt
+echo "(Generating 1,000,000,000 random numbers for each trial)" > results.txt
+echo "------------------------------" > results.txt
 
 # Run 10 IID trials for Serial Mersenne Twister
 echo "Running Serial Mersenne trials..." | tee -a results.txt

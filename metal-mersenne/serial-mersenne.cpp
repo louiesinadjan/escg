@@ -23,14 +23,14 @@ int main() {
     // Serial Mersenne Twister
     static std::random_device rd;                     // Random number generator
     static std::mt19937 gen(rd());                    // Mersenne Twister
-    std::uniform_int_distribution<int> dist(INT_MAX); // Uniform distribution
+    std::uniform_int_distribution<int> dist(1, INT_MAX); // Uniform distribution
 
-    int* x = new int[1000000]; // Array to store random numbers
-    for (int run = 0; run < 100; run++) {
-        for (int j = 0; j < 1000000; j++) { // Generate 1,000,000 random numbers
-            x[j] = dist(gen);
-        }
+    int* x = new int[1000000000];          // Array to store random numbers
+                                           // for (int run = 0; run < 100; run++) {
+    for (int j = 0; j < 1000000000; j++) { // Generate 1,000,000,000 random numbers
+        x[j] = dist(gen);
     }
+    // }
 
     // validateRandomNumbers(x, 1000000);
     // printNumbers(x, 1000000);

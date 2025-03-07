@@ -1,124 +1,124 @@
-Starting benchmark trials...
+------------------------------
 Running Serial Mersenne trials...
 Trial 1
 
-real	0m0.888s
-user	0m0.698s
-sys	0m0.004s
+real	0m7.607s
+user	0m7.037s
+sys	0m0.406s
 ------------------------------
 Trial 2
 
-real	0m0.708s
-user	0m0.698s
-sys	0m0.003s
+real	0m7.602s
+user	0m7.022s
+sys	0m0.442s
 ------------------------------
 Trial 3
 
-real	0m0.707s
-user	0m0.697s
-sys	0m0.003s
+real	0m7.594s
+user	0m7.012s
+sys	0m0.463s
 ------------------------------
 Trial 4
 
-real	0m0.711s
-user	0m0.698s
-sys	0m0.003s
+real	0m7.568s
+user	0m7.012s
+sys	0m0.452s
 ------------------------------
 Trial 5
 
-real	0m0.712s
-user	0m0.698s
-sys	0m0.003s
+real	0m7.748s
+user	0m7.019s
+sys	0m0.379s
 ------------------------------
 Trial 6
 
-real	0m0.710s
-user	0m0.698s
-sys	0m0.003s
+real	0m7.555s
+user	0m7.030s
+sys	0m0.406s
 ------------------------------
 Trial 7
 
-real	0m0.710s
-user	0m0.698s
-sys	0m0.003s
+real	0m7.603s
+user	0m7.021s
+sys	0m0.438s
 ------------------------------
 Trial 8
 
-real	0m0.707s
-user	0m0.697s
-sys	0m0.002s
+real	0m7.569s
+user	0m7.012s
+sys	0m0.489s
 ------------------------------
 Trial 9
 
-real	0m0.707s
-user	0m0.697s
-sys	0m0.002s
+real	0m7.624s
+user	0m7.016s
+sys	0m0.494s
 ------------------------------
 Trial 10
 
-real	0m0.707s
-user	0m0.697s
-sys	0m0.002s
+real	0m7.565s
+user	0m7.011s
+sys	0m0.491s
 ------------------------------
 Running Metal Mersenne trials...
 Trial 1
 
-real	0m0.489s
-user	0m0.009s
-sys	0m0.028s
+real	0m1.327s
+user	0m0.007s
+sys	0m0.257s
 ------------------------------
 Trial 2
 
-real	0m0.204s
-user	0m0.010s
-sys	0m0.017s
+real	0m0.447s
+user	0m0.007s
+sys	0m0.103s
 ------------------------------
 Trial 3
 
-real	0m0.214s
-user	0m0.010s
-sys	0m0.022s
+real	0m0.346s
+user	0m0.006s
+sys	0m0.149s
 ------------------------------
 Trial 4
 
-real	0m0.207s
-user	0m0.010s
-sys	0m0.020s
+real	0m0.361s
+user	0m0.007s
+sys	0m0.148s
 ------------------------------
 Trial 5
 
-real	0m0.208s
-user	0m0.010s
-sys	0m0.013s
+real	0m0.348s
+user	0m0.007s
+sys	0m0.187s
 ------------------------------
 Trial 6
 
-real	0m0.215s
-user	0m0.011s
-sys	0m0.016s
+real	0m0.347s
+user	0m0.006s
+sys	0m0.116s
 ------------------------------
 Trial 7
 
-real	0m0.210s
-user	0m0.010s
-sys	0m0.017s
+real	0m0.361s
+user	0m0.006s
+sys	0m0.111s
 ------------------------------
 Trial 8
 
-real	0m0.211s
-user	0m0.010s
-sys	0m0.017s
+real	0m0.344s
+user	0m0.006s
+sys	0m0.164s
 ------------------------------
 Trial 9
 
-real	0m0.213s
-user	0m0.010s
-sys	0m0.015s
+real	0m0.347s
+user	0m0.007s
+sys	0m0.147s
 ------------------------------
 Trial 10
 
-real	0m0.244s
-user	0m0.011s
-sys	0m0.021s
+real	0m0.345s
+user	0m0.006s
+sys	0m0.142s
 ------------------------------
 All trials completed.
