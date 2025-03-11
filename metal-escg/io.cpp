@@ -42,7 +42,7 @@ void exportGridToCSV(int* grid, Params p, int mcs) {
 
 // Export the parameters to a CSV file (except bool resume)
 void exportParamsToCSV(Params p) {
-    std::cout << "Exporting parameters to csv" << std::endl;
+    std::cout << "Exporting parameters to csv..." << std::endl;
 
     std::ofstream file("./" + p.outputDir + "/params.csv");
     if (!file) {
@@ -134,7 +134,65 @@ void importCSVToParams(Params& p) { // Imports the parameters from the csv file
     file.close();
 }
 
-void importCSVToDominance(int* dominates, int species){}
+void importCSVToDominance(int* dominates, int species) {
+    std::ifstream file("dominance.csv");
+    if (!file) {
+        std::cerr << "Error: Could not open file dominance.csv for reading." << std::endl;
+        return;
+    }
 
-void exportDominanceToCSV(int* dominates, int species){}
+    std::string line;
+    int row = 0;
 
+    while (std::getline(file, line) && row < species) {
+        std::stringstream ss(line);
+        std::string cell;
+        int col = 0;
+
+        while (std::getline(ss, cell, ',') && col < species) {
+            // Convert adjacency matrix from 2D to 1D format
+            dominates[row * species + col] = std::stoi(cell);
+            col++;
+        }
+
+        row++;
+    }
+
+    file.close();
+}
+
+void exportDominanceToCSV(int* dominates, int species, Params p) {
+    std::cout << "Exporting dominance to CSV..." << std::endl;
+
+    std::ofstream file("./" + p.outputDir + "/dominance.csv");
+    if (!file) {
+        std::cerr << "Error: Could not open file " << p.outputDir << "/dominance.csv for writing." << std::endl;
+        return;
+    }
+
+    // Write the adjacency matrix row-wise
+    for (int i = 0; i < species; i++) {
+        for (int j = 0; j < species; j++) {
+            file << dominates[i * species + j]; // Convert 1D index to 2D
+            if (j < species - 1) {
+                file << ","; // Add a comma between values (except last column)
+            }
+        }
+        file << "\n"; // New line after each row
+    }
+
+    file.close();
+}
+
+std::vector<std::vector<int>> generateCircularAdjacencyMatrix(int speciesCount, const std::vector<int>& offsets) {
+    std::vector<std::vector<int>> adjacencyMatrix(speciesCount, std::vector<int>(speciesCount, 0));
+
+    for (int species = 0; species < speciesCount; species++) {
+        for (int offset : offsets) {
+            int target = (species + offset) % speciesCount; // Circular wrap-around
+            adjacencyMatrix[species][target] = 1;
+        }
+    }
+
+    return adjacencyMatrix;
+}

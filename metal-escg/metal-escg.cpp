@@ -380,7 +380,7 @@ void initMetalStep(MetalContext& ctx, int N) {
     ctx.actionProbabilitiesBuffer = ctx.device->newBuffer(sizeof(float) * N, MTL::ResourceStorageModeShared);
     ctx.stepGridBuffer = ctx.device->newBuffer(sizeof(int) * N, MTL::ResourceStorageModeShared);
 }
-
+       
 // ------------------------------------------------------------------------------
 // Metal step shader
 // ------------------------------------------------------------------------------
@@ -510,6 +510,23 @@ int main(int argc, const char* argv[]) {
 
     exportParamsToCSV(params);                 // Export the parameters to a csv file
     exportGridToCSV(grid, params, currentMCS); // Export the grid to a csv file
+
+    int speciesCount = 5; // Example species count
+    int* dominanceMatrix = new int[speciesCount * speciesCount];
+
+    importCSVToDominance(dominanceMatrix, speciesCount);
+
+    // Print dominance matrix (for debugging)
+    for (int i = 0; i < speciesCount; i++) {
+        for (int j = 0; j < speciesCount; j++) {
+            std::cout << dominanceMatrix[i * speciesCount + j] << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    exportDominanceToCSV(dominanceMatrix, speciesCount, params);
+
+    delete[] dominanceMatrix;
 
     std::cout << "------------------- Parameters -------------------\n";
     std::cout << "MCS: " << params.MCS << "\n";
