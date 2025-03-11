@@ -55,7 +55,8 @@
         "random": "cpp",
         "chrono": "cpp",
         "set": "cpp",
-        "unordered_set": "cpp"
+        "unordered_set": "cpp",
+        "fstream": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabledIfIncludesResolve",
     "C_Cpp.default.compilerPath": "/usr/bin/g++"

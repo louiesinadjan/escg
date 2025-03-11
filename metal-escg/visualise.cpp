@@ -35,7 +35,7 @@ void plot_densities(GridContext g, Params p) {
     std::string species = std::to_string(p.species) + "species";
 
     plt::title(length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species);
-    plt::save("densities_" + length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species + ".png");
+    plt::save("./" + p.outputDir + "/densities.png");
 }
 
 // https://github.com/lava/matplotlib-cpp/blob/master/examples/imshow.cpp
@@ -77,5 +77,6 @@ void plot_snapshot(const int* grid, int mcs, Params p) {
     std::string species = std::to_string(p.species) + "species";
 
     plt::title(length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species + "_" + mcs_str);
-    plt::save("ss_" + length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species + "_" + mcs_str + ".png");
+
+    plt::save("./" + p.outputDir + "/ss_" + mcs_str + ".png");
 }
