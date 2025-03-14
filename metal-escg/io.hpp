@@ -11,4 +11,4 @@ int importCSVToGrid(int* grid, int N); // Returns the MCS to resume from
 void importCSVToParams(Params& p); // Imports the parameters from the csv file
 
 void importCSVToDominance(int* dominates, int species);
-void exportDominanceToCSV(int* dominates, int species, Params p);
+void exportDominanceToCSV(int* dominates, int species);

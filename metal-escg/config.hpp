@@ -24,6 +24,8 @@ struct Params {
     int species = 5;            // Number of species (Rock, Paper, Scissors, Lizard, Spock)
     bool flux = true;           // Flux boundary conditions
     float emptyProbability = 0; // Initial empty cell probability
+
+    bool dominance = false;
     bool resume = false;        // Resume simulation from given files
 
     std::string outputDir; // Output directory for simulation files
@@ -76,6 +78,9 @@ struct GridContext {
     std::vector<double> densityScissors;
     std::vector<double> densityLizard;
     std::vector<double> densitySpock;
+
+    std::vector<std::vector<int>> speciesCounters;
+    std::vector<std::vector<double>> speciesDensities;
 };
 
 //------------------------------------------------------------------------------

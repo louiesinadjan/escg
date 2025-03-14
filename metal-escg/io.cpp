@@ -97,7 +97,7 @@ int importCSVToGrid(int* grid, int N) {
     }
 }
 
-void importCSVToParams(Params& p) { // Imports the parameters from the csv file
+void importCSVToParams(Params& p) { // Imports the parameters (except resume) from the csv file
     std::ifstream file("params.csv");
     if (!file) {
         std::cerr << "Error: Could not open file params.csv for reading." << std::endl;

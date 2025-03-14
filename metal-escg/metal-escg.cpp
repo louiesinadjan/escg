@@ -11,6 +11,7 @@
 #include <getopt.h>
 #include <iostream>
 #include <random>
+#include <set>
 #include <sstream>
 #include <vector>
 
@@ -25,17 +26,19 @@ Params parseArgs(int argc, char* argv[]) {
         {"height", required_argument, 0, 'h'},        {"printFrequency", required_argument, 0, 'p'},
         {"neighbourhood", required_argument, 0, 'n'}, {"species", required_argument, 0, 's'},
         {"mobility", required_argument, 0, 'M'},      {"flux", required_argument, 0, 'f'},
-        {"empty", required_argument, 0, 'w'},         {0, 0, 0, 0} // End of options
+        {"empty", required_argument, 0, 'w'},         {"dominance", required_argument, 0, 'd'}, 
+        {0, 0, 0, 0} // End of options
     };
 
     int opt;
     int option_index = 0;
 
+    // Dominance refers to importing a dominance.csv as the dominance adjacency matrix
     std::string usage = " [--mcs <MCS>] [--length <Lattice Length>] [--height <Lattice Height>] "
                         " [--printFrequency <Print Frequency>] [--empty <Initial Empty Cell Probability >] "
                         "[--neighbourhood <Neighbourhood 4/8>] [--mobility <Mobility>] "
-                        "[--species <Number of Species 3/5>] [--flux <true|false>]"
-                        " [--resume <true|false>]";
+                        "[--species <int>] [--flux <true|false>] [--dominance <true|false]"
+                        "[--resume <true|false>]";
 
     // Parse the command line arguments
     while ((opt = getopt_long(argc, argv, "m:l:h:p:n:M:s:f:e:r:", long_options, &option_index)) != -1) {
@@ -61,8 +64,8 @@ Params parseArgs(int argc, char* argv[]) {
                 break;
             case 's':
                 params.species = std::stoi(optarg);
-                if (params.species != 3 && params.species != 5) {
-                    std::cerr << "Error: Number of species must be 3 or 5." << std::endl;
+                if (params.species < 0) {
+                    std::cerr << "Error: Number of species must be >0." << std::endl;
                     exit(EXIT_FAILURE);
                 }
                 break;
@@ -79,6 +82,19 @@ Params parseArgs(int argc, char* argv[]) {
                     params.flux = false;
                 } else {
                     params.flux = true;
+                }
+                break;
+            }
+            case 'd': {
+                std::string domStr(optarg);
+                // Convert the argument to lowercase for easier comparison
+                for (auto& c : domStr) {
+                    c = tolower(c);
+                }
+                if (domStr == "true" || domStr == "1" || domStr == "yes") {
+                    params.dominance = true;
+                } else {
+                    params.dominance = false;
                 }
                 break;
             }
@@ -287,11 +303,11 @@ void destroyMetalContext(MetalContext& ctx) {
 //------------------------------------------------------------------------------
 // Calculate densities of each species and add to vectors for visualisation using metal
 //------------------------------------------------------------------------------
-void computeDensitiesGPU(MetalContext& ctx, int* grid, int* densities, int N) {
+void computeDensitiesGPU(MetalContext& ctx, int* grid, int* densities, int N, int speciesNum) {
     // Copy the flattened grid to the GPU buffer
     std::memcpy(ctx.gridBuffer->contents(), grid, sizeof(int) * N);
     // Reset the density buffer
-    std::memset(ctx.densityResultsBuffer->contents(), 0, sizeof(int) * 6);
+    std::memset(ctx.densityResultsBuffer->contents(), 0, sizeof(int) * (speciesNum + 1));
 
     MTL::CommandBuffer* commandBuffer = ctx.commandQueue->commandBuffer();
     MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
@@ -310,42 +326,38 @@ void computeDensitiesGPU(MetalContext& ctx, int* grid, int* densities, int N) {
     commandBuffer->waitUntilCompleted();
 
     // Copy the results from the GPU buffer to the densities array
-    std::memcpy(densities, ctx.densityResultsBuffer->contents(), sizeof(int) * 6);
+    std::memcpy(densities, ctx.densityResultsBuffer->contents(), sizeof(int) * (speciesNum + 1));
 }
 
 //------------------------------------------------------------------------------
 // Calculate densities of each species and add to vectors for visualisation
 //------------------------------------------------------------------------------
-void densities(int* grid, int N, int mcs, GridContext& gridCtx, MetalContext& metalCtx, int printFrequency) {
-    int speciesCounts[6] = {0}; // [empty, rock, paper, scissors, lizard, spock]
+void densities(int* grid, int N, int mcs, GridContext& gridCtx, MetalContext& metalCtx, int printFrequency, int speciesNum) {
+    int* speciesCounts = new int[speciesNum + 1]; // [empty, species...]
 
     // Call Metal shader
-    computeDensitiesGPU(metalCtx, grid, speciesCounts, N);
+    computeDensitiesGPU(metalCtx, grid, speciesCounts, N, speciesNum);
 
     // Calculate the percentage density cells
     double emptyDensity = (static_cast<double>(speciesCounts[0]) / N) * 100;
-    double rockDensity = (static_cast<double>(speciesCounts[1]) / N) * 100;
-    double paperDensity = (static_cast<double>(speciesCounts[2]) / N) * 100;
-    double scissorsDensity = (static_cast<double>(speciesCounts[3]) / N) * 100;
-    double lizardDensity = (static_cast<double>(speciesCounts[4]) / N) * 100;
-    double spockDensity = (static_cast<double>(speciesCounts[5]) / N) * 100;
+
+    std::vector<double> densities;
+    for (int i = 0; i < speciesNum; i++) {
+        densities.push_back((static_cast<double>(speciesCounts[i]) / N) * 100);
+    }
 
     gridCtx.steps.push_back(mcs);
-    gridCtx.densityRock.push_back(rockDensity);
-    gridCtx.densityPaper.push_back(paperDensity);
-    gridCtx.densityScissors.push_back(scissorsDensity);
-    gridCtx.densityLizard.push_back(lizardDensity);
-    gridCtx.densitySpock.push_back(spockDensity);
+    gridCtx.speciesDensities.push_back(densities);
 
     // Print the densities
     if (mcs % printFrequency == 0 && mcs != 0) {
         std::cout << "Population Densities at: " << mcs << std::endl;
         std::cout << "EMPTY: " << emptyDensity << std::endl;
-        std::cout << "ROCK: " << rockDensity << std::endl;
-        std::cout << "PAPER: " << paperDensity << std::endl;
-        std::cout << "SCISSORS: " << scissorsDensity << std::endl;
-        std::cout << "LIZARD: " << lizardDensity << std::endl;
-        std::cout << "SPOCK: " << spockDensity << std::endl;
+
+        for (int i = 0; i < speciesNum; i++) {
+            // The vector is 0-indexed but the species starts from Species 1 (value 0 in grid refers to empty)
+            std::cout << "Species " << (i + 1) << ": " << densities[i] << std::endl;
+        }
         std::cout << std::endl;
     }
 }
@@ -380,7 +392,7 @@ void initMetalStep(MetalContext& ctx, int N) {
     ctx.actionProbabilitiesBuffer = ctx.device->newBuffer(sizeof(float) * N, MTL::ResourceStorageModeShared);
     ctx.stepGridBuffer = ctx.device->newBuffer(sizeof(int) * N, MTL::ResourceStorageModeShared);
 }
-       
+
 // ------------------------------------------------------------------------------
 // Metal step shader
 // ------------------------------------------------------------------------------
@@ -424,7 +436,7 @@ void initialiseGrid(int* grid, Params p) {
     // Set up a random number generator
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dist(1, p.species);     // Range: 1 to 5 (RPSLS)
+    std::uniform_int_distribution<int> dist(1, p.species);     // Range: 1 to 5 (RPSLS) or p.species
     std::uniform_real_distribution<float> emptyCellProb(0, 1); // Range: 0 to 1
 
     // Randomly initialise the grid with species (stored as int)
@@ -453,6 +465,7 @@ int main(int argc, const char* argv[]) {
     int N;      // Elementary time steps = total number of cells
     bool moore; // Moore neighbourhood if true, Von Neumann if false
     int* grid;  // Flattened grid size = L x H
+
 
     if (params.resume) {
         std::cout << "Resuming simulation from previous state." << std::endl;
@@ -510,23 +523,6 @@ int main(int argc, const char* argv[]) {
 
     exportParamsToCSV(params);                 // Export the parameters to a csv file
     exportGridToCSV(grid, params, currentMCS); // Export the grid to a csv file
-
-    int speciesCount = 5; // Example species count
-    int* dominanceMatrix = new int[speciesCount * speciesCount];
-
-    importCSVToDominance(dominanceMatrix, speciesCount);
-
-    // Print dominance matrix (for debugging)
-    for (int i = 0; i < speciesCount; i++) {
-        for (int j = 0; j < speciesCount; j++) {
-            std::cout << dominanceMatrix[i * speciesCount + j] << " ";
-        }
-        std::cout << std::endl;
-    }
-
-    exportDominanceToCSV(dominanceMatrix, speciesCount, params);
-
-    delete[] dominanceMatrix;
 
     std::cout << "------------------- Parameters -------------------\n";
     std::cout << "MCS: " << params.MCS << "\n";
@@ -589,12 +585,17 @@ int main(int argc, const char* argv[]) {
 
     // ------------------- Start Simulating -------------------
 
-    plot_snapshot(grid, currentMCS, params);              // Plot snapshots at specific MCS
-    exportGridToCSV(grid, params, currentMCS);            // Export the grid to a csv file
-    densities(grid, N, currentMCS, gridCtx, metalCtx, 1); // Print initial densities
+    densities(grid, N, currentMCS, gridCtx, metalCtx, 1, params.species); // Print initial densities
+    plot_snapshot(grid, currentMCS, params);                              // Plot snapshots at specific MCS
+    exportGridToCSV(grid, params, currentMCS);                            // Export the grid to a csv file
 
-    for (int mcs = currentMCS; mcs <= MCS; mcs++) {                        // Monte Carlos
-        densities(grid, N, mcs, gridCtx, metalCtx, params.printFrequency); // Every MCS, call densities to add to density vectors for visualisation after simulation
+    std::set<int> speciesSet;
+    for (int i = 1; i <= params.species; i++) {
+        speciesSet.insert(i);
+    }
+
+    for (int mcs = currentMCS; mcs <= MCS; mcs++) {                                        // Monte Carlos
+        densities(grid, N, mcs, gridCtx, metalCtx, params.printFrequency, params.species); // Every MCS, call densities to add to density vectors for visualisation after simulation
         if (mcs == 2000 || mcs == 6000 || mcs == 20000 || mcs == 100000) {
             plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
             exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
