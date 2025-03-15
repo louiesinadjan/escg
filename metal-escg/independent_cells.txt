@@ -37,3 +37,6 @@ bool independentCells(StepContext& stepCtx, int nextCell, int nextNeighbourDir, 
     // If the next cell is not in the neighbours set, then it is independent
     return true;
 }
+
+
+this would compute 2MCS/s

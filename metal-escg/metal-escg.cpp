@@ -22,11 +22,16 @@ Params parseArgs(int argc, char* argv[]) {
     Params params; // Uses default values
 
     static struct option long_options[] = {
-        {"mcs", required_argument, 0, 'm'},           {"length", required_argument, 0, 'l'},
-        {"height", required_argument, 0, 'h'},        {"printFrequency", required_argument, 0, 'p'},
-        {"neighbourhood", required_argument, 0, 'n'}, {"species", required_argument, 0, 's'},
-        {"mobility", required_argument, 0, 'M'},      {"flux", required_argument, 0, 'f'},
-        {"empty", required_argument, 0, 'w'},         {"dominance", required_argument, 0, 'd'}, 
+        {"mcs", required_argument, 0, 'm'},
+        {"length", required_argument, 0, 'l'},
+        {"height", required_argument, 0, 'h'},
+        {"printFrequency", required_argument, 0, 'p'},
+        {"neighbourhood", required_argument, 0, 'n'},
+        {"species", required_argument, 0, 's'},
+        {"mobility", required_argument, 0, 'M'},
+        {"flux", required_argument, 0, 'f'},
+        {"empty", required_argument, 0, 'w'},
+        {"dominance", required_argument, 0, 'd'},
         {0, 0, 0, 0} // End of options
     };
 
@@ -41,7 +46,7 @@ Params parseArgs(int argc, char* argv[]) {
                         "[--resume <true|false>]";
 
     // Parse the command line arguments
-    while ((opt = getopt_long(argc, argv, "m:l:h:p:n:M:s:f:e:r:", long_options, &option_index)) != -1) {
+    while ((opt = getopt_long(argc, argv, "m:l:h:p:n:M:s:f:e:r:d:", long_options, &option_index)) != -1) {
         switch (opt) {
             case 'm':
                 params.MCS = std::stoi(optarg);
@@ -211,7 +216,7 @@ bool initMetalContext(MetalContext& ctx, int N, int randomNums) {
 // Refresh: Use existing pipeline and buffer objects to generate new random numbers
 //------------------------------------------------------------------------------
 void refreshRandomNumbers(MetalContext& ctx, float* action_probabilities, uint32_t* cells, uint32_t* neighbours, int N, bool moore) {
-    std::cout << "Refreshing random numbers\n" << std::endl;
+    std::cout << "Refreshing random numbers...\n" << std::endl;
 
     // Setup common dispatch parameters
     MTL::Size gridSize = MTL::Size(ctx.threads, 1, 1);
@@ -342,7 +347,7 @@ void densities(int* grid, int N, int mcs, GridContext& gridCtx, MetalContext& me
     double emptyDensity = (static_cast<double>(speciesCounts[0]) / N) * 100;
 
     std::vector<double> densities;
-    for (int i = 0; i < speciesNum; i++) {
+    for (int i = 1; i <= speciesNum; i++) {
         densities.push_back((static_cast<double>(speciesCounts[i]) / N) * 100);
     }
 
@@ -350,7 +355,7 @@ void densities(int* grid, int N, int mcs, GridContext& gridCtx, MetalContext& me
     gridCtx.speciesDensities.push_back(densities);
 
     // Print the densities
-    if (mcs % printFrequency == 0 && mcs != 0) {
+    if (mcs % printFrequency == 0) {
         std::cout << "Population Densities at: " << mcs << std::endl;
         std::cout << "EMPTY: " << emptyDensity << std::endl;
 
@@ -371,7 +376,7 @@ void show(GridContext& gridCtx, Params params) { plot_densities(gridCtx, params)
 // Initialise metal step buffers and pipelines
 // Computes the step functionality
 //------------------------------------------------------------------------------
-void initMetalStep(MetalContext& ctx, int N) {
+void initMetalStep(MetalContext& ctx, int N, int species) {
     NS::Error* error = nullptr;
 
     // Load the step function from the library
@@ -391,12 +396,13 @@ void initMetalStep(MetalContext& ctx, int N) {
     ctx.neighboursDirsBuffer = ctx.device->newBuffer(sizeof(int) * N, MTL::ResourceStorageModeShared);
     ctx.actionProbabilitiesBuffer = ctx.device->newBuffer(sizeof(float) * N, MTL::ResourceStorageModeShared);
     ctx.stepGridBuffer = ctx.device->newBuffer(sizeof(int) * N, MTL::ResourceStorageModeShared);
+    ctx.dominanceBuffer = ctx.device->newBuffer(sizeof(int) * species * species, MTL::ResourceStorageModeShared);
 }
 
 // ------------------------------------------------------------------------------
 // Metal step shader
 // ------------------------------------------------------------------------------
-void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, int N, Params& p, int* grid) {
+void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, int N, Params& p, int* grid, int* dominance) {
     MTL::CommandBuffer* commandBuffer = ctx.commandQueue->commandBuffer();
     MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
 
@@ -405,12 +411,14 @@ void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, i
     std::memcpy(ctx.neighboursDirsBuffer->contents(), stepCtx.neighbour_dirs, sizeof(int) * N);
     std::memcpy(ctx.actionProbabilitiesBuffer->contents(), stepCtx.action_probabilities, sizeof(float) * N);
     std::memcpy(ctx.stepGridBuffer->contents(), grid, sizeof(int) * N);
+    std::memcpy(ctx.dominanceBuffer->contents(), dominance, sizeof(int) * p.species * p.species);
 
     // Create buffers for cells, neighbour directions, action probabilities
     encoder->setComputePipelineState(ctx.pipelineStateStep);
     encoder->setBuffer(ctx.cellsBuffer, 0, 0);
     encoder->setBuffer(ctx.neighboursDirsBuffer, 0, 1);
     encoder->setBuffer(ctx.actionProbabilitiesBuffer, 0, 2);
+    encoder->setBuffer(ctx.dominanceBuffer, 0, 9);
 
     // Using `setBytes()` for scalar values (floats)
     encoder->setBytes(&mu, sizeof(float), 3);
@@ -418,6 +426,7 @@ void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, i
     encoder->setBytes(&p.L, sizeof(int), 5);
     encoder->setBytes(&p.H, sizeof(int), 6);
     encoder->setBytes(&p.flux, sizeof(bool), 7);
+    encoder->setBytes(&p.species, sizeof(bool), 10);
 
     // Set the grid buffer
     encoder->setBuffer(ctx.stepGridBuffer, 0, 8);
@@ -449,12 +458,7 @@ void initialiseGrid(int* grid, Params p) {
     }
 }
 
-//------------------------------------------------------------------------------
-// Main function
-//------------------------------------------------------------------------------
 int main(int argc, const char* argv[]) {
-    // Debug prints to check argc and argv
-
     // ------------------- Parse Command Line Arguments -------------------
     Params params = parseArgs(argc, const_cast<char**>(argv));
 
@@ -465,9 +469,11 @@ int main(int argc, const char* argv[]) {
     int N;      // Elementary time steps = total number of cells
     bool moore; // Moore neighbourhood if true, Von Neumann if false
     int* grid;  // Flattened grid size = L x H
-
+    int* dominance;
 
     if (params.resume) {
+        params.dominance = true; // Also import dominance
+
         std::cout << "Resuming simulation from previous state." << std::endl;
         importCSVToParams(params); // Doesn't rewrite target MCS
 
@@ -521,8 +527,16 @@ int main(int argc, const char* argv[]) {
         std::cout << "Failed to create or already exists: " << params.outputDir << std::endl;
     }
 
+    if (params.dominance) {
+        params.species = importCSVToDominance(dominance);
+    } else {
+        dominance = new int[params.species * params.species];
+        generateCircularAdjacencyMatrix(dominance, params.species);
+    }
+
     exportParamsToCSV(params);                 // Export the parameters to a csv file
     exportGridToCSV(grid, params, currentMCS); // Export the grid to a csv file
+    exportDominanceToCSV(dominance, params.species, params);
 
     std::cout << "------------------- Parameters -------------------\n";
     std::cout << "MCS: " << params.MCS << "\n";
@@ -562,7 +576,7 @@ int main(int argc, const char* argv[]) {
     stepCtx.neighbour_dirs = new int[N];
     stepCtx.action_probabilities = new float[N];
 
-    initMetalStep(metalCtx, N); // Initialise Metal step buffers and pipelines
+    initMetalStep(metalCtx, N, params.species); // Initialise Metal step buffers and pipelines
 
     float M = params.mobility; // Mobility 'since it is proportional to the typical area
                                // explored by one mobile individual per unit time'
@@ -616,7 +630,7 @@ int main(int argc, const char* argv[]) {
         }
 
         std::memcpy(metalCtx.stepGridBuffer->contents(), grid, sizeof(int) * N);
-        metalStep(metalCtx, stepCtx, mu, sigma, N, params, grid);
+        metalStep(metalCtx, stepCtx, mu, sigma, N, params, grid, dominance);
         std::memcpy(grid, metalCtx.stepGridBuffer->contents(), sizeof(int) * N);
     }
 
