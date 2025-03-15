@@ -1,0 +1,447 @@
+Starting new simulation.
+
+Directory created: l200_h200_VN_M1.00e-06_flux_5species
+Exporting parameters to csv...
+Finished exporting parameters to csv
+Exporting dominance to CSV...
+------------------- Parameters -------------------
+MCS: 10000
+Lattice Length: 200
+Lattice Height: 200
+Initial Empty Cell Probability: 0
+Neighbourhood: 4
+Mobility: 1e-06
+Species: 5
+Flux: 1
+Print Frequency: 200
+Resume: 0
+-------------------------------------------------
+Refreshing random numbers...
+
+Population Densities at: 0
+EMPTY: 0
+Species 1: 19.9175
+Species 2: 20.095
+Species 3: 20.355
+Species 4: 20.01
+Species 5: 19.6225
+
+Population Densities at: 0
+EMPTY: 0
+Species 1: 19.9175
+Species 2: 20.095
+Species 3: 20.355
+Species 4: 20.01
+Species 5: 19.6225
+
+Population Densities at: 200
+EMPTY: 4.7375
+Species 1: 17.04
+Species 2: 20.6075
+Species 3: 20.22
+Species 4: 20.01
+Species 5: 17.385
+
+Population Densities at: 400
+EMPTY: 4.445
+Species 1: 17.535
+Species 2: 19.925
+Species 3: 20.1725
+Species 4: 21.4275
+Species 5: 16.495
+
+Population Densities at: 600
+EMPTY: 4.47
+Species 1: 20.2375
+Species 2: 19.04
+Species 3: 20.145
+Species 4: 18.41
+Species 5: 17.6975
+
+Population Densities at: 800
+EMPTY: 4.15
+Species 1: 21.6
+Species 2: 19.275
+Species 3: 17.0025
+Species 4: 21.2975
+Species 5: 16.675
+
+Population Densities at: 1000
+EMPTY: 4.33
+Species 1: 23.1025
+Species 2: 17.955
+Species 3: 16.86
+Species 4: 19.9075
+Species 5: 17.845
+
+Population Densities at: 1200
+EMPTY: 4.44
+Species 1: 20.4175
+Species 2: 18.7425
+Species 3: 16.9675
+Species 4: 21.945
+Species 5: 17.4875
+
+Population Densities at: 1400
+EMPTY: 4.4075
+Species 1: 18.3575
+Species 2: 20.0225
+Species 3: 16.1975
+Species 4: 21.59
+Species 5: 19.425
+
+Population Densities at: 1600
+EMPTY: 4.42
+Species 1: 18.405
+Species 2: 21.935
+Species 3: 16.9975
+Species 4: 18.4825
+Species 5: 19.76
+
+Population Densities at: 1800
+EMPTY: 4.2025
+Species 1: 17.9
+Species 2: 18.575
+Species 3: 18.93
+Species 4: 21.5225
+Species 5: 18.87
+
+Population Densities at: 2000
+EMPTY: 4.11
+Species 1: 17.9375
+Species 2: 17.4675
+Species 3: 19.0775
+Species 4: 23.18
+Species 5: 18.2275
+
+Population Densities at: 2200
+EMPTY: 3.835
+Species 1: 16.6475
+Species 2: 19.7875
+Species 3: 20.1975
+Species 4: 21.405
+Species 5: 18.1275
+
+Population Densities at: 2400
+EMPTY: 4.5475
+Species 1: 17.7525
+Species 2: 20.05
+Species 3: 18.625
+Species 4: 20.17
+Species 5: 18.855
+
+Refreshing random numbers...
+
+Population Densities at: 2600
+EMPTY: 4.2575
+Species 1: 15.23
+Species 2: 21.4325
+Species 3: 22.1625
+Species 4: 17.8025
+Species 5: 19.115
+
+Population Densities at: 2800
+EMPTY: 4.2625
+Species 1: 16.575
+Species 2: 22.8225
+Species 3: 20.4125
+Species 4: 16.795
+Species 5: 19.1325
+
+Population Densities at: 3000
+EMPTY: 3.935
+Species 1: 16.2875
+Species 2: 21.3275
+Species 3: 20.07
+Species 4: 20.29
+Species 5: 18.09
+
+Population Densities at: 3200
+EMPTY: 4.0375
+Species 1: 16.6375
+Species 2: 19.4875
+Species 3: 22.0225
+Species 4: 19.2675
+Species 5: 18.5475
+
+Population Densities at: 3400
+EMPTY: 4.105
+Species 1: 17.4725
+Species 2: 22.835
+Species 3: 19.1625
+Species 4: 17.1325
+Species 5: 19.2925
+
+Population Densities at: 3600
+EMPTY: 3.865
+Species 1: 18.47
+Species 2: 21.0575
+Species 3: 18.4
+Species 4: 17.16
+Species 5: 21.0475
+
+Population Densities at: 3800
+EMPTY: 3.7425
+Species 1: 18.735
+Species 2: 19.09
+Species 3: 16.815
+Species 4: 18.2575
+Species 5: 23.36
+
+Population Densities at: 4000
+EMPTY: 4.1475
+Species 1: 19.75
+Species 2: 18.0225
+Species 3: 17.795
+Species 4: 18.705
+Species 5: 21.58
+
+Population Densities at: 4200
+EMPTY: 4.1875
+Species 1: 20.4275
+Species 2: 16.75
+Species 3: 18.2475
+Species 4: 17.595
+Species 5: 22.7925
+
+Population Densities at: 4400
+EMPTY: 4.1075
+Species 1: 20.6975
+Species 2: 15.315
+Species 3: 14.4825
+Species 4: 21.1275
+Species 5: 24.27
+
+Population Densities at: 4600
+EMPTY: 3.925
+Species 1: 18.27
+Species 2: 14.1375
+Species 3: 17.455
+Species 4: 21.4675
+Species 5: 24.745
+
+Population Densities at: 4800
+EMPTY: 4.1475
+Species 1: 20.5925
+Species 2: 16.5225
+Species 3: 16.41
+Species 4: 18.6675
+Species 5: 23.66
+
+Population Densities at: 5000
+EMPTY: 4.3975
+Species 1: 17.53
+Species 2: 17.0675
+Species 3: 16.7575
+Species 4: 21.96
+Species 5: 22.2875
+
+Refreshing random numbers...
+
+Population Densities at: 5200
+EMPTY: 3.7675
+Species 1: 19.12
+Species 2: 20.0225
+Species 3: 15.21
+Species 4: 19.8175
+Species 5: 22.0625
+
+Population Densities at: 5400
+EMPTY: 3.95
+Species 1: 18.35
+Species 2: 18.525
+Species 3: 14.5775
+Species 4: 18.5825
+Species 5: 26.015
+
+Population Densities at: 5600
+EMPTY: 4.1425
+Species 1: 19.69
+Species 2: 18.5075
+Species 3: 18.6175
+Species 4: 14.77
+Species 5: 24.2725
+
+Population Densities at: 5800
+EMPTY: 3.9775
+Species 1: 17.655
+Species 2: 16.8475
+Species 3: 19.3325
+Species 4: 17.17
+Species 5: 25.0175
+
+Population Densities at: 6000
+EMPTY: 4.1825
+Species 1: 19.295
+Species 2: 14.7375
+Species 3: 17.8725
+Species 4: 20.0075
+Species 5: 23.905
+
+Population Densities at: 6200
+EMPTY: 3.985
+Species 1: 22.375
+Species 2: 16.985
+Species 3: 18.835
+Species 4: 18.1875
+Species 5: 19.6325
+
+Population Densities at: 6400
+EMPTY: 3.8725
+Species 1: 20.7825
+Species 2: 18.2525
+Species 3: 15.7225
+Species 4: 18.4875
+Species 5: 22.8825
+
+Population Densities at: 6600
+EMPTY: 4.075
+Species 1: 16.265
+Species 2: 21.5025
+Species 3: 16.7075
+Species 4: 17.825
+Species 5: 23.625
+
+Population Densities at: 6800
+EMPTY: 4.12
+Species 1: 16.06
+Species 2: 19.8
+Species 3: 16.655
+Species 4: 20.62
+Species 5: 22.745
+
+Population Densities at: 7000
+EMPTY: 4.05
+Species 1: 15.7025
+Species 2: 20.38
+Species 3: 20.075
+Species 4: 21.84
+Species 5: 17.9525
+
+Population Densities at: 7200
+EMPTY: 3.8075
+Species 1: 19.6175
+Species 2: 19.98
+Species 3: 18.0275
+Species 4: 21.485
+Species 5: 17.0825
+
+Population Densities at: 7400
+EMPTY: 4.0425
+Species 1: 20.12
+Species 2: 18.445
+Species 3: 16.865
+Species 4: 20.0825
+Species 5: 20.445
+
+Refreshing random numbers...
+
+Population Densities at: 7600
+EMPTY: 4.265
+Species 1: 19.365
+Species 2: 17.38
+Species 3: 18.555
+Species 4: 18.875
+Species 5: 21.56
+
+Population Densities at: 7800
+EMPTY: 4.1525
+Species 1: 20.23
+Species 2: 15.7425
+Species 3: 21.295
+Species 4: 17.3975
+Species 5: 21.1825
+
+Population Densities at: 8000
+EMPTY: 4.085
+Species 1: 18.04
+Species 2: 13.745
+Species 3: 23.78
+Species 4: 22.3
+Species 5: 18.05
+
+Population Densities at: 8200
+EMPTY: 4.115
+Species 1: 16.4275
+Species 2: 15.25
+Species 3: 25.35
+Species 4: 21.3275
+Species 5: 17.53
+
+Population Densities at: 8400
+EMPTY: 4.075
+Species 1: 17.105
+Species 2: 16.1175
+Species 3: 25.085
+Species 4: 24.4775
+Species 5: 13.14
+
+Population Densities at: 8600
+EMPTY: 3.9525
+Species 1: 13.7575
+Species 2: 19.9775
+Species 3: 23.9
+Species 4: 23.8375
+Species 5: 14.575
+
+Population Densities at: 8800
+EMPTY: 4.215
+Species 1: 17.9275
+Species 2: 22.8625
+Species 3: 23.1575
+Species 4: 18.91
+Species 5: 12.9275
+
+Population Densities at: 9000
+EMPTY: 4.0075
+Species 1: 16.2675
+Species 2: 21.82
+Species 3: 25.645
+Species 4: 19.525
+Species 5: 12.735
+
+Population Densities at: 9200
+EMPTY: 4.16
+Species 1: 16.555
+Species 2: 24.8975
+Species 3: 22.3325
+Species 4: 17.345
+Species 5: 14.71
+
+Population Densities at: 9400
+EMPTY: 3.8775
+Species 1: 19.9225
+Species 2: 24.84
+Species 3: 23.5175
+Species 4: 13.2225
+Species 5: 14.62
+
+Population Densities at: 9600
+EMPTY: 3.9875
+Species 1: 21.655
+Species 2: 27.795
+Species 3: 21.2075
+Species 4: 12.4325
+Species 5: 12.9225
+
+Population Densities at: 9800
+EMPTY: 3.9875
+Species 1: 19.8275
+Species 2: 29.3
+Species 3: 20.285
+Species 4: 11.6575
+Species 5: 14.9425
+
+Population Densities at: 10000
+EMPTY: 4.3
+Species 1: 19.1425
+Species 2: 28.67
+Species 3: 17.5
+Species 4: 12.2475
+Species 5: 18.14
+
+Refreshing random numbers...
+
+Simulation Complete.
+
+./build/metal -m 10000 > pre_speedup.txt  7.32s user 3.55s system 40% cpu 26.909 total

@@ -22,31 +22,23 @@ Params parseArgs(int argc, char* argv[]) {
     Params params; // Uses default values
 
     static struct option long_options[] = {
-        {"mcs", required_argument, 0, 'm'},
-        {"length", required_argument, 0, 'l'},
-        {"height", required_argument, 0, 'h'},
-        {"printFrequency", required_argument, 0, 'p'},
-        {"neighbourhood", required_argument, 0, 'n'},
-        {"species", required_argument, 0, 's'},
-        {"mobility", required_argument, 0, 'M'},
-        {"flux", required_argument, 0, 'f'},
-        {"empty", required_argument, 0, 'w'},
-        {"dominance", required_argument, 0, 'd'},
-        {0, 0, 0, 0} // End of options
+        {"mcs", required_argument, 0, 'm'},           {"length", required_argument, 0, 'l'},    {"height", required_argument, 0, 'h'},   {"printFrequency", required_argument, 0, 'p'},
+        {"neighbourhood", required_argument, 0, 'n'}, {"species", required_argument, 0, 's'},   {"mobility", required_argument, 0, 'M'}, {"flux", required_argument, 0, 'f'},
+        {"empty", required_argument, 0, 'w'},         {"dominance", required_argument, 0, 'd'}, {"save", required_argument, 0, 's'},     {0, 0, 0, 0} // End of options
     };
 
     int opt;
     int option_index = 0;
 
     // Dominance refers to importing a dominance.csv as the dominance adjacency matrix
-    std::string usage = " [--mcs <MCS>] [--length <Lattice Length>] [--height <Lattice Height>] "
-                        " [--printFrequency <Print Frequency>] [--empty <Initial Empty Cell Probability >] "
+    std::string usage = "[--mcs <MCS>] [--length <Lattice Length>] [--height <Lattice Height>] "
+                        "[--printFrequency <Print Frequency>] [--empty <Initial Empty Cell Probability >] "
                         "[--neighbourhood <Neighbourhood 4/8>] [--mobility <Mobility>] "
                         "[--species <int>] [--flux <true|false>] [--dominance <true|false]"
-                        "[--resume <true|false>]";
+                        "[--save <true|false>] [--resume <true|false>]";
 
     // Parse the command line arguments
-    while ((opt = getopt_long(argc, argv, "m:l:h:p:n:M:s:f:e:r:d:", long_options, &option_index)) != -1) {
+    while ((opt = getopt_long(argc, argv, "m:l:h:p:n:M:s:f:e:r:d:S:", long_options, &option_index)) != -1) {
         switch (opt) {
             case 'm':
                 params.MCS = std::stoi(optarg);
@@ -120,6 +112,19 @@ Params parseArgs(int argc, char* argv[]) {
                     params.resume = true;
                 } else {
                     params.resume = false;
+                }
+                break;
+            }
+            case 'S': {
+                std::string saveStr(optarg);
+                // Convert the argument to lowercase for easier comparison
+                for (auto& c : saveStr) {
+                    c = tolower(c);
+                }
+                if (saveStr == "true" || saveStr == "1" || saveStr == "yes") {
+                    params.save = true;
+                } else {
+                    params.save = false;
                 }
                 break;
             }
@@ -464,7 +469,7 @@ void initialiseGrid(int* grid, Params p) {
     }
 }
 
-bool stasis(std::set<int> speciesSet) { return speciesSet.size() == 1; }
+bool stasis(std::set<int> speciesSet) { return speciesSet.size() <= 1; }
 
 int main(int argc, const char* argv[]) {
     // ------------------- Parse Command Line Arguments -------------------
@@ -542,9 +547,11 @@ int main(int argc, const char* argv[]) {
         generateCircularAdjacencyMatrix(dominance, params.species);
     }
 
-    exportParamsToCSV(params);                 // Export the parameters to a csv file
-    exportGridToCSV(grid, params, currentMCS); // Export the grid to a csv file
-    exportDominanceToCSV(dominance, params.species, params);
+    if (params.save) {
+        exportParamsToCSV(params);                 // Export the parameters to a csv file
+        exportGridToCSV(grid, params, currentMCS); // Export the grid to a csv file
+        exportDominanceToCSV(dominance, params.species, params);
+    }
 
     std::cout << "------------------- Parameters -------------------\n";
     std::cout << "MCS: " << params.MCS << "\n";
@@ -556,6 +563,7 @@ int main(int argc, const char* argv[]) {
     std::cout << "Species: " << params.species << "\n";
     std::cout << "Flux: " << params.flux << "\n";
     std::cout << "Print Frequency: " << params.printFrequency << "\n";
+    std::cout << "Save: " << params.save << "\n";
     std::cout << "Resume: " << params.resume << "\n";
     std::cout << "-------------------------------------------------\n";
 
@@ -613,12 +621,14 @@ int main(int argc, const char* argv[]) {
     // ------------------- Start Simulating -------------------
 
     densities(grid, N, currentMCS, gridCtx, metalCtx, 1, params.species, speciesSet); // Print initial densities
-    plot_snapshot(grid, currentMCS, params);                                          // Plot snapshots at specific MCS
-    exportGridToCSV(grid, params, currentMCS);                                        // Export the grid to a csv file
+    if (params.save) {
+        plot_snapshot(grid, currentMCS, params);   // Plot snapshots at specific MCS
+        exportGridToCSV(grid, params, currentMCS); // Export the grid to a csv file
+    }
 
     for (int mcs = currentMCS; mcs <= MCS; mcs++) {                                                    // Monte Carlos
         densities(grid, N, mcs, gridCtx, metalCtx, params.printFrequency, params.species, speciesSet); // Every MCS, call densities to add to density vectors for visualisation after simulation
-        if (mcs == 2000 || mcs == 6000 || (mcs > 6000 && mcs % 5000 == 0 && mcs <= 100000) || (mcs > 100000 && mcs % 20000 == 0)) {
+        if ((mcs == 2000 || mcs == 6000 || (mcs > 6000 && mcs % 5000 == 0 && mcs <= 100000) || (mcs > 100000 && mcs % 20000 == 0)) && params.save) {
             plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
             exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
         }
@@ -641,8 +651,11 @@ int main(int argc, const char* argv[]) {
         std::memcpy(grid, metalCtx.stepGridBuffer->contents(), sizeof(int) * N);
 
         if (stasis(speciesSet)) {
-            plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
-            exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
+            if (params.save) {
+                plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
+                exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
+            }
+
             densities(grid, N, mcs + 1, gridCtx, metalCtx, params.printFrequency, params.species, speciesSet);
             break;
         }
@@ -656,6 +669,9 @@ int main(int argc, const char* argv[]) {
     delete[] action_probabilities;
     delete[] cells;
     delete[] neighbours;
+
+    delete[] grid;
+    delete[] dominance;
 
     return 0;
 }

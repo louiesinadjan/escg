@@ -2,7 +2,7 @@
 using namespace metal;
 
  // Species dominates neighbour? 
-bool dominates(int specie, int neighbour, int speciesNum, constant int* dominance) {
+inline bool dominates(int specie, int neighbour, int speciesNum, constant int* dominance) {
     if (specie == 0 || neighbour == 0) {
         return false; // Empty spaces don't dominate anything
     }
@@ -24,7 +24,7 @@ bool dominates(int specie, int neighbour, int speciesNum, constant int* dominanc
     // }
 }
 
-int action(float action_prob, float mu, float sigma) {
+inline int action(float action_prob, float mu, float sigma) {
     if (action_prob < mu) {
         return 1; // Interaction
     } else if (action_prob < mu + sigma) {
