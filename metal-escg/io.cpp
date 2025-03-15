@@ -211,7 +211,7 @@ void generateCircularAdjacencyMatrix(int* dominance, int speciesCount) {
         offsets = {1, 3, 5, 7};
     }
 
-    // Initialize dominance matrix (1D representation of speciesCount x speciesCount)
+    // Initialise dominance matrix (1D representation of speciesCount x speciesCount)
     for (int i = 0; i < speciesCount * speciesCount; i++) {
         dominance[i] = 0; // Set everything to 0
     }
