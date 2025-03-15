@@ -337,7 +337,7 @@ void computeDensitiesGPU(MetalContext& ctx, int* grid, int* densities, int N, in
 //------------------------------------------------------------------------------
 // Calculate densities of each species and add to vectors for visualisation
 //------------------------------------------------------------------------------
-void densities(int* grid, int N, int mcs, GridContext& gridCtx, MetalContext& metalCtx, int printFrequency, int speciesNum) {
+void densities(int* grid, int N, int mcs, GridContext& gridCtx, MetalContext& metalCtx, int printFrequency, int speciesNum, std::set<int>& speciesSet) {
     int* speciesCounts = new int[speciesNum + 1]; // [empty, species...]
 
     // Call Metal shader
@@ -349,6 +349,10 @@ void densities(int* grid, int N, int mcs, GridContext& gridCtx, MetalContext& me
     std::vector<double> densities;
     for (int i = 1; i <= speciesNum; i++) {
         densities.push_back((static_cast<double>(speciesCounts[i]) / N) * 100);
+
+        if (speciesCounts[i] == 0) {
+            speciesSet.erase(i);
+        }
     }
 
     gridCtx.steps.push_back(mcs);
@@ -365,6 +369,8 @@ void densities(int* grid, int N, int mcs, GridContext& gridCtx, MetalContext& me
         }
         std::cout << std::endl;
     }
+
+    delete[] speciesCounts;
 }
 
 //------------------------------------------------------------------------------
@@ -457,6 +463,8 @@ void initialiseGrid(int* grid, Params p) {
         }
     }
 }
+
+bool stasis(std::set<int> speciesSet) { return speciesSet.size() == 1; }
 
 int main(int argc, const char* argv[]) {
     // ------------------- Parse Command Line Arguments -------------------
@@ -597,20 +605,20 @@ int main(int argc, const char* argv[]) {
         initialiseGrid(grid, params); // Initialise the grid
     }
 
-    // ------------------- Start Simulating -------------------
-
-    densities(grid, N, currentMCS, gridCtx, metalCtx, 1, params.species); // Print initial densities
-    plot_snapshot(grid, currentMCS, params);                              // Plot snapshots at specific MCS
-    exportGridToCSV(grid, params, currentMCS);                            // Export the grid to a csv file
-
     std::set<int> speciesSet;
     for (int i = 1; i <= params.species; i++) {
         speciesSet.insert(i);
     }
 
-    for (int mcs = currentMCS; mcs <= MCS; mcs++) {                                        // Monte Carlos
-        densities(grid, N, mcs, gridCtx, metalCtx, params.printFrequency, params.species); // Every MCS, call densities to add to density vectors for visualisation after simulation
-        if (mcs == 2000 || mcs == 6000 || (mcs > 6000 && mcs % 5000 == 0)) {
+    // ------------------- Start Simulating -------------------
+
+    densities(grid, N, currentMCS, gridCtx, metalCtx, 1, params.species, speciesSet); // Print initial densities
+    plot_snapshot(grid, currentMCS, params);                                          // Plot snapshots at specific MCS
+    exportGridToCSV(grid, params, currentMCS);                                        // Export the grid to a csv file
+
+    for (int mcs = currentMCS; mcs <= MCS; mcs++) {                                                    // Monte Carlos
+        densities(grid, N, mcs, gridCtx, metalCtx, params.printFrequency, params.species, speciesSet); // Every MCS, call densities to add to density vectors for visualisation after simulation
+        if (mcs == 2000 || mcs == 6000 || (mcs > 6000 && mcs % 5000 == 0 && mcs <= 100000) || (mcs > 100000 && mcs % 20000 == 0)) {
             plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
             exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
         }
@@ -625,13 +633,19 @@ int main(int argc, const char* argv[]) {
             stepCtx.cells[i] = cells[index];
             stepCtx.neighbour_dirs[i] = neighbours[index];
             stepCtx.action_probabilities[i] = action_probabilities[index];
-
             index++;
         }
 
         std::memcpy(metalCtx.stepGridBuffer->contents(), grid, sizeof(int) * N);
         metalStep(metalCtx, stepCtx, mu, sigma, N, params, grid, dominance);
         std::memcpy(grid, metalCtx.stepGridBuffer->contents(), sizeof(int) * N);
+
+        if (stasis(speciesSet)) {
+            plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
+            exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
+            densities(grid, N, mcs + 1, gridCtx, metalCtx, params.printFrequency, params.species, speciesSet);
+            break;
+        }
     }
 
     show(gridCtx, params); // Plot density against steps
