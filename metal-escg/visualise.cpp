@@ -7,7 +7,7 @@ void plot_densities(GridContext g, Params p) {
 
     // Define a set of colors to cycle through
     std::vector<std::string> colors = {"b-", "c-", "g-", "y-", "r-", "m-", "k-", "orange", "pink", "purple"};
-    
+
     // Ensure speciesDensities is not empty
     if (!g.speciesDensities.empty()) {
         size_t speciesCount = g.speciesDensities[0].size(); // Get number of species
@@ -15,7 +15,7 @@ void plot_densities(GridContext g, Params p) {
         for (size_t i = 0; i < speciesCount; i++) {
             std::string color = colors[i % colors.size()]; // Cycle through colors
             std::vector<double> speciesDensity;
-            
+
             // Extract the density evolution for species `i`
             for (size_t step = 0; step < g.speciesDensities.size(); step++) {
                 speciesDensity.push_back(g.speciesDensities[step][i]);
@@ -46,6 +46,7 @@ void plot_densities(GridContext g, Params p) {
 
     plt::title(length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species);
     plt::save("./" + p.outputDir + "/densities.png");
+    plt::close();
 }
 
 // https://github.com/lava/matplotlib-cpp/blob/master/examples/imshow.cpp
@@ -68,10 +69,18 @@ void plot_snapshot(const int* grid, int mcs, Params p) {
 
     // Plot using imshow
     plt::figure();
-    plt::imshow(gridPtr, p.H, p.L, 1);
 
-    // plt::title("Snapshot at MCS = " + std::to_string(mcs));
+    // https: // matplotlib.org/stable/users/explain/colors/colormaps.html
+    // Change colormap as desired
+    std::map<std::string, std::string> keywords;
 
+    if (p.species < 5) {
+        keywords = {{"cmap", "cividis"}};
+    } else {
+        keywords = {{"cmap", "tab20b"}};
+    }
+
+    plt::imshow(gridPtr, p.H, p.L, 1, keywords);
     // plt::show();
     std::string length = "l" + std::to_string(p.L);
     std::string height = "h" + std::to_string(p.H);
@@ -89,4 +98,5 @@ void plot_snapshot(const int* grid, int mcs, Params p) {
     plt::title(length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species + "_" + mcs_str);
 
     plt::save("./" + p.outputDir + "/ss_" + mcs_str + ".png");
+    plt::close();
 }

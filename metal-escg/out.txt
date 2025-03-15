@@ -1,0 +1,6627 @@
+Starting new simulation.
+
+Directory created: l200_h200_VN_M1.00e-06_flux_10species
+Exporting parameters to csv...
+Finished exporting parameters to csv
+Exporting dominance to CSV...
+------------------- Parameters -------------------
+MCS: 100000
+Lattice Length: 200
+Lattice Height: 200
+Initial Empty Cell Probability: 0
+Neighbourhood: 4
+Mobility: 1e-06
+Species: 10
+Flux: 1
+Print Frequency: 200
+Resume: 0
+-------------------------------------------------
+Refreshing random numbers...
+
+Population Densities at: 0
+EMPTY: 0
+Species 1: 10.19
+Species 2: 9.865
+Species 3: 9.935
+Species 4: 9.97
+Species 5: 9.875
+Species 6: 10.175
+Species 7: 10.3
+Species 8: 10.0575
+Species 9: 9.76
+Species 10: 9.8725
+
+Population Densities at: 0
+EMPTY: 0
+Species 1: 10.19
+Species 2: 9.865
+Species 3: 9.935
+Species 4: 9.97
+Species 5: 9.875
+Species 6: 10.175
+Species 7: 10.3
+Species 8: 10.0575
+Species 9: 9.76
+Species 10: 9.8725
+
+Population Densities at: 200
+EMPTY: 1.5075
+Species 1: 10.9225
+Species 2: 8.9925
+Species 3: 8.935
+Species 4: 9.8825
+Species 5: 10.2475
+Species 6: 10.285
+Species 7: 10.6025
+Species 8: 9.1075
+Species 9: 9.4225
+Species 10: 10.095
+
+Population Densities at: 400
+EMPTY: 1.11
+Species 1: 10.8675
+Species 2: 8.54
+Species 3: 9.3675
+Species 4: 10.05
+Species 5: 11.41
+Species 6: 9.9475
+Species 7: 9.7375
+Species 8: 8.7025
+Species 9: 9.6425
+Species 10: 10.625
+
+Population Densities at: 600
+EMPTY: 1.01
+Species 1: 10.965
+Species 2: 8.3375
+Species 3: 9.21
+Species 4: 9.475
+Species 5: 10.99
+Species 6: 9.6375
+Species 7: 10.0225
+Species 8: 9.655
+Species 9: 10.1125
+Species 10: 10.585
+
+Population Densities at: 800
+EMPTY: 0.815
+Species 1: 10.6025
+Species 2: 8.8675
+Species 3: 8.9375
+Species 4: 9.9225
+Species 5: 11.3825
+Species 6: 9.345
+Species 7: 10.135
+Species 8: 9.425
+Species 9: 10
+Species 10: 10.5675
+
+Population Densities at: 1000
+EMPTY: 0.7125
+Species 1: 11.245
+Species 2: 8.35
+Species 3: 9.27
+Species 4: 10.405
+Species 5: 11.305
+Species 6: 9.075
+Species 7: 10.0225
+Species 8: 9.15
+Species 9: 10.1975
+Species 10: 10.2675
+
+Population Densities at: 1200
+EMPTY: 0.6575
+Species 1: 10.9725
+Species 2: 8.1775
+Species 3: 9.9775
+Species 4: 10.03
+Species 5: 11.8275
+Species 6: 8.7975
+Species 7: 10.085
+Species 8: 9.3375
+Species 9: 9.7025
+Species 10: 10.435
+
+Population Densities at: 1400
+EMPTY: 0.6525
+Species 1: 10.6
+Species 2: 8.83
+Species 3: 9.5425
+Species 4: 9.7275
+Species 5: 11.885
+Species 6: 8.845
+Species 7: 10.3825
+Species 8: 8.96
+Species 9: 10.79
+Species 10: 9.785
+
+Population Densities at: 1600
+EMPTY: 0.5875
+Species 1: 10.9425
+Species 2: 8.47
+Species 3: 10.0275
+Species 4: 9.81
+Species 5: 11.7975
+Species 6: 8.855
+Species 7: 9.955
+Species 8: 8.925
+Species 9: 11.1075
+Species 10: 9.5225
+
+Population Densities at: 1800
+EMPTY: 0.575
+Species 1: 10.4225
+Species 2: 8.6625
+Species 3: 10.365
+Species 4: 9.76
+Species 5: 11.9025
+Species 6: 8.6775
+Species 7: 10.125
+Species 8: 9.1675
+Species 9: 10.8175
+Species 10: 9.525
+
+Population Densities at: 2000
+EMPTY: 0.6425
+Species 1: 10.9525
+Species 2: 8.5
+Species 3: 10.7625
+Species 4: 9.3425
+Species 5: 11.8525
+Species 6: 8.85
+Species 7: 10.19
+Species 8: 9.0575
+Species 9: 10.9475
+Species 10: 8.9025
+
+Population Densities at: 2200
+EMPTY: 0.585
+Species 1: 11.1425
+Species 2: 8.4275
+Species 3: 10.4725
+Species 4: 9.235
+Species 5: 12.2225
+Species 6: 8.6375
+Species 7: 10.47
+Species 8: 8.59
+Species 9: 11.3025
+Species 10: 8.915
+
+Population Densities at: 2400
+EMPTY: 0.535
+Species 1: 10.8775
+Species 2: 8.395
+Species 3: 10.91
+Species 4: 8.9825
+Species 5: 12.235
+Species 6: 8.3775
+Species 7: 10.53
+Species 8: 8.6725
+Species 9: 11.1925
+Species 10: 9.2925
+
+Refreshing random numbers...
+
+Population Densities at: 2600
+EMPTY: 0.52
+Species 1: 10.965
+Species 2: 8.16
+Species 3: 10.985
+Species 4: 9.315
+Species 5: 11.7975
+Species 6: 8.68
+Species 7: 10.7825
+Species 8: 8.5725
+Species 9: 11.43
+Species 10: 8.7925
+
+Population Densities at: 2800
+EMPTY: 0.47
+Species 1: 11.2075
+Species 2: 8.1525
+Species 3: 11.18
+Species 4: 8.915
+Species 5: 11.935
+Species 6: 8.565
+Species 7: 10.3725
+Species 8: 8.76
+Species 9: 11.48
+Species 10: 8.9625
+
+Population Densities at: 3000
+EMPTY: 0.415
+Species 1: 10.8625
+Species 2: 8.5875
+Species 3: 11.0475
+Species 4: 8.8325
+Species 5: 11.68
+Species 6: 8.7625
+Species 7: 10.595
+Species 8: 8.5075
+Species 9: 11.5075
+Species 10: 9.2025
+
+Population Densities at: 3200
+EMPTY: 0.37
+Species 1: 10.9825
+Species 2: 8.655
+Species 3: 11.005
+Species 4: 8.4525
+Species 5: 11.8925
+Species 6: 8.655
+Species 7: 10.4975
+Species 8: 8.7775
+Species 9: 11.7425
+Species 10: 8.97
+
+Population Densities at: 3400
+EMPTY: 0.3875
+Species 1: 10.8875
+Species 2: 8.57
+Species 3: 10.7425
+Species 4: 8.9175
+Species 5: 12.245
+Species 6: 8.3875
+Species 7: 10.68
+Species 8: 8.7125
+Species 9: 11.845
+Species 10: 8.625
+
+Population Densities at: 3600
+EMPTY: 0.41
+Species 1: 11.0575
+Species 2: 8.3325
+Species 3: 11.2525
+Species 4: 9.09
+Species 5: 12.005
+Species 6: 8.29
+Species 7: 10.69
+Species 8: 8.565
+Species 9: 12.165
+Species 10: 8.1425
+
+Population Densities at: 3800
+EMPTY: 0.3875
+Species 1: 11.025
+Species 2: 8.46
+Species 3: 11.515
+Species 4: 9.055
+Species 5: 11.6
+Species 6: 8.2425
+Species 7: 11.1225
+Species 8: 8.475
+Species 9: 11.9
+Species 10: 8.2175
+
+Population Densities at: 4000
+EMPTY: 0.3825
+Species 1: 11.3025
+Species 2: 8.435
+Species 3: 11.7825
+Species 4: 8.75
+Species 5: 11.78
+Species 6: 8.24
+Species 7: 10.935
+Species 8: 8.55
+Species 9: 11.7775
+Species 10: 8.065
+
+Population Densities at: 4200
+EMPTY: 0.39
+Species 1: 11.46
+Species 2: 8.5825
+Species 3: 11.805
+Species 4: 8.585
+Species 5: 11.6025
+Species 6: 8.1075
+Species 7: 11.5375
+Species 8: 8.37
+Species 9: 11.5925
+Species 10: 7.9675
+
+Population Densities at: 4400
+EMPTY: 0.3475
+Species 1: 11.645
+Species 2: 8.8175
+Species 3: 11.46
+Species 4: 8.365
+Species 5: 12.0625
+Species 6: 8.1975
+Species 7: 11.4325
+Species 8: 8.08
+Species 9: 11.5025
+Species 10: 8.09
+
+Population Densities at: 4600
+EMPTY: 0.3425
+Species 1: 12.1725
+Species 2: 8.44
+Species 3: 11.28
+Species 4: 8.215
+Species 5: 12.0525
+Species 6: 8.5625
+Species 7: 11.375
+Species 8: 7.86
+Species 9: 11.445
+Species 10: 8.255
+
+Population Densities at: 4800
+EMPTY: 0.3475
+Species 1: 12.2275
+Species 2: 8.325
+Species 3: 11.3075
+Species 4: 8.2775
+Species 5: 11.91
+Species 6: 8.76
+Species 7: 11.2175
+Species 8: 7.5475
+Species 9: 11.8475
+Species 10: 8.2325
+
+Population Densities at: 5000
+EMPTY: 0.3125
+Species 1: 12.04
+Species 2: 8.1175
+Species 3: 11.2475
+Species 4: 8.2
+Species 5: 12.5175
+Species 6: 8.3625
+Species 7: 11.1325
+Species 8: 7.805
+Species 9: 11.945
+Species 10: 8.32
+
+Refreshing random numbers...
+
+Population Densities at: 5200
+EMPTY: 0.33
+Species 1: 12.2975
+Species 2: 8.1375
+Species 3: 11.3575
+Species 4: 8.445
+Species 5: 12.0275
+Species 6: 8.1075
+Species 7: 11.21
+Species 8: 7.865
+Species 9: 12.3975
+Species 10: 7.825
+
+Population Densities at: 5400
+EMPTY: 0.3425
+Species 1: 11.6825
+Species 2: 8.14
+Species 3: 11.46
+Species 4: 8.195
+Species 5: 12.6625
+Species 6: 8.1125
+Species 7: 11.3375
+Species 8: 7.8925
+Species 9: 11.885
+Species 10: 8.29
+
+Population Densities at: 5600
+EMPTY: 0.34
+Species 1: 11.6825
+Species 2: 8.2525
+Species 3: 11.6975
+Species 4: 8.03
+Species 5: 12.255
+Species 6: 7.9075
+Species 7: 11.255
+Species 8: 8.3525
+Species 9: 11.9125
+Species 10: 8.315
+
+Population Densities at: 5800
+EMPTY: 0.35
+Species 1: 11.7375
+Species 2: 8.39
+Species 3: 11.3425
+Species 4: 8.365
+Species 5: 12.45
+Species 6: 8.025
+Species 7: 11.3825
+Species 8: 7.6275
+Species 9: 12.205
+Species 10: 8.125
+
+Population Densities at: 6000
+EMPTY: 0.3175
+Species 1: 11.8775
+Species 2: 8.0675
+Species 3: 11.495
+Species 4: 8.1325
+Species 5: 12.5625
+Species 6: 8.16
+Species 7: 11.2525
+Species 8: 7.9575
+Species 9: 12.0125
+Species 10: 8.165
+
+Population Densities at: 6200
+EMPTY: 0.335
+Species 1: 11.8625
+Species 2: 8.0675
+Species 3: 11.3625
+Species 4: 8.165
+Species 5: 12.445
+Species 6: 8.16
+Species 7: 11.3875
+Species 8: 7.9875
+Species 9: 12.0275
+Species 10: 8.2
+
+Population Densities at: 6400
+EMPTY: 0.26
+Species 1: 12.0175
+Species 2: 7.945
+Species 3: 11.82
+Species 4: 8.2675
+Species 5: 12.3925
+Species 6: 7.7975
+Species 7: 11.445
+Species 8: 7.915
+Species 9: 12.05
+Species 10: 8.09
+
+Population Densities at: 6600
+EMPTY: 0.305
+Species 1: 11.6625
+Species 2: 7.89
+Species 3: 11.805
+Species 4: 8.255
+Species 5: 12.4125
+Species 6: 8.0525
+Species 7: 11.3875
+Species 8: 7.9175
+Species 9: 11.9175
+Species 10: 8.395
+
+Population Densities at: 6800
+EMPTY: 0.26
+Species 1: 11.8625
+Species 2: 8.005
+Species 3: 11.655
+Species 4: 8.4225
+Species 5: 12.04
+Species 6: 8.1125
+Species 7: 11.5
+Species 8: 8
+Species 9: 12.2575
+Species 10: 7.885
+
+Population Densities at: 7000
+EMPTY: 0.2875
+Species 1: 11.74
+Species 2: 8.4525
+Species 3: 11.63
+Species 4: 7.9425
+Species 5: 12.245
+Species 6: 8.035
+Species 7: 11.8275
+Species 8: 7.835
+Species 9: 11.9425
+Species 10: 8.0625
+
+Population Densities at: 7200
+EMPTY: 0.2825
+Species 1: 11.8775
+Species 2: 8.26
+Species 3: 11.38
+Species 4: 8.2075
+Species 5: 12.485
+Species 6: 8.2875
+Species 7: 11.88
+Species 8: 7.5075
+Species 9: 11.825
+Species 10: 8.0075
+
+Population Densities at: 7400
+EMPTY: 0.295
+Species 1: 11.8325
+Species 2: 8.06
+Species 3: 11.7475
+Species 4: 8.455
+Species 5: 11.8675
+Species 6: 8.235
+Species 7: 11.5475
+Species 8: 7.8325
+Species 9: 12.1975
+Species 10: 7.93
+
+Refreshing random numbers...
+
+Population Densities at: 7600
+EMPTY: 0.37
+Species 1: 11.415
+Species 2: 8.0725
+Species 3: 11.6525
+Species 4: 8.1425
+Species 5: 12.4225
+Species 6: 7.9325
+Species 7: 11.7175
+Species 8: 7.8575
+Species 9: 12.0775
+Species 10: 8.34
+
+Population Densities at: 7800
+EMPTY: 0.2925
+Species 1: 11.7125
+Species 2: 7.9875
+Species 3: 11.4025
+Species 4: 8.22
+Species 5: 12.035
+Species 6: 7.945
+Species 7: 11.935
+Species 8: 7.92
+Species 9: 12.3775
+Species 10: 8.1725
+
+Population Densities at: 8000
+EMPTY: 0.25
+Species 1: 11.7975
+Species 2: 7.6925
+Species 3: 11.4925
+Species 4: 8.3075
+Species 5: 12.1225
+Species 6: 8.0025
+Species 7: 11.765
+Species 8: 8.015
+Species 9: 12.6125
+Species 10: 7.9425
+
+Population Densities at: 8200
+EMPTY: 0.3125
+Species 1: 11.9175
+Species 2: 7.6475
+Species 3: 11.7125
+Species 4: 8.2225
+Species 5: 11.9725
+Species 6: 7.995
+Species 7: 12.01
+Species 8: 8.1025
+Species 9: 12.465
+Species 10: 7.6425
+
+Population Densities at: 8400
+EMPTY: 0.2875
+Species 1: 11.7775
+Species 2: 7.875
+Species 3: 11.7925
+Species 4: 7.9125
+Species 5: 12.57
+Species 6: 7.63
+Species 7: 11.8375
+Species 8: 7.91
+Species 9: 12.2825
+Species 10: 8.125
+
+Population Densities at: 8600
+EMPTY: 0.2875
+Species 1: 11.2225
+Species 2: 7.95
+Species 3: 11.8275
+Species 4: 8.11
+Species 5: 12.265
+Species 6: 7.75
+Species 7: 12.1575
+Species 8: 8.21
+Species 9: 12.44
+Species 10: 7.78
+
+Population Densities at: 8800
+EMPTY: 0.3075
+Species 1: 11.685
+Species 2: 8.09
+Species 3: 11.8775
+Species 4: 7.9775
+Species 5: 12.1375
+Species 6: 8.065
+Species 7: 12.13
+Species 8: 7.9675
+Species 9: 12.0675
+Species 10: 7.695
+
+Population Densities at: 9000
+EMPTY: 0.3025
+Species 1: 11.65
+Species 2: 7.92
+Species 3: 11.76
+Species 4: 8
+Species 5: 12.5225
+Species 6: 8.05
+Species 7: 11.8575
+Species 8: 7.92
+Species 9: 12.005
+Species 10: 8.0125
+
+Population Densities at: 9200
+EMPTY: 0.2975
+Species 1: 11.69
+Species 2: 8.045
+Species 3: 11.695
+Species 4: 8.24
+Species 5: 12.195
+Species 6: 8.155
+Species 7: 11.7125
+Species 8: 7.915
+Species 9: 12.1825
+Species 10: 7.8725
+
+Population Densities at: 9400
+EMPTY: 0.2575
+Species 1: 11.495
+Species 2: 8.125
+Species 3: 11.73
+Species 4: 8.2725
+Species 5: 12.2375
+Species 6: 8.135
+Species 7: 11.6925
+Species 8: 8.1275
+Species 9: 12.1125
+Species 10: 7.815
+
+Population Densities at: 9600
+EMPTY: 0.2675
+Species 1: 11.5
+Species 2: 8.0875
+Species 3: 11.695
+Species 4: 8.42
+Species 5: 12.135
+Species 6: 8.0525
+Species 7: 11.64
+Species 8: 8.21
+Species 9: 11.93
+Species 10: 8.0625
+
+Population Densities at: 9800
+EMPTY: 0.2625
+Species 1: 11.62
+Species 2: 8.1525
+Species 3: 11.5125
+Species 4: 8.235
+Species 5: 12.1575
+Species 6: 8.2825
+Species 7: 11.67
+Species 8: 8.0075
+Species 9: 11.9675
+Species 10: 8.1325
+
+Population Densities at: 10000
+EMPTY: 0.2625
+Species 1: 11.66
+Species 2: 7.985
+Species 3: 11.5975
+Species 4: 8.4625
+Species 5: 12.4725
+Species 6: 8.185
+Species 7: 11.505
+Species 8: 7.9125
+Species 9: 12.0275
+Species 10: 7.93
+
+Refreshing random numbers...
+
+Population Densities at: 10200
+EMPTY: 0.3325
+Species 1: 11.8175
+Species 2: 7.73
+Species 3: 11.775
+Species 4: 8.235
+Species 5: 12.0675
+Species 6: 8.475
+Species 7: 11.42
+Species 8: 8.13
+Species 9: 12.255
+Species 10: 7.7625
+
+Population Densities at: 10400
+EMPTY: 0.3
+Species 1: 11.58
+Species 2: 7.92
+Species 3: 11.6675
+Species 4: 8.02
+Species 5: 12.445
+Species 6: 8.19
+Species 7: 11.6375
+Species 8: 7.845
+Species 9: 12.1975
+Species 10: 8.1975
+
+Population Densities at: 10600
+EMPTY: 0.285
+Species 1: 11.55
+Species 2: 7.7475
+Species 3: 12.06
+Species 4: 8.06
+Species 5: 12.055
+Species 6: 8.2325
+Species 7: 11.7025
+Species 8: 7.94
+Species 9: 12.5475
+Species 10: 7.82
+
+Population Densities at: 10800
+EMPTY: 0.3
+Species 1: 11.555
+Species 2: 8.08
+Species 3: 11.905
+Species 4: 7.81
+Species 5: 12.295
+Species 6: 8.2775
+Species 7: 11.75
+Species 8: 7.91
+Species 9: 12.4275
+Species 10: 7.69
+
+Population Densities at: 11000
+EMPTY: 0.2425
+Species 1: 11.5
+Species 2: 7.86
+Species 3: 11.925
+Species 4: 7.9225
+Species 5: 12.5825
+Species 6: 8.1925
+Species 7: 11.57
+Species 8: 7.925
+Species 9: 12.2775
+Species 10: 8.0025
+
+Population Densities at: 11200
+EMPTY: 0.2475
+Species 1: 11.4475
+Species 2: 7.9625
+Species 3: 11.9275
+Species 4: 7.94
+Species 5: 12.2125
+Species 6: 8.09
+Species 7: 11.455
+Species 8: 8.1825
+Species 9: 12.7925
+Species 10: 7.7425
+
+Population Densities at: 11400
+EMPTY: 0.2475
+Species 1: 11.3425
+Species 2: 8.2375
+Species 3: 12.17
+Species 4: 7.9525
+Species 5: 12.21
+Species 6: 7.945
+Species 7: 11.725
+Species 8: 8.045
+Species 9: 12.71
+Species 10: 7.415
+
+Population Densities at: 11600
+EMPTY: 0.28
+Species 1: 11.595
+Species 2: 8.185
+Species 3: 11.9725
+Species 4: 7.7225
+Species 5: 12.4825
+Species 6: 7.7325
+Species 7: 11.875
+Species 8: 8.0775
+Species 9: 12.5625
+Species 10: 7.515
+
+Population Densities at: 11800
+EMPTY: 0.2525
+Species 1: 11.93
+Species 2: 8.1325
+Species 3: 11.725
+Species 4: 7.7175
+Species 5: 12.4575
+Species 6: 8.0425
+Species 7: 11.9125
+Species 8: 8.0075
+Species 9: 12.42
+Species 10: 7.4025
+
+Population Densities at: 12000
+EMPTY: 0.2525
+Species 1: 11.9875
+Species 2: 7.825
+Species 3: 11.38
+Species 4: 7.915
+Species 5: 12.72
+Species 6: 8.0175
+Species 7: 11.8975
+Species 8: 7.72
+Species 9: 12.6275
+Species 10: 7.6575
+
+Population Densities at: 12200
+EMPTY: 0.305
+Species 1: 11.845
+Species 2: 7.7875
+Species 3: 11.855
+Species 4: 8.0925
+Species 5: 12.575
+Species 6: 7.5475
+Species 7: 11.7275
+Species 8: 7.825
+Species 9: 12.62
+Species 10: 7.82
+
+Population Densities at: 12400
+EMPTY: 0.305
+Species 1: 11.7275
+Species 2: 7.96
+Species 3: 11.695
+Species 4: 8.06
+Species 5: 12.245
+Species 6: 7.7975
+Species 7: 12.085
+Species 8: 7.8
+Species 9: 12.7175
+Species 10: 7.6075
+
+Refreshing random numbers...
+
+Population Densities at: 12600
+EMPTY: 0.2625
+Species 1: 11.76
+Species 2: 7.9125
+Species 3: 11.98
+Species 4: 8
+Species 5: 12.4825
+Species 6: 7.3975
+Species 7: 12.01
+Species 8: 7.9475
+Species 9: 12.8525
+Species 10: 7.395
+
+Population Densities at: 12800
+EMPTY: 0.255
+Species 1: 11.8025
+Species 2: 7.62
+Species 3: 12.1375
+Species 4: 8.18
+Species 5: 12.395
+Species 6: 7.2425
+Species 7: 12.1025
+Species 8: 7.985
+Species 9: 12.7825
+Species 10: 7.4975
+
+Population Densities at: 13000
+EMPTY: 0.2075
+Species 1: 11.88
+Species 2: 7.74
+Species 3: 12.125
+Species 4: 7.815
+Species 5: 12.2075
+Species 6: 7.43
+Species 7: 11.96
+Species 8: 7.9825
+Species 9: 13.025
+Species 10: 7.6275
+
+Population Densities at: 13200
+EMPTY: 0.245
+Species 1: 12.0325
+Species 2: 7.9475
+Species 3: 12.1875
+Species 4: 7.5625
+Species 5: 12.285
+Species 6: 7.5925
+Species 7: 12.035
+Species 8: 7.9125
+Species 9: 12.6325
+Species 10: 7.5675
+
+Population Densities at: 13400
+EMPTY: 0.2425
+Species 1: 12.1225
+Species 2: 7.8425
+Species 3: 11.97
+Species 4: 7.7225
+Species 5: 12.36
+Species 6: 7.7775
+Species 7: 12
+Species 8: 7.62
+Species 9: 12.8025
+Species 10: 7.54
+
+Population Densities at: 13600
+EMPTY: 0.245
+Species 1: 12.0675
+Species 2: 7.53
+Species 3: 12.16
+Species 4: 7.55
+Species 5: 12.385
+Species 6: 7.7975
+Species 7: 11.735
+Species 8: 7.945
+Species 9: 12.7225
+Species 10: 7.8625
+
+Population Densities at: 13800
+EMPTY: 0.2525
+Species 1: 11.9475
+Species 2: 7.675
+Species 3: 11.9475
+Species 4: 7.74
+Species 5: 12.3525
+Species 6: 7.6
+Species 7: 12.0075
+Species 8: 7.9475
+Species 9: 13.125
+Species 10: 7.405
+
+Population Densities at: 14000
+EMPTY: 0.2425
+Species 1: 11.78
+Species 2: 7.755
+Species 3: 12.0975
+Species 4: 7.7825
+Species 5: 12.51
+Species 6: 7.5325
+Species 7: 12.0025
+Species 8: 7.9725
+Species 9: 12.93
+Species 10: 7.395
+
+Population Densities at: 14200
+EMPTY: 0.2025
+Species 1: 11.805
+Species 2: 7.78
+Species 3: 11.9875
+Species 4: 7.69
+Species 5: 12.6275
+Species 6: 7.485
+Species 7: 12.2475
+Species 8: 7.79
+Species 9: 12.8425
+Species 10: 7.5425
+
+Population Densities at: 14400
+EMPTY: 0.21
+Species 1: 11.93
+Species 2: 7.6625
+Species 3: 12
+Species 4: 7.66
+Species 5: 12.42
+Species 6: 7.345
+Species 7: 12.34
+Species 8: 7.955
+Species 9: 13.09
+Species 10: 7.3875
+
+Population Densities at: 14600
+EMPTY: 0.205
+Species 1: 12.0375
+Species 2: 7.8425
+Species 3: 11.9375
+Species 4: 7.705
+Species 5: 12.2675
+Species 6: 7.5825
+Species 7: 12.455
+Species 8: 7.715
+Species 9: 12.845
+Species 10: 7.4075
+
+Population Densities at: 14800
+EMPTY: 0.2125
+Species 1: 11.8
+Species 2: 7.7375
+Species 3: 11.9275
+Species 4: 7.64
+Species 5: 12.575
+Species 6: 7.605
+Species 7: 12.28
+Species 8: 7.6975
+Species 9: 13.015
+Species 10: 7.51
+
+Population Densities at: 15000
+EMPTY: 0.315
+Species 1: 11.95
+Species 2: 7.8775
+Species 3: 12.495
+Species 4: 7.47
+Species 5: 12.0825
+Species 6: 7.2225
+Species 7: 12.3075
+Species 8: 7.8875
+Species 9: 13.2725
+Species 10: 7.12
+
+Refreshing random numbers...
+
+Population Densities at: 15200
+EMPTY: 0.1875
+Species 1: 12.385
+Species 2: 8.1875
+Species 3: 12.275
+Species 4: 7.195
+Species 5: 12.325
+Species 6: 7.475
+Species 7: 12.5175
+Species 8: 7.545
+Species 9: 12.675
+Species 10: 7.2325
+
+Population Densities at: 15400
+EMPTY: 0.2025
+Species 1: 12.405
+Species 2: 7.655
+Species 3: 12.1925
+Species 4: 7.3175
+Species 5: 12.32
+Species 6: 7.7475
+Species 7: 12.25
+Species 8: 7.7075
+Species 9: 12.8175
+Species 10: 7.385
+
+Population Densities at: 15600
+EMPTY: 0.18
+Species 1: 11.815
+Species 2: 7.9975
+Species 3: 12.075
+Species 4: 7.6475
+Species 5: 12.5375
+Species 6: 7.43
+Species 7: 12.615
+Species 8: 7.4375
+Species 9: 12.9325
+Species 10: 7.3325
+
+Population Densities at: 15800
+EMPTY: 0.2175
+Species 1: 12.2525
+Species 2: 7.62
+Species 3: 12.2825
+Species 4: 7.3525
+Species 5: 12.8425
+Species 6: 7.63
+Species 7: 12.0275
+Species 8: 7.3575
+Species 9: 12.81
+Species 10: 7.6075
+
+Population Densities at: 16000
+EMPTY: 0.2275
+Species 1: 11.8125
+Species 2: 7.7075
+Species 3: 12.1625
+Species 4: 7.6525
+Species 5: 12.785
+Species 6: 7.3
+Species 7: 12.2425
+Species 8: 7.2875
+Species 9: 13.315
+Species 10: 7.5075
+
+Population Densities at: 16200
+EMPTY: 0.2325
+Species 1: 11.8675
+Species 2: 7.6875
+Species 3: 12.305
+Species 4: 7.58
+Species 5: 12.6025
+Species 6: 7.505
+Species 7: 12.2125
+Species 8: 7.4375
+Species 9: 13.23
+Species 10: 7.34
+
+Population Densities at: 16400
+EMPTY: 0.235
+Species 1: 11.9975
+Species 2: 7.8125
+Species 3: 12.315
+Species 4: 7.655
+Species 5: 12.4875
+Species 6: 7.475
+Species 7: 12.1
+Species 8: 7.475
+Species 9: 13.095
+Species 10: 7.3525
+
+Population Densities at: 16600
+EMPTY: 0.245
+Species 1: 11.8525
+Species 2: 7.95
+Species 3: 12.055
+Species 4: 7.585
+Species 5: 12.5425
+Species 6: 7.525
+Species 7: 12.14
+Species 8: 7.3925
+Species 9: 13.14
+Species 10: 7.5725
+
+Population Densities at: 16800
+EMPTY: 0.22
+Species 1: 11.98
+Species 2: 7.9025
+Species 3: 12.27
+Species 4: 7.46
+Species 5: 12.445
+Species 6: 7.3425
+Species 7: 12.4175
+Species 8: 7.5675
+Species 9: 13.1875
+Species 10: 7.2075
+
+Population Densities at: 17000
+EMPTY: 0.2375
+Species 1: 11.9925
+Species 2: 8.0575
+Species 3: 11.8825
+Species 4: 7.5325
+Species 5: 12.6325
+Species 6: 7.455
+Species 7: 12.4875
+Species 8: 7.32
+Species 9: 13.065
+Species 10: 7.3375
+
+Population Densities at: 17200
+EMPTY: 0.2075
+Species 1: 12.4225
+Species 2: 7.7825
+Species 3: 12.035
+Species 4: 7.38
+Species 5: 12.655
+Species 6: 7.47
+Species 7: 12.42
+Species 8: 7.36
+Species 9: 12.9275
+Species 10: 7.34
+
+Population Densities at: 17400
+EMPTY: 0.2275
+Species 1: 12.0325
+Species 2: 7.61
+Species 3: 12.0375
+Species 4: 7.2375
+Species 5: 13.275
+Species 6: 7.2275
+Species 7: 12.5625
+Species 8: 7.1425
+Species 9: 13.175
+Species 10: 7.4725
+
+Refreshing random numbers...
+
+Population Densities at: 17600
+EMPTY: 0.245
+Species 1: 12.215
+Species 2: 7.4
+Species 3: 12.175
+Species 4: 7.48
+Species 5: 12.9825
+Species 6: 7.29
+Species 7: 12.37
+Species 8: 7.265
+Species 9: 13.215
+Species 10: 7.3625
+
+Population Densities at: 17800
+EMPTY: 0.16
+Species 1: 12.29
+Species 2: 7.4625
+Species 3: 12.2125
+Species 4: 7.4125
+Species 5: 13.0775
+Species 6: 7.1775
+Species 7: 12.4175
+Species 8: 7.32
+Species 9: 13.225
+Species 10: 7.245
+
+Population Densities at: 18000
+EMPTY: 0.1575
+Species 1: 12.4025
+Species 2: 7.4075
+Species 3: 12.425
+Species 4: 7.4425
+Species 5: 12.955
+Species 6: 7.2675
+Species 7: 12.235
+Species 8: 7.375
+Species 9: 13.215
+Species 10: 7.1175
+
+Population Densities at: 18200
+EMPTY: 0.1925
+Species 1: 12.325
+Species 2: 7.455
+Species 3: 12.335
+Species 4: 7.4625
+Species 5: 12.855
+Species 6: 7.1825
+Species 7: 12.4875
+Species 8: 7.1775
+Species 9: 13.5
+Species 10: 7.0275
+
+Population Densities at: 18400
+EMPTY: 0.2275
+Species 1: 12.4925
+Species 2: 7.285
+Species 3: 12.5125
+Species 4: 7.2125
+Species 5: 12.8425
+Species 6: 7.3325
+Species 7: 12.2375
+Species 8: 7.525
+Species 9: 13.1675
+Species 10: 7.165
+
+Population Densities at: 18600
+EMPTY: 0.2075
+Species 1: 12.645
+Species 2: 7.3475
+Species 3: 12.2275
+Species 4: 7.195
+Species 5: 12.8225
+Species 6: 7.255
+Species 7: 12.5825
+Species 8: 7.2875
+Species 9: 13.3625
+Species 10: 7.0675
+
+Population Densities at: 18800
+EMPTY: 0.1825
+Species 1: 12.4625
+Species 2: 7.11
+Species 3: 12.335
+Species 4: 7.1925
+Species 5: 13.055
+Species 6: 7.2525
+Species 7: 12.2925
+Species 8: 7.4325
+Species 9: 13.3225
+Species 10: 7.3625
+
+Population Densities at: 19000
+EMPTY: 0.1875
+Species 1: 12.3525
+Species 2: 7.44
+Species 3: 12.3275
+Species 4: 7.335
+Species 5: 12.8625
+Species 6: 7.3975
+Species 7: 12.25
+Species 8: 7.125
+Species 9: 13.415
+Species 10: 7.3075
+
+Population Densities at: 19200
+EMPTY: 0.1875
+Species 1: 12.26
+Species 2: 7.58
+Species 3: 12.39
+Species 4: 7.3425
+Species 5: 12.97
+Species 6: 7.21
+Species 7: 12.285
+Species 8: 7.33
+Species 9: 13.25
+Species 10: 7.195
+
+Population Densities at: 19400
+EMPTY: 0.1725
+Species 1: 12.4875
+Species 2: 7.225
+Species 3: 12.19
+Species 4: 7.455
+Species 5: 12.9975
+Species 6: 7.2025
+Species 7: 12.3675
+Species 8: 7.2
+Species 9: 13.28
+Species 10: 7.4225
+
+Population Densities at: 19600
+EMPTY: 0.2275
+Species 1: 12.475
+Species 2: 7.0975
+Species 3: 12.4175
+Species 4: 7.3025
+Species 5: 12.99
+Species 6: 7.1225
+Species 7: 12.5625
+Species 8: 7.25
+Species 9: 13.385
+Species 10: 7.17
+
+Population Densities at: 19800
+EMPTY: 0.2375
+Species 1: 12.515
+Species 2: 7.1775
+Species 3: 12.3225
+Species 4: 7.0875
+Species 5: 13.0675
+Species 6: 7.22
+Species 7: 12.4425
+Species 8: 7.2025
+Species 9: 13.4275
+Species 10: 7.3
+
+Population Densities at: 20000
+EMPTY: 0.18
+Species 1: 12.54
+Species 2: 6.9225
+Species 3: 12.4675
+Species 4: 7.215
+Species 5: 13.16
+Species 6: 7.2475
+Species 7: 12.2375
+Species 8: 7.4525
+Species 9: 13.3975
+Species 10: 7.18
+
+Refreshing random numbers...
+
+Population Densities at: 20200
+EMPTY: 0.175
+Species 1: 12.385
+Species 2: 6.9675
+Species 3: 12.4525
+Species 4: 7.4
+Species 5: 12.9775
+Species 6: 7.02
+Species 7: 12.47
+Species 8: 7.4075
+Species 9: 13.43
+Species 10: 7.315
+
+Population Densities at: 20400
+EMPTY: 0.2025
+Species 1: 12.5075
+Species 2: 6.9675
+Species 3: 12.44
+Species 4: 7.295
+Species 5: 13.0125
+Species 6: 7.1425
+Species 7: 12.3775
+Species 8: 7.485
+Species 9: 13.35
+Species 10: 7.22
+
+Population Densities at: 20600
+EMPTY: 0.175
+Species 1: 12.0275
+Species 2: 7.1475
+Species 3: 12.6425
+Species 4: 7.265
+Species 5: 13.0875
+Species 6: 7.03
+Species 7: 12.5925
+Species 8: 7.4975
+Species 9: 13.2775
+Species 10: 7.2575
+
+Population Densities at: 20800
+EMPTY: 0.19
+Species 1: 12.4125
+Species 2: 7.1825
+Species 3: 12.575
+Species 4: 7.4875
+Species 5: 12.865
+Species 6: 6.865
+Species 7: 12.6525
+Species 8: 7.2725
+Species 9: 13.4175
+Species 10: 7.08
+
+Population Densities at: 21000
+EMPTY: 0.2125
+Species 1: 12.2125
+Species 2: 7.1025
+Species 3: 12.6
+Species 4: 7.485
+Species 5: 12.8825
+Species 6: 6.935
+Species 7: 12.655
+Species 8: 7.46
+Species 9: 13.305
+Species 10: 7.15
+
+Population Densities at: 21200
+EMPTY: 0.185
+Species 1: 12.095
+Species 2: 7.2075
+Species 3: 12.475
+Species 4: 7.36
+Species 5: 12.785
+Species 6: 6.9075
+Species 7: 12.8625
+Species 8: 7.51
+Species 9: 13.42
+Species 10: 7.1925
+
+Population Densities at: 21400
+EMPTY: 0.19
+Species 1: 12.47
+Species 2: 6.9825
+Species 3: 12.7525
+Species 4: 7.27
+Species 5: 12.815
+Species 6: 6.9175
+Species 7: 12.5325
+Species 8: 7.645
+Species 9: 13.4475
+Species 10: 6.9775
+
+Population Densities at: 21600
+EMPTY: 0.1725
+Species 1: 12.545
+Species 2: 7.2075
+Species 3: 12.505
+Species 4: 7.2475
+Species 5: 12.8425
+Species 6: 6.7125
+Species 7: 12.765
+Species 8: 7.59
+Species 9: 13.5475
+Species 10: 6.865
+
+Population Densities at: 21800
+EMPTY: 0.185
+Species 1: 12.8075
+Species 2: 6.965
+Species 3: 12.915
+Species 4: 7.2275
+Species 5: 12.8675
+Species 6: 6.6075
+Species 7: 12.8525
+Species 8: 7.3975
+Species 9: 13.435
+Species 10: 6.74
+
+Population Densities at: 22000
+EMPTY: 0.1425
+Species 1: 12.8
+Species 2: 6.99
+Species 3: 12.8775
+Species 4: 6.9075
+Species 5: 12.875
+Species 6: 6.8425
+Species 7: 13.055
+Species 8: 7.22
+Species 9: 13.39
+Species 10: 6.9
+
+Population Densities at: 22200
+EMPTY: 0.1875
+Species 1: 12.8275
+Species 2: 6.815
+Species 3: 12.99
+Species 4: 6.79
+Species 5: 12.74
+Species 6: 6.98
+Species 7: 13.09
+Species 8: 7.165
+Species 9: 13.445
+Species 10: 6.97
+
+Population Densities at: 22400
+EMPTY: 0.19
+Species 1: 12.8375
+Species 2: 6.8675
+Species 3: 12.8825
+Species 4: 6.9
+Species 5: 12.8275
+Species 6: 6.8875
+Species 7: 13.06
+Species 8: 7.3
+Species 9: 13.275
+Species 10: 6.9725
+
+Refreshing random numbers...
+
+Population Densities at: 22600
+EMPTY: 0.1775
+Species 1: 12.8825
+Species 2: 6.965
+Species 3: 12.5725
+Species 4: 7.13
+Species 5: 12.7025
+Species 6: 7.205
+Species 7: 13.0125
+Species 8: 7.005
+Species 9: 13.385
+Species 10: 6.9625
+
+Population Densities at: 22800
+EMPTY: 0.18
+Species 1: 12.755
+Species 2: 6.865
+Species 3: 12.735
+Species 4: 6.9525
+Species 5: 12.7975
+Species 6: 7.0875
+Species 7: 12.995
+Species 8: 7.32
+Species 9: 13.15
+Species 10: 7.1625
+
+Population Densities at: 23000
+EMPTY: 0.1625
+Species 1: 12.605
+Species 2: 6.855
+Species 3: 12.6975
+Species 4: 7.0075
+Species 5: 12.845
+Species 6: 7.0975
+Species 7: 12.965
+Species 8: 7.17
+Species 9: 13.3325
+Species 10: 7.2625
+
+Population Densities at: 23200
+EMPTY: 0.1825
+Species 1: 12.585
+Species 2: 7.0625
+Species 3: 12.8475
+Species 4: 6.8275
+Species 5: 12.6
+Species 6: 7.175
+Species 7: 12.8475
+Species 8: 7.095
+Species 9: 13.6725
+Species 10: 7.105
+
+Population Densities at: 23400
+EMPTY: 0.1675
+Species 1: 12.35
+Species 2: 7.085
+Species 3: 12.6425
+Species 4: 6.9625
+Species 5: 12.92
+Species 6: 6.975
+Species 7: 12.77
+Species 8: 7.2075
+Species 9: 13.5225
+Species 10: 7.3975
+
+Population Densities at: 23600
+EMPTY: 0.2075
+Species 1: 12.255
+Species 2: 6.985
+Species 3: 12.8125
+Species 4: 6.9525
+Species 5: 12.6575
+Species 6: 7.2025
+Species 7: 12.7125
+Species 8: 7.565
+Species 9: 13.5275
+Species 10: 7.1225
+
+Population Densities at: 23800
+EMPTY: 0.185
+Species 1: 12.1475
+Species 2: 7.245
+Species 3: 12.645
+Species 4: 6.91
+Species 5: 12.77
+Species 6: 7.1775
+Species 7: 12.9675
+Species 8: 7.2225
+Species 9: 13.3775
+Species 10: 7.3525
+
+Population Densities at: 24000
+EMPTY: 0.185
+Species 1: 12.35
+Species 2: 6.81
+Species 3: 13.1475
+Species 4: 6.8375
+Species 5: 12.7075
+Species 6: 6.9875
+Species 7: 12.7475
+Species 8: 7.525
+Species 9: 13.535
+Species 10: 7.1675
+
+Population Densities at: 24200
+EMPTY: 0.1775
+Species 1: 12.0775
+Species 2: 7.1675
+Species 3: 12.9775
+Species 4: 6.9825
+Species 5: 12.645
+Species 6: 7.145
+Species 7: 13.1075
+Species 8: 7.2725
+Species 9: 13.525
+Species 10: 6.9225
+
+Population Densities at: 24400
+EMPTY: 0.17
+Species 1: 12.075
+Species 2: 7.2775
+Species 3: 13.1025
+Species 4: 6.8225
+Species 5: 12.7
+Species 6: 7.01
+Species 7: 13.0875
+Species 8: 7.4025
+Species 9: 13.52
+Species 10: 6.8325
+
+Population Densities at: 24600
+EMPTY: 0.195
+Species 1: 12.3175
+Species 2: 7.3525
+Species 3: 13.2325
+Species 4: 6.6525
+Species 5: 12.5725
+Species 6: 7.1425
+Species 7: 13.065
+Species 8: 7.4875
+Species 9: 13.025
+Species 10: 6.9575
+
+Population Densities at: 24800
+EMPTY: 0.15
+Species 1: 12.2475
+Species 2: 7.5025
+Species 3: 12.9175
+Species 4: 6.98
+Species 5: 12.5075
+Species 6: 7.035
+Species 7: 13.145
+Species 8: 7.435
+Species 9: 13.0675
+Species 10: 7.0125
+
+Population Densities at: 25000
+EMPTY: 0.19
+Species 1: 12.3325
+Species 2: 7.465
+Species 3: 12.985
+Species 4: 6.6675
+Species 5: 12.5075
+Species 6: 7.065
+Species 7: 13.4275
+Species 8: 7.53
+Species 9: 12.9025
+Species 10: 6.9275
+
+Refreshing random numbers...
+
+Population Densities at: 25200
+EMPTY: 0.2
+Species 1: 12.5325
+Species 2: 7.2725
+Species 3: 12.935
+Species 4: 6.77
+Species 5: 12.5225
+Species 6: 7.305
+Species 7: 13.24
+Species 8: 7.4375
+Species 9: 12.8175
+Species 10: 6.9675
+
+Population Densities at: 25400
+EMPTY: 0.155
+Species 1: 12.525
+Species 2: 7.235
+Species 3: 12.9775
+Species 4: 6.6
+Species 5: 12.82
+Species 6: 7.1875
+Species 7: 13.495
+Species 8: 7.23
+Species 9: 12.8
+Species 10: 6.975
+
+Population Densities at: 25600
+EMPTY: 0.1275
+Species 1: 12.8925
+Species 2: 7.1025
+Species 3: 12.8225
+Species 4: 6.585
+Species 5: 12.685
+Species 6: 7.38
+Species 7: 13.165
+Species 8: 7.3
+Species 9: 12.9775
+Species 10: 6.9625
+
+Population Densities at: 25800
+EMPTY: 0.2075
+Species 1: 12.755
+Species 2: 6.9825
+Species 3: 12.83
+Species 4: 6.81
+Species 5: 12.71
+Species 6: 7.345
+Species 7: 13.1625
+Species 8: 7.2725
+Species 9: 13.0075
+Species 10: 6.9175
+
+Population Densities at: 26000
+EMPTY: 0.1675
+Species 1: 12.615
+Species 2: 7.2475
+Species 3: 12.89
+Species 4: 6.7925
+Species 5: 12.6375
+Species 6: 7.345
+Species 7: 13.16
+Species 8: 7.3025
+Species 9: 12.985
+Species 10: 6.8575
+
+Population Densities at: 26200
+EMPTY: 0.14
+Species 1: 12.575
+Species 2: 7.3425
+Species 3: 12.7125
+Species 4: 7.0025
+Species 5: 12.5275
+Species 6: 7.355
+Species 7: 12.9
+Species 8: 7.37
+Species 9: 13.1475
+Species 10: 6.9275
+
+Population Densities at: 26400
+EMPTY: 0.1875
+Species 1: 12.8275
+Species 2: 7.27
+Species 3: 12.9475
+Species 4: 6.6075
+Species 5: 12.4675
+Species 6: 7.39
+Species 7: 12.9975
+Species 8: 7.4025
+Species 9: 13.015
+Species 10: 6.8875
+
+Population Densities at: 26600
+EMPTY: 0.1725
+Species 1: 12.7275
+Species 2: 7.3025
+Species 3: 12.675
+Species 4: 6.7175
+Species 5: 12.6875
+Species 6: 7.3925
+Species 7: 13.1475
+Species 8: 7.0325
+Species 9: 13.05
+Species 10: 7.095
+
+Population Densities at: 26800
+EMPTY: 0.2075
+Species 1: 12.945
+Species 2: 7.02
+Species 3: 12.9025
+Species 4: 6.7825
+Species 5: 12.7725
+Species 6: 7.2725
+Species 7: 13.005
+Species 8: 7.1125
+Species 9: 13.1725
+Species 10: 6.8075
+
+Population Densities at: 27000
+EMPTY: 0.1775
+Species 1: 12.67
+Species 2: 7.3625
+Species 3: 12.73
+Species 4: 6.6725
+Species 5: 12.9625
+Species 6: 7.17
+Species 7: 13.2025
+Species 8: 7.0475
+Species 9: 12.975
+Species 10: 7.03
+
+Population Densities at: 27200
+EMPTY: 0.1375
+Species 1: 12.7275
+Species 2: 7.3725
+Species 3: 12.7925
+Species 4: 6.7025
+Species 5: 12.9775
+Species 6: 7.135
+Species 7: 12.9975
+Species 8: 6.9425
+Species 9: 13.13
+Species 10: 7.085
+
+Population Densities at: 27400
+EMPTY: 0.1725
+Species 1: 12.6025
+Species 2: 7.1425
+Species 3: 12.6275
+Species 4: 7.045
+Species 5: 12.86
+Species 6: 7.0325
+Species 7: 13.1
+Species 8: 6.955
+Species 9: 13.35
+Species 10: 7.1125
+
+Refreshing random numbers...
+
+Population Densities at: 27600
+EMPTY: 0.175
+Species 1: 12.825
+Species 2: 7.205
+Species 3: 12.8175
+Species 4: 6.9225
+Species 5: 12.86
+Species 6: 6.9025
+Species 7: 13.1075
+Species 8: 7.095
+Species 9: 13.2525
+Species 10: 6.8375
+
+Population Densities at: 27800
+EMPTY: 0.1925
+Species 1: 12.6825
+Species 2: 7.295
+Species 3: 12.7925
+Species 4: 6.8575
+Species 5: 12.86
+Species 6: 6.7975
+Species 7: 13.1725
+Species 8: 7.08
+Species 9: 13.3975
+Species 10: 6.8725
+
+Population Densities at: 28000
+EMPTY: 0.1625
+Species 1: 12.915
+Species 2: 7.355
+Species 3: 12.8575
+Species 4: 6.89
+Species 5: 12.65
+Species 6: 6.875
+Species 7: 13.0475
+Species 8: 7.2975
+Species 9: 13.3875
+Species 10: 6.5625
+
+Population Densities at: 28200
+EMPTY: 0.16
+Species 1: 12.8825
+Species 2: 7.39
+Species 3: 12.9475
+Species 4: 6.635
+Species 5: 12.6975
+Species 6: 6.985
+Species 7: 13.38
+Species 8: 6.93
+Species 9: 13.25
+Species 10: 6.7425
+
+Population Densities at: 28400
+EMPTY: 0.1625
+Species 1: 12.85
+Species 2: 7.08
+Species 3: 12.955
+Species 4: 6.885
+Species 5: 12.57
+Species 6: 7.135
+Species 7: 13.145
+Species 8: 6.995
+Species 9: 13.5175
+Species 10: 6.705
+
+Population Densities at: 28600
+EMPTY: 0.18
+Species 1: 12.7925
+Species 2: 6.94
+Species 3: 13.0275
+Species 4: 6.7575
+Species 5: 12.9725
+Species 6: 7.0175
+Species 7: 13.1025
+Species 8: 6.9625
+Species 9: 13.6175
+Species 10: 6.63
+
+Population Densities at: 28800
+EMPTY: 0.16
+Species 1: 12.7625
+Species 2: 7.035
+Species 3: 12.9975
+Species 4: 6.5175
+Species 5: 12.8125
+Species 6: 6.8275
+Species 7: 13.24
+Species 8: 7.25
+Species 9: 13.6775
+Species 10: 6.72
+
+Population Densities at: 29000
+EMPTY: 0.1825
+Species 1: 12.855
+Species 2: 7.2975
+Species 3: 12.97
+Species 4: 6.5725
+Species 5: 12.64
+Species 6: 6.91
+Species 7: 13.355
+Species 8: 7.145
+Species 9: 13.45
+Species 10: 6.6225
+
+Population Densities at: 29200
+EMPTY: 0.1725
+Species 1: 13.045
+Species 2: 7.36
+Species 3: 13.0325
+Species 4: 6.39
+Species 5: 12.56
+Species 6: 6.9675
+Species 7: 13.38
+Species 8: 7.08
+Species 9: 13.2775
+Species 10: 6.735
+
+Population Densities at: 29400
+EMPTY: 0.1325
+Species 1: 13.12
+Species 2: 7.5
+Species 3: 12.8
+Species 4: 6.5325
+Species 5: 12.5225
+Species 6: 7.31
+Species 7: 13.3375
+Species 8: 6.79
+Species 9: 13.245
+Species 10: 6.71
+
+Population Densities at: 29600
+EMPTY: 0.1675
+Species 1: 13.0275
+Species 2: 7.045
+Species 3: 12.8225
+Species 4: 6.445
+Species 5: 13
+Species 6: 7.355
+Species 7: 13.19
+Species 8: 6.84
+Species 9: 13.07
+Species 10: 7.0375
+
+Population Densities at: 29800
+EMPTY: 0.14
+Species 1: 13.095
+Species 2: 7.06
+Species 3: 12.605
+Species 4: 6.5025
+Species 5: 13.06
+Species 6: 7.2375
+Species 7: 13.2675
+Species 8: 6.7625
+Species 9: 13.1875
+Species 10: 7.0825
+
+Population Densities at: 30000
+EMPTY: 0.165
+Species 1: 13.1
+Species 2: 7.085
+Species 3: 12.64
+Species 4: 6.93
+Species 5: 13.035
+Species 6: 7.1625
+Species 7: 13.0725
+Species 8: 6.5625
+Species 9: 13.4
+Species 10: 6.8475
+
+Refreshing random numbers...
+
+Population Densities at: 30200
+EMPTY: 0.1725
+Species 1: 13.05
+Species 2: 6.8675
+Species 3: 12.695
+Species 4: 6.805
+Species 5: 12.96
+Species 6: 7.08
+Species 7: 12.985
+Species 8: 6.915
+Species 9: 13.435
+Species 10: 7.035
+
+Population Densities at: 30400
+EMPTY: 0.165
+Species 1: 12.8325
+Species 2: 6.7925
+Species 3: 12.68
+Species 4: 7.025
+Species 5: 12.8425
+Species 6: 6.9775
+Species 7: 12.985
+Species 8: 6.8425
+Species 9: 13.81
+Species 10: 7.0475
+
+Population Densities at: 30600
+EMPTY: 0.2275
+Species 1: 12.93
+Species 2: 6.8675
+Species 3: 12.9325
+Species 4: 6.935
+Species 5: 12.75
+Species 6: 7.0175
+Species 7: 12.8725
+Species 8: 7.025
+Species 9: 13.6075
+Species 10: 6.835
+
+Population Densities at: 30800
+EMPTY: 0.1625
+Species 1: 12.75
+Species 2: 6.9925
+Species 3: 12.8425
+Species 4: 6.8875
+Species 5: 12.91
+Species 6: 6.9275
+Species 7: 12.8975
+Species 8: 7.0125
+Species 9: 13.745
+Species 10: 6.8725
+
+Population Densities at: 31000
+EMPTY: 0.16
+Species 1: 12.815
+Species 2: 7
+Species 3: 12.8425
+Species 4: 6.985
+Species 5: 12.9375
+Species 6: 6.84
+Species 7: 13.04
+Species 8: 6.9775
+Species 9: 13.5325
+Species 10: 6.87
+
+Population Densities at: 31200
+EMPTY: 0.1925
+Species 1: 12.5575
+Species 2: 6.845
+Species 3: 13.2075
+Species 4: 6.71
+Species 5: 12.86
+Species 6: 6.8375
+Species 7: 12.9775
+Species 8: 7.32
+Species 9: 13.7025
+Species 10: 6.79
+
+Population Densities at: 31400
+EMPTY: 0.165
+Species 1: 12.7825
+Species 2: 7.155
+Species 3: 13.135
+Species 4: 6.6525
+Species 5: 12.855
+Species 6: 6.705
+Species 7: 13.035
+Species 8: 7.3425
+Species 9: 13.5
+Species 10: 6.6725
+
+Population Densities at: 31600
+EMPTY: 0.135
+Species 1: 13.0275
+Species 2: 7.0475
+Species 3: 13
+Species 4: 6.58
+Species 5: 12.8575
+Species 6: 6.7625
+Species 7: 13.355
+Species 8: 7.265
+Species 9: 13.47
+Species 10: 6.5
+
+Population Densities at: 31800
+EMPTY: 0.2025
+Species 1: 12.685
+Species 2: 7.195
+Species 3: 12.875
+Species 4: 6.7425
+Species 5: 12.945
+Species 6: 6.8075
+Species 7: 13.29
+Species 8: 7.125
+Species 9: 13.53
+Species 10: 6.6025
+
+Population Densities at: 32000
+EMPTY: 0.185
+Species 1: 12.935
+Species 2: 7.0525
+Species 3: 13.03
+Species 4: 6.7675
+Species 5: 12.765
+Species 6: 7.0225
+Species 7: 12.995
+Species 8: 7.3025
+Species 9: 13.435
+Species 10: 6.51
+
+Population Densities at: 32200
+EMPTY: 0.125
+Species 1: 12.9025
+Species 2: 7.095
+Species 3: 12.95
+Species 4: 6.755
+Species 5: 12.9475
+Species 6: 6.8875
+Species 7: 13.1275
+Species 8: 7.0625
+Species 9: 13.5925
+Species 10: 6.555
+
+Population Densities at: 32400
+EMPTY: 0.16
+Species 1: 12.9175
+Species 2: 7.1825
+Species 3: 13.1625
+Species 4: 6.445
+Species 5: 13
+Species 6: 6.8125
+Species 7: 13.26
+Species 8: 7.3325
+Species 9: 13.31
+Species 10: 6.4175
+
+Refreshing random numbers...
+
+Population Densities at: 32600
+EMPTY: 0.155
+Species 1: 13.26
+Species 2: 7.1075
+Species 3: 12.965
+Species 4: 6.5325
+Species 5: 12.93
+Species 6: 6.925
+Species 7: 13.2775
+Species 8: 6.9425
+Species 9: 13.3975
+Species 10: 6.5075
+
+Population Densities at: 32800
+EMPTY: 0.1525
+Species 1: 13.22
+Species 2: 7.22
+Species 3: 12.9875
+Species 4: 6.3425
+Species 5: 12.855
+Species 6: 6.955
+Species 7: 13.1875
+Species 8: 7.055
+Species 9: 13.3075
+Species 10: 6.7175
+
+Population Densities at: 33000
+EMPTY: 0.165
+Species 1: 13.095
+Species 2: 7.1525
+Species 3: 12.94
+Species 4: 6.5875
+Species 5: 13.13
+Species 6: 6.8075
+Species 7: 13.075
+Species 8: 7.005
+Species 9: 13.445
+Species 10: 6.5975
+
+Population Densities at: 33200
+EMPTY: 0.1575
+Species 1: 13.1975
+Species 2: 7.0525
+Species 3: 13.04
+Species 4: 6.56
+Species 5: 12.8825
+Species 6: 7.005
+Species 7: 13.06
+Species 8: 7.12
+Species 9: 13.465
+Species 10: 6.46
+
+Population Densities at: 33400
+EMPTY: 0.1625
+Species 1: 12.9875
+Species 2: 7.1525
+Species 3: 13.0325
+Species 4: 6.5575
+Species 5: 13.2475
+Species 6: 6.7075
+Species 7: 13.15
+Species 8: 7.005
+Species 9: 13.225
+Species 10: 6.7725
+
+Population Densities at: 33600
+EMPTY: 0.15
+Species 1: 13.095
+Species 2: 7.01
+Species 3: 13.205
+Species 4: 6.6375
+Species 5: 12.875
+Species 6: 6.805
+Species 7: 13.0525
+Species 8: 7.1975
+Species 9: 13.1875
+Species 10: 6.785
+
+Population Densities at: 33800
+EMPTY: 0.1375
+Species 1: 13.0625
+Species 2: 7.2925
+Species 3: 13.07
+Species 4: 6.7075
+Species 5: 12.7275
+Species 6: 6.6375
+Species 7: 13.1975
+Species 8: 7.015
+Species 9: 13.605
+Species 10: 6.5475
+
+Population Densities at: 34000
+EMPTY: 0.1975
+Species 1: 13.1175
+Species 2: 7.065
+Species 3: 13.1425
+Species 4: 6.54
+Species 5: 12.6425
+Species 6: 6.8475
+Species 7: 13.1875
+Species 8: 7.02
+Species 9: 13.51
+Species 10: 6.73
+
+Population Densities at: 34200
+EMPTY: 0.175
+Species 1: 13.12
+Species 2: 7.025
+Species 3: 13.1575
+Species 4: 6.7025
+Species 5: 12.895
+Species 6: 6.7725
+Species 7: 13.155
+Species 8: 6.8075
+Species 9: 13.5425
+Species 10: 6.6475
+
+Population Densities at: 34400
+EMPTY: 0.1375
+Species 1: 13.2075
+Species 2: 6.9925
+Species 3: 13.1275
+Species 4: 6.605
+Species 5: 12.9475
+Species 6: 6.8875
+Species 7: 13.14
+Species 8: 6.81
+Species 9: 13.5125
+Species 10: 6.6325
+
+Population Densities at: 34600
+EMPTY: 0.155
+Species 1: 13.35
+Species 2: 6.8925
+Species 3: 12.9375
+Species 4: 6.7075
+Species 5: 12.905
+Species 6: 6.96
+Species 7: 12.825
+Species 8: 6.7125
+Species 9: 13.6625
+Species 10: 6.8925
+
+Population Densities at: 34800
+EMPTY: 0.1575
+Species 1: 13.0125
+Species 2: 6.865
+Species 3: 12.9175
+Species 4: 6.845
+Species 5: 13.15
+Species 6: 6.72
+Species 7: 12.8475
+Species 8: 6.865
+Species 9: 13.685
+Species 10: 6.935
+
+Population Densities at: 35000
+EMPTY: 0.1925
+Species 1: 13.1925
+Species 2: 6.86
+Species 3: 13.025
+Species 4: 6.89
+Species 5: 12.87
+Species 6: 6.7925
+Species 7: 12.7425
+Species 8: 7.155
+Species 9: 13.5175
+Species 10: 6.7625
+
+Refreshing random numbers...
+
+Population Densities at: 35200
+EMPTY: 0.17
+Species 1: 12.8975
+Species 2: 7.0775
+Species 3: 13.095
+Species 4: 6.8075
+Species 5: 12.88
+Species 6: 6.7475
+Species 7: 12.9775
+Species 8: 7.1075
+Species 9: 13.3825
+Species 10: 6.8575
+
+Population Densities at: 35400
+EMPTY: 0.125
+Species 1: 13.1175
+Species 2: 6.95
+Species 3: 13.0275
+Species 4: 6.9425
+Species 5: 12.7775
+Species 6: 6.9125
+Species 7: 12.6925
+Species 8: 7.15
+Species 9: 13.6775
+Species 10: 6.6275
+
+Population Densities at: 35600
+EMPTY: 0.1775
+Species 1: 13.205
+Species 2: 7.015
+Species 3: 13.14
+Species 4: 6.7925
+Species 5: 12.78
+Species 6: 7.015
+Species 7: 12.66
+Species 8: 7.175
+Species 9: 13.4225
+Species 10: 6.6175
+
+Population Densities at: 35800
+EMPTY: 0.1325
+Species 1: 13.175
+Species 2: 6.91
+Species 3: 13.1325
+Species 4: 6.865
+Species 5: 12.83
+Species 6: 6.835
+Species 7: 12.885
+Species 8: 7.0825
+Species 9: 13.3725
+Species 10: 6.78
+
+Population Densities at: 36000
+EMPTY: 0.14
+Species 1: 13.1275
+Species 2: 6.8625
+Species 3: 13.185
+Species 4: 6.73
+Species 5: 12.8875
+Species 6: 6.8525
+Species 7: 12.92
+Species 8: 7.06
+Species 9: 13.3075
+Species 10: 6.9275
+
+Population Densities at: 36200
+EMPTY: 0.16
+Species 1: 13.1675
+Species 2: 6.94
+Species 3: 13.0225
+Species 4: 6.8125
+Species 5: 12.715
+Species 6: 6.9275
+Species 7: 12.9775
+Species 8: 6.915
+Species 9: 13.595
+Species 10: 6.7675
+
+Population Densities at: 36400
+EMPTY: 0.17
+Species 1: 13.1575
+Species 2: 6.89
+Species 3: 13.025
+Species 4: 6.7875
+Species 5: 12.7175
+Species 6: 6.905
+Species 7: 13.0625
+Species 8: 6.83
+Species 9: 13.58
+Species 10: 6.875
+
+Population Densities at: 36600
+EMPTY: 0.16
+Species 1: 13.1925
+Species 2: 6.8225
+Species 3: 13.115
+Species 4: 6.8625
+Species 5: 12.7325
+Species 6: 6.885
+Species 7: 13.005
+Species 8: 6.86
+Species 9: 13.5425
+Species 10: 6.8225
+
+Population Densities at: 36800
+EMPTY: 0.1925
+Species 1: 13.1675
+Species 2: 6.8575
+Species 3: 13.05
+Species 4: 7.05
+Species 5: 12.6325
+Species 6: 6.9925
+Species 7: 12.7825
+Species 8: 7.1
+Species 9: 13.4775
+Species 10: 6.6975
+
+Population Densities at: 37000
+EMPTY: 0.225
+Species 1: 12.95
+Species 2: 7.19
+Species 3: 12.8525
+Species 4: 6.875
+Species 5: 12.6625
+Species 6: 6.905
+Species 7: 13.0125
+Species 8: 7.1875
+Species 9: 13.4
+Species 10: 6.74
+
+Population Densities at: 37200
+EMPTY: 0.175
+Species 1: 12.9425
+Species 2: 7.265
+Species 3: 12.9575
+Species 4: 6.94
+Species 5: 12.495
+Species 6: 7.015
+Species 7: 13.035
+Species 8: 7.0975
+Species 9: 13.445
+Species 10: 6.6325
+
+Population Densities at: 37400
+EMPTY: 0.215
+Species 1: 12.9775
+Species 2: 7.2625
+Species 3: 12.825
+Species 4: 6.7775
+Species 5: 12.6625
+Species 6: 7.095
+Species 7: 12.98
+Species 8: 7.155
+Species 9: 13.2625
+Species 10: 6.7875
+
+Refreshing random numbers...
+
+Population Densities at: 37600
+EMPTY: 0.13
+Species 1: 12.9825
+Species 2: 7.095
+Species 3: 12.885
+Species 4: 6.845
+Species 5: 12.5375
+Species 6: 7.275
+Species 7: 12.845
+Species 8: 7.2675
+Species 9: 13.4175
+Species 10: 6.72
+
+Population Densities at: 37800
+EMPTY: 0.165
+Species 1: 13.0025
+Species 2: 7.1025
+Species 3: 13.0775
+Species 4: 6.855
+Species 5: 12.765
+Species 6: 7.08
+Species 7: 12.725
+Species 8: 7.21
+Species 9: 13.2825
+Species 10: 6.735
+
+Population Densities at: 38000
+EMPTY: 0.1775
+Species 1: 12.9875
+Species 2: 7.1975
+Species 3: 12.8
+Species 4: 6.895
+Species 5: 12.945
+Species 6: 6.8725
+Species 7: 12.7175
+Species 8: 7.3275
+Species 9: 13.1875
+Species 10: 6.8925
+
+Population Densities at: 38200
+EMPTY: 0.1525
+Species 1: 13.0025
+Species 2: 6.9675
+Species 3: 12.905
+Species 4: 7.2275
+Species 5: 12.7125
+Species 6: 6.8875
+Species 7: 12.7675
+Species 8: 7.37
+Species 9: 13.3925
+Species 10: 6.615
+
+Population Densities at: 38400
+EMPTY: 0.1775
+Species 1: 12.945
+Species 2: 6.8825
+Species 3: 12.9025
+Species 4: 6.975
+Species 5: 12.8425
+Species 6: 6.6475
+Species 7: 12.9025
+Species 8: 7.3775
+Species 9: 13.4825
+Species 10: 6.865
+
+Population Densities at: 38600
+EMPTY: 0.13
+Species 1: 12.9
+Species 2: 7.0375
+Species 3: 12.9275
+Species 4: 7.0375
+Species 5: 12.815
+Species 6: 6.635
+Species 7: 12.685
+Species 8: 7.4475
+Species 9: 13.66
+Species 10: 6.725
+
+Population Densities at: 38800
+EMPTY: 0.1475
+Species 1: 13.01
+Species 2: 7.085
+Species 3: 12.9225
+Species 4: 6.95
+Species 5: 12.9425
+Species 6: 6.8275
+Species 7: 12.74
+Species 8: 7.2875
+Species 9: 13.425
+Species 10: 6.6625
+
+Population Densities at: 39000
+EMPTY: 0.145
+Species 1: 13.2125
+Species 2: 7.0725
+Species 3: 12.8075
+Species 4: 6.91
+Species 5: 13.005
+Species 6: 6.615
+Species 7: 13.0125
+Species 8: 7.055
+Species 9: 13.4625
+Species 10: 6.7025
+
+Population Densities at: 39200
+EMPTY: 0.1525
+Species 1: 13.1175
+Species 2: 6.8425
+Species 3: 13.155
+Species 4: 6.7075
+Species 5: 12.9275
+Species 6: 6.7325
+Species 7: 12.9275
+Species 8: 7.1875
+Species 9: 13.57
+Species 10: 6.68
+
+Population Densities at: 39400
+EMPTY: 0.215
+Species 1: 13.0425
+Species 2: 6.8575
+Species 3: 13.205
+Species 4: 6.8875
+Species 5: 13.0525
+Species 6: 6.7025
+Species 7: 12.9825
+Species 8: 6.98
+Species 9: 13.5375
+Species 10: 6.5375
+
+Population Densities at: 39600
+EMPTY: 0.165
+Species 1: 13.0575
+Species 2: 6.9675
+Species 3: 13.2675
+Species 4: 6.85
+Species 5: 13.2425
+Species 6: 6.5275
+Species 7: 12.9225
+Species 8: 7.12
+Species 9: 13.3475
+Species 10: 6.5325
+
+Population Densities at: 39800
+EMPTY: 0.1725
+Species 1: 12.9425
+Species 2: 7.095
+Species 3: 13.0725
+Species 4: 6.9275
+Species 5: 13.04
+Species 6: 6.69
+Species 7: 13.0975
+Species 8: 7.045
+Species 9: 13.615
+Species 10: 6.3025
+
+Population Densities at: 40000
+EMPTY: 0.1775
+Species 1: 13.0275
+Species 2: 7.19
+Species 3: 13.475
+Species 4: 6.6775
+Species 5: 13.1175
+Species 6: 6.5875
+Species 7: 13.0125
+Species 8: 7.2125
+Species 9: 13.32
+Species 10: 6.2025
+
+Refreshing random numbers...
+
+Population Densities at: 40200
+EMPTY: 0.155
+Species 1: 13.0175
+Species 2: 7.33
+Species 3: 13.265
+Species 4: 6.5575
+Species 5: 13.005
+Species 6: 6.665
+Species 7: 13.0725
+Species 8: 7.1475
+Species 9: 13.47
+Species 10: 6.315
+
+Population Densities at: 40400
+EMPTY: 0.155
+Species 1: 13.1125
+Species 2: 7.1625
+Species 3: 13.2875
+Species 4: 6.7225
+Species 5: 12.915
+Species 6: 6.8175
+Species 7: 12.9475
+Species 8: 7.2025
+Species 9: 13.5025
+Species 10: 6.175
+
+Population Densities at: 40600
+EMPTY: 0.1175
+Species 1: 13.0475
+Species 2: 7.135
+Species 3: 13.1275
+Species 4: 6.5375
+Species 5: 12.955
+Species 6: 6.855
+Species 7: 13.0775
+Species 8: 7.3075
+Species 9: 13.3975
+Species 10: 6.4425
+
+Population Densities at: 40800
+EMPTY: 0.16
+Species 1: 13.115
+Species 2: 7.4175
+Species 3: 13.0725
+Species 4: 6.335
+Species 5: 13.0875
+Species 6: 6.9775
+Species 7: 12.9625
+Species 8: 7.0725
+Species 9: 13.2125
+Species 10: 6.5875
+
+Population Densities at: 41000
+EMPTY: 0.17
+Species 1: 13.195
+Species 2: 7.245
+Species 3: 12.8725
+Species 4: 6.3375
+Species 5: 13.205
+Species 6: 7.1475
+Species 7: 12.8975
+Species 8: 7.0375
+Species 9: 13.265
+Species 10: 6.6275
+
+Population Densities at: 41200
+EMPTY: 0.15
+Species 1: 12.9125
+Species 2: 7.1025
+Species 3: 13.0225
+Species 4: 6.5325
+Species 5: 13.6825
+Species 6: 6.685
+Species 7: 12.7625
+Species 8: 6.9975
+Species 9: 13.39
+Species 10: 6.7625
+
+Population Densities at: 41400
+EMPTY: 0.13
+Species 1: 12.98
+Species 2: 7.32
+Species 3: 13
+Species 4: 6.6525
+Species 5: 13.275
+Species 6: 6.9125
+Species 7: 12.765
+Species 8: 7.1075
+Species 9: 13.4775
+Species 10: 6.38
+
+Population Densities at: 41600
+EMPTY: 0.18
+Species 1: 12.845
+Species 2: 7.3225
+Species 3: 12.8425
+Species 4: 6.5325
+Species 5: 13.345
+Species 6: 6.6475
+Species 7: 13.155
+Species 8: 7.1725
+Species 9: 13.4275
+Species 10: 6.53
+
+Population Densities at: 41800
+EMPTY: 0.1525
+Species 1: 12.98
+Species 2: 7.1975
+Species 3: 13.0075
+Species 4: 6.585
+Species 5: 13.3075
+Species 6: 6.99
+Species 7: 12.8325
+Species 8: 7.095
+Species 9: 13.385
+Species 10: 6.4675
+
+Population Densities at: 42000
+EMPTY: 0.155
+Species 1: 12.7075
+Species 2: 7.16
+Species 3: 13.02
+Species 4: 6.6075
+Species 5: 13.4425
+Species 6: 6.69
+Species 7: 12.81
+Species 8: 7.07
+Species 9: 13.5075
+Species 10: 6.83
+
+Population Densities at: 42200
+EMPTY: 0.1775
+Species 1: 12.7225
+Species 2: 7.0525
+Species 3: 13.1675
+Species 4: 6.4875
+Species 5: 13.085
+Species 6: 7.0825
+Species 7: 12.7625
+Species 8: 7.4625
+Species 9: 13.4225
+Species 10: 6.5775
+
+Population Densities at: 42400
+EMPTY: 0.1425
+Species 1: 12.7175
+Species 2: 7.1275
+Species 3: 13.28
+Species 4: 6.6275
+Species 5: 13.26
+Species 6: 6.85
+Species 7: 12.6675
+Species 8: 7.0875
+Species 9: 13.625
+Species 10: 6.615
+
+Refreshing random numbers...
+
+Population Densities at: 42600
+EMPTY: 0.1625
+Species 1: 12.7875
+Species 2: 7.3025
+Species 3: 13.26
+Species 4: 6.395
+Species 5: 13.29
+Species 6: 6.9025
+Species 7: 12.8125
+Species 8: 7.1175
+Species 9: 13.5075
+Species 10: 6.4625
+
+Population Densities at: 42800
+EMPTY: 0.1775
+Species 1: 12.8025
+Species 2: 7.1475
+Species 3: 13.2575
+Species 4: 6.4225
+Species 5: 13.385
+Species 6: 6.96
+Species 7: 12.8075
+Species 8: 6.8875
+Species 9: 13.6925
+Species 10: 6.46
+
+Population Densities at: 43000
+EMPTY: 0.1575
+Species 1: 12.9775
+Species 2: 6.9525
+Species 3: 13.145
+Species 4: 6.52
+Species 5: 13.4575
+Species 6: 6.87
+Species 7: 12.77
+Species 8: 6.99
+Species 9: 13.77
+Species 10: 6.39
+
+Population Densities at: 43200
+EMPTY: 0.14
+Species 1: 12.9975
+Species 2: 7.075
+Species 3: 13.33
+Species 4: 6.4075
+Species 5: 13.46
+Species 6: 6.62
+Species 7: 12.875
+Species 8: 6.9325
+Species 9: 13.8275
+Species 10: 6.335
+
+Population Densities at: 43400
+EMPTY: 0.125
+Species 1: 13.05
+Species 2: 6.92
+Species 3: 13.29
+Species 4: 6.4575
+Species 5: 13.75
+Species 6: 6.76
+Species 7: 12.6875
+Species 8: 6.85
+Species 9: 13.72
+Species 10: 6.39
+
+Population Densities at: 43600
+EMPTY: 0.1425
+Species 1: 13.0975
+Species 2: 6.815
+Species 3: 13.28
+Species 4: 6.555
+Species 5: 13.6275
+Species 6: 6.5625
+Species 7: 12.69
+Species 8: 6.7725
+Species 9: 14.115
+Species 10: 6.3425
+
+Population Densities at: 43800
+EMPTY: 0.1625
+Species 1: 12.975
+Species 2: 6.8325
+Species 3: 13.2525
+Species 4: 6.6575
+Species 5: 13.45
+Species 6: 6.5775
+Species 7: 12.8325
+Species 8: 6.97
+Species 9: 14.04
+Species 10: 6.25
+
+Population Densities at: 44000
+EMPTY: 0.1675
+Species 1: 13.245
+Species 2: 6.7675
+Species 3: 13.57
+Species 4: 6.6775
+Species 5: 13.235
+Species 6: 6.5325
+Species 7: 12.525
+Species 8: 7.12
+Species 9: 13.9375
+Species 10: 6.2225
+
+Population Densities at: 44200
+EMPTY: 0.1425
+Species 1: 12.9325
+Species 2: 6.955
+Species 3: 13.5825
+Species 4: 6.42
+Species 5: 13.4225
+Species 6: 6.4225
+Species 7: 12.8125
+Species 8: 7.175
+Species 9: 13.695
+Species 10: 6.44
+
+Population Densities at: 44400
+EMPTY: 0.175
+Species 1: 13.0575
+Species 2: 6.9575
+Species 3: 13.4225
+Species 4: 6.46
+Species 5: 13.335
+Species 6: 6.5675
+Species 7: 12.845
+Species 8: 7.1075
+Species 9: 13.595
+Species 10: 6.4775
+
+Population Densities at: 44600
+EMPTY: 0.1575
+Species 1: 13.215
+Species 2: 6.7825
+Species 3: 13.6125
+Species 4: 6.5475
+Species 5: 13.165
+Species 6: 6.6275
+Species 7: 12.655
+Species 8: 7.185
+Species 9: 13.7625
+Species 10: 6.29
+
+Population Densities at: 44800
+EMPTY: 0.16
+Species 1: 13.1025
+Species 2: 7.025
+Species 3: 13.2625
+Species 4: 6.59
+Species 5: 13.335
+Species 6: 6.325
+Species 7: 12.99
+Species 8: 7.1175
+Species 9: 13.6675
+Species 10: 6.425
+
+Population Densities at: 45000
+EMPTY: 0.165
+Species 1: 13.195
+Species 2: 6.805
+Species 3: 13.235
+Species 4: 6.6875
+Species 5: 13.1575
+Species 6: 6.6425
+Species 7: 13.025
+Species 8: 7.0525
+Species 9: 13.8275
+Species 10: 6.2075
+
+Refreshing random numbers...
+
+Population Densities at: 45200
+EMPTY: 0.155
+Species 1: 13.21
+Species 2: 6.9875
+Species 3: 13.4175
+Species 4: 6.4275
+Species 5: 13.3025
+Species 6: 6.405
+Species 7: 12.97
+Species 8: 7.0475
+Species 9: 13.6725
+Species 10: 6.405
+
+Population Densities at: 45400
+EMPTY: 0.1625
+Species 1: 13.2625
+Species 2: 6.775
+Species 3: 13.285
+Species 4: 6.7025
+Species 5: 13.1425
+Species 6: 6.8375
+Species 7: 12.69
+Species 8: 6.8775
+Species 9: 13.96
+Species 10: 6.305
+
+Population Densities at: 45600
+EMPTY: 0.185
+Species 1: 13.07
+Species 2: 6.8675
+Species 3: 13.4
+Species 4: 6.5825
+Species 5: 13.35
+Species 6: 6.4775
+Species 7: 12.905
+Species 8: 7.0425
+Species 9: 13.74
+Species 10: 6.38
+
+Population Densities at: 45800
+EMPTY: 0.155
+Species 1: 13.055
+Species 2: 6.86
+Species 3: 13.2875
+Species 4: 6.7525
+Species 5: 13.1825
+Species 6: 6.5125
+Species 7: 12.88
+Species 8: 6.9725
+Species 9: 13.87
+Species 10: 6.4725
+
+Population Densities at: 46000
+EMPTY: 0.1725
+Species 1: 13.1025
+Species 2: 7.0525
+Species 3: 13.255
+Species 4: 6.7875
+Species 5: 13.0475
+Species 6: 6.55
+Species 7: 12.8825
+Species 8: 6.9225
+Species 9: 13.695
+Species 10: 6.5325
+
+Population Densities at: 46200
+EMPTY: 0.135
+Species 1: 13.085
+Species 2: 7.0525
+Species 3: 13.33
+Species 4: 6.8
+Species 5: 13.0075
+Species 6: 6.825
+Species 7: 12.7625
+Species 8: 6.7475
+Species 9: 13.7725
+Species 10: 6.4825
+
+Population Densities at: 46400
+EMPTY: 0.1425
+Species 1: 13.1775
+Species 2: 6.8975
+Species 3: 13.1775
+Species 4: 6.8975
+Species 5: 12.8575
+Species 6: 7.02
+Species 7: 12.805
+Species 8: 6.795
+Species 9: 13.7975
+Species 10: 6.4325
+
+Population Densities at: 46600
+EMPTY: 0.1875
+Species 1: 13.0625
+Species 2: 6.9175
+Species 3: 13.085
+Species 4: 6.81
+Species 5: 13.1175
+Species 6: 6.7075
+Species 7: 12.745
+Species 8: 6.8725
+Species 9: 13.795
+Species 10: 6.7
+
+Population Densities at: 46800
+EMPTY: 0.1325
+Species 1: 12.9825
+Species 2: 6.91
+Species 3: 13.12
+Species 4: 6.8275
+Species 5: 13.0425
+Species 6: 6.7625
+Species 7: 12.4975
+Species 8: 7.105
+Species 9: 14.1
+Species 10: 6.52
+
+Population Densities at: 47000
+EMPTY: 0.165
+Species 1: 13.0975
+Species 2: 6.84
+Species 3: 13.115
+Species 4: 6.8675
+Species 5: 13.075
+Species 6: 6.685
+Species 7: 12.4375
+Species 8: 7.19
+Species 9: 13.8925
+Species 10: 6.635
+
+Population Densities at: 47200
+EMPTY: 0.15
+Species 1: 12.9825
+Species 2: 6.8975
+Species 3: 13.3375
+Species 4: 6.895
+Species 5: 12.9875
+Species 6: 6.695
+Species 7: 12.495
+Species 8: 7.4125
+Species 9: 13.67
+Species 10: 6.4775
+
+Population Densities at: 47400
+EMPTY: 0.1325
+Species 1: 12.8625
+Species 2: 7
+Species 3: 13.305
+Species 4: 6.9225
+Species 5: 13.0075
+Species 6: 6.4525
+Species 7: 12.54
+Species 8: 7.3925
+Species 9: 13.76
+Species 10: 6.625
+
+Refreshing random numbers...
+
+Population Densities at: 47600
+EMPTY: 0.215
+Species 1: 13.09
+Species 2: 7.035
+Species 3: 13.1425
+Species 4: 6.805
+Species 5: 12.8275
+Species 6: 6.7225
+Species 7: 12.8125
+Species 8: 7.1325
+Species 9: 13.7125
+Species 10: 6.505
+
+Population Densities at: 47800
+EMPTY: 0.1675
+Species 1: 13.065
+Species 2: 6.955
+Species 3: 13.3275
+Species 4: 6.7875
+Species 5: 13.0425
+Species 6: 6.515
+Species 7: 12.6925
+Species 8: 7.17
+Species 9: 13.6025
+Species 10: 6.675
+
+Population Densities at: 48000
+EMPTY: 0.1325
+Species 1: 13.1575
+Species 2: 7.04
+Species 3: 13.175
+Species 4: 6.635
+Species 5: 13.1225
+Species 6: 6.5075
+Species 7: 12.905
+Species 8: 7.01
+Species 9: 13.575
+Species 10: 6.74
+
+Population Densities at: 48200
+EMPTY: 0.15
+Species 1: 13.035
+Species 2: 6.9975
+Species 3: 13.1875
+Species 4: 6.63
+Species 5: 13.085
+Species 6: 6.455
+Species 7: 12.8775
+Species 8: 7.02
+Species 9: 13.5975
+Species 10: 6.965
+
+Population Densities at: 48400
+EMPTY: 0.1625
+Species 1: 13.1575
+Species 2: 6.8025
+Species 3: 13.4325
+Species 4: 6.685
+Species 5: 12.975
+Species 6: 6.43
+Species 7: 12.68
+Species 8: 7.1575
+Species 9: 13.87
+Species 10: 6.6475
+
+Population Densities at: 48600
+EMPTY: 0.1975
+Species 1: 13
+Species 2: 6.83
+Species 3: 13.445
+Species 4: 6.6175
+Species 5: 13.2
+Species 6: 6.365
+Species 7: 12.75
+Species 8: 7.155
+Species 9: 13.7025
+Species 10: 6.7375
+
+Population Densities at: 48800
+EMPTY: 0.125
+Species 1: 13.0625
+Species 2: 6.8
+Species 3: 13.175
+Species 4: 6.8775
+Species 5: 12.94
+Species 6: 6.3875
+Species 7: 12.96
+Species 8: 7.2075
+Species 9: 13.9575
+Species 10: 6.5075
+
+Population Densities at: 49000
+EMPTY: 0.1525
+Species 1: 13.02
+Species 2: 6.8825
+Species 3: 13.2875
+Species 4: 6.82
+Species 5: 13.2475
+Species 6: 6.4175
+Species 7: 12.77
+Species 8: 6.95
+Species 9: 13.97
+Species 10: 6.4825
+
+Population Densities at: 49200
+EMPTY: 0.1975
+Species 1: 13.225
+Species 2: 6.795
+Species 3: 13.2025
+Species 4: 6.935
+Species 5: 13.045
+Species 6: 6.495
+Species 7: 12.5975
+Species 8: 6.8225
+Species 9: 14.255
+Species 10: 6.43
+
+Population Densities at: 49400
+EMPTY: 0.1525
+Species 1: 13.16
+Species 2: 6.885
+Species 3: 13.2
+Species 4: 6.555
+Species 5: 13.2
+Species 6: 6.51
+Species 7: 12.6275
+Species 8: 6.935
+Species 9: 13.975
+Species 10: 6.8
+
+Population Densities at: 49600
+EMPTY: 0.1175
+Species 1: 13.02
+Species 2: 6.85
+Species 3: 13.22
+Species 4: 6.845
+Species 5: 13.075
+Species 6: 6.345
+Species 7: 12.5725
+Species 8: 7.1
+Species 9: 14.015
+Species 10: 6.84
+
+Population Densities at: 49800
+EMPTY: 0.135
+Species 1: 13.2525
+Species 2: 6.7975
+Species 3: 13.185
+Species 4: 6.7725
+Species 5: 12.915
+Species 6: 6.6075
+Species 7: 12.29
+Species 8: 7.1225
+Species 9: 13.985
+Species 10: 6.9375
+
+Population Densities at: 50000
+EMPTY: 0.135
+Species 1: 12.9825
+Species 2: 6.8175
+Species 3: 13.2225
+Species 4: 6.7725
+Species 5: 13.1025
+Species 6: 6.5025
+Species 7: 12.5875
+Species 8: 7.0175
+Species 9: 13.96
+Species 10: 6.9
+
+Refreshing random numbers...
+
+Population Densities at: 50200
+EMPTY: 0.1175
+Species 1: 13.0225
+Species 2: 6.8675
+Species 3: 13.3125
+Species 4: 7.215
+Species 5: 12.75
+Species 6: 6.685
+Species 7: 12.3375
+Species 8: 7.035
+Species 9: 13.9725
+Species 10: 6.685
+
+Population Densities at: 50400
+EMPTY: 0.135
+Species 1: 13.0175
+Species 2: 7.2375
+Species 3: 13.2075
+Species 4: 6.8475
+Species 5: 12.9125
+Species 6: 6.8025
+Species 7: 12.31
+Species 8: 7.225
+Species 9: 13.5325
+Species 10: 6.7725
+
+Population Densities at: 50600
+EMPTY: 0.1525
+Species 1: 12.84
+Species 2: 7.2775
+Species 3: 13.2625
+Species 4: 6.865
+Species 5: 12.8725
+Species 6: 6.705
+Species 7: 12.1875
+Species 8: 7.42
+Species 9: 13.7325
+Species 10: 6.685
+
+Population Densities at: 50800
+EMPTY: 0.1525
+Species 1: 12.9075
+Species 2: 7.385
+Species 3: 13.2475
+Species 4: 6.9025
+Species 5: 12.6925
+Species 6: 6.795
+Species 7: 12.2475
+Species 8: 7.34
+Species 9: 13.5575
+Species 10: 6.7725
+
+Population Densities at: 51000
+EMPTY: 0.165
+Species 1: 12.91
+Species 2: 7.3925
+Species 3: 13.1075
+Species 4: 6.5625
+Species 5: 12.89
+Species 6: 6.93
+Species 7: 12.51
+Species 8: 7.19
+Species 9: 13.415
+Species 10: 6.9275
+
+Population Densities at: 51200
+EMPTY: 0.1475
+Species 1: 12.94
+Species 2: 7.3175
+Species 3: 13.1775
+Species 4: 6.875
+Species 5: 12.81
+Species 6: 6.995
+Species 7: 12.3525
+Species 8: 7.155
+Species 9: 13.475
+Species 10: 6.755
+
+Population Densities at: 51400
+EMPTY: 0.17
+Species 1: 13
+Species 2: 7.3025
+Species 3: 13.465
+Species 4: 6.6025
+Species 5: 12.6975
+Species 6: 6.93
+Species 7: 12.3425
+Species 8: 7.1475
+Species 9: 13.515
+Species 10: 6.8275
+
+Population Densities at: 51600
+EMPTY: 0.1325
+Species 1: 12.9275
+Species 2: 7.2475
+Species 3: 13.265
+Species 4: 6.7
+Species 5: 13.08
+Species 6: 6.7675
+Species 7: 12.2625
+Species 8: 6.965
+Species 9: 13.6275
+Species 10: 7.025
+
+Population Densities at: 51800
+EMPTY: 0.1775
+Species 1: 13.13
+Species 2: 7.2075
+Species 3: 13.3
+Species 4: 6.735
+Species 5: 13.005
+Species 6: 6.76
+Species 7: 12.24
+Species 8: 7.1375
+Species 9: 13.6375
+Species 10: 6.67
+
+Population Densities at: 52000
+EMPTY: 0.1875
+Species 1: 12.83
+Species 2: 7.3725
+Species 3: 13.35
+Species 4: 6.7575
+Species 5: 13.0175
+Species 6: 6.6925
+Species 7: 12.345
+Species 8: 7.1075
+Species 9: 13.6725
+Species 10: 6.6675
+
+Population Densities at: 52200
+EMPTY: 0.1625
+Species 1: 12.955
+Species 2: 7.2175
+Species 3: 13.525
+Species 4: 6.5675
+Species 5: 12.9925
+Species 6: 6.7275
+Species 7: 12.3725
+Species 8: 7.1175
+Species 9: 13.5125
+Species 10: 6.85
+
+Population Densities at: 52400
+EMPTY: 0.1725
+Species 1: 13.0125
+Species 2: 7.4
+Species 3: 13.3
+Species 4: 6.5275
+Species 5: 13.0675
+Species 6: 6.63
+Species 7: 12.5175
+Species 8: 7.0125
+Species 9: 13.68
+Species 10: 6.68
+
+Refreshing random numbers...
+
+Population Densities at: 52600
+EMPTY: 0.155
+Species 1: 13.075
+Species 2: 7.31
+Species 3: 13.435
+Species 4: 6.475
+Species 5: 13.105
+Species 6: 6.8275
+Species 7: 12.3675
+Species 8: 7.185
+Species 9: 13.5075
+Species 10: 6.5575
+
+Population Densities at: 52800
+EMPTY: 0.145
+Species 1: 13.0875
+Species 2: 7.4775
+Species 3: 13.2675
+Species 4: 6.46
+Species 5: 13.1925
+Species 6: 6.8375
+Species 7: 12.525
+Species 8: 6.86
+Species 9: 13.6325
+Species 10: 6.515
+
+Population Densities at: 53000
+EMPTY: 0.1875
+Species 1: 13.01
+Species 2: 7.22
+Species 3: 13.2925
+Species 4: 6.65
+Species 5: 13.24
+Species 6: 6.755
+Species 7: 12.5175
+Species 8: 6.815
+Species 9: 13.605
+Species 10: 6.7075
+
+Population Densities at: 53200
+EMPTY: 0.1425
+Species 1: 13.145
+Species 2: 7.0675
+Species 3: 13.2525
+Species 4: 6.7475
+Species 5: 13.2
+Species 6: 6.7775
+Species 7: 12.34
+Species 8: 7.04
+Species 9: 13.68
+Species 10: 6.6075
+
+Population Densities at: 53400
+EMPTY: 0.1425
+Species 1: 13.0175
+Species 2: 6.97
+Species 3: 13.5925
+Species 4: 6.57
+Species 5: 13.0475
+Species 6: 6.58
+Species 7: 12.675
+Species 8: 7.055
+Species 9: 13.62
+Species 10: 6.73
+
+Population Densities at: 53600
+EMPTY: 0.1575
+Species 1: 13.2225
+Species 2: 7.015
+Species 3: 13.4775
+Species 4: 6.48
+Species 5: 13.2025
+Species 6: 6.5475
+Species 7: 12.6575
+Species 8: 7.1175
+Species 9: 13.455
+Species 10: 6.6675
+
+Population Densities at: 53800
+EMPTY: 0.1325
+Species 1: 13.01
+Species 2: 7.075
+Species 3: 13.61
+Species 4: 6.7275
+Species 5: 13.1225
+Species 6: 6.4125
+Species 7: 12.54
+Species 8: 6.9925
+Species 9: 13.5975
+Species 10: 6.78
+
+Population Densities at: 54000
+EMPTY: 0.14
+Species 1: 13.075
+Species 2: 7.1275
+Species 3: 13.6525
+Species 4: 6.6525
+Species 5: 12.9425
+Species 6: 6.54
+Species 7: 12.6625
+Species 8: 6.99
+Species 9: 13.6975
+Species 10: 6.52
+
+Population Densities at: 54200
+EMPTY: 0.16
+Species 1: 12.8275
+Species 2: 7.1375
+Species 3: 13.5525
+Species 4: 6.535
+Species 5: 13.1275
+Species 6: 6.4325
+Species 7: 12.595
+Species 8: 7.0025
+Species 9: 13.635
+Species 10: 6.995
+
+Population Densities at: 54400
+EMPTY: 0.175
+Species 1: 12.8125
+Species 2: 7.1925
+Species 3: 13.64
+Species 4: 6.685
+Species 5: 12.79
+Species 6: 6.6925
+Species 7: 12.42
+Species 8: 7.075
+Species 9: 13.805
+Species 10: 6.7125
+
+Population Densities at: 54600
+EMPTY: 0.14
+Species 1: 12.8
+Species 2: 7.2225
+Species 3: 13.2325
+Species 4: 6.725
+Species 5: 12.9275
+Species 6: 6.755
+Species 7: 12.535
+Species 8: 7.0375
+Species 9: 13.955
+Species 10: 6.67
+
+Population Densities at: 54800
+EMPTY: 0.1775
+Species 1: 12.8575
+Species 2: 7.135
+Species 3: 13.4275
+Species 4: 6.5475
+Species 5: 13.0475
+Species 6: 6.8925
+Species 7: 12.115
+Species 8: 7.205
+Species 9: 13.7225
+Species 10: 6.8725
+
+Population Densities at: 55000
+EMPTY: 0.175
+Species 1: 12.7725
+Species 2: 7.4625
+Species 3: 13.4075
+Species 4: 6.5025
+Species 5: 13.12
+Species 6: 6.4775
+Species 7: 12.1575
+Species 8: 7.1675
+Species 9: 13.8525
+Species 10: 6.905
+
+Refreshing random numbers...
+
+Population Densities at: 55200
+EMPTY: 0.1875
+Species 1: 12.865
+Species 2: 7.2575
+Species 3: 13.2175
+Species 4: 6.93
+Species 5: 13.095
+Species 6: 6.545
+Species 7: 12.135
+Species 8: 7.06
+Species 9: 13.86
+Species 10: 6.8475
+
+Population Densities at: 55400
+EMPTY: 0.18
+Species 1: 12.5125
+Species 2: 7.355
+Species 3: 13.52
+Species 4: 6.7225
+Species 5: 13.14
+Species 6: 6.415
+Species 7: 12.4325
+Species 8: 7.255
+Species 9: 13.7775
+Species 10: 6.69
+
+Population Densities at: 55600
+EMPTY: 0.155
+Species 1: 12.8325
+Species 2: 7.1225
+Species 3: 13.635
+Species 4: 6.9725
+Species 5: 13.0225
+Species 6: 6.5225
+Species 7: 12.305
+Species 8: 7.235
+Species 9: 13.5
+Species 10: 6.6975
+
+Population Densities at: 55800
+EMPTY: 0.175
+Species 1: 12.6425
+Species 2: 7.39
+Species 3: 13.56
+Species 4: 6.8675
+Species 5: 13.01
+Species 6: 6.3425
+Species 7: 12.4275
+Species 8: 7.2875
+Species 9: 13.66
+Species 10: 6.6375
+
+Population Densities at: 56000
+EMPTY: 0.1625
+Species 1: 12.755
+Species 2: 7.1825
+Species 3: 13.675
+Species 4: 6.765
+Species 5: 12.805
+Species 6: 6.42
+Species 7: 12.345
+Species 8: 7.5
+Species 9: 13.625
+Species 10: 6.765
+
+Population Densities at: 56200
+EMPTY: 0.14
+Species 1: 12.725
+Species 2: 7.4175
+Species 3: 13.4225
+Species 4: 7.04
+Species 5: 12.8275
+Species 6: 6.525
+Species 7: 12.3975
+Species 8: 7.4275
+Species 9: 13.545
+Species 10: 6.5325
+
+Population Densities at: 56400
+EMPTY: 0.1625
+Species 1: 12.9025
+Species 2: 7.3875
+Species 3: 13.1525
+Species 4: 6.94
+Species 5: 12.6925
+Species 6: 6.6475
+Species 7: 12.73
+Species 8: 7.2675
+Species 9: 13.5275
+Species 10: 6.59
+
+Population Densities at: 56600
+EMPTY: 0.1025
+Species 1: 12.71
+Species 2: 7.5925
+Species 3: 13.2
+Species 4: 6.94
+Species 5: 12.79
+Species 6: 6.6025
+Species 7: 12.7675
+Species 8: 7.245
+Species 9: 13.455
+Species 10: 6.595
+
+Population Densities at: 56800
+EMPTY: 0.1775
+Species 1: 13.02
+Species 2: 7.27
+Species 3: 13.3225
+Species 4: 6.775
+Species 5: 12.84
+Species 6: 6.8775
+Species 7: 12.2875
+Species 8: 7.3675
+Species 9: 13.37
+Species 10: 6.6925
+
+Population Densities at: 57000
+EMPTY: 0.1675
+Species 1: 12.8925
+Species 2: 7.435
+Species 3: 13.2825
+Species 4: 6.89
+Species 5: 12.82
+Species 6: 6.645
+Species 7: 12.3375
+Species 8: 7
+Species 9: 13.635
+Species 10: 6.895
+
+Population Densities at: 57200
+EMPTY: 0.22
+Species 1: 12.8375
+Species 2: 7.315
+Species 3: 13.3375
+Species 4: 6.8175
+Species 5: 12.8125
+Species 6: 6.765
+Species 7: 12.4025
+Species 8: 7.115
+Species 9: 13.655
+Species 10: 6.7225
+
+Population Densities at: 57400
+EMPTY: 0.1525
+Species 1: 12.735
+Species 2: 7.455
+Species 3: 13.105
+Species 4: 7.135
+Species 5: 12.89
+Species 6: 6.5925
+Species 7: 12.6475
+Species 8: 7.055
+Species 9: 13.6
+Species 10: 6.6325
+
+Refreshing random numbers...
+
+Population Densities at: 57600
+EMPTY: 0.145
+Species 1: 12.75
+Species 2: 7.4675
+Species 3: 13.2875
+Species 4: 6.93
+Species 5: 12.905
+Species 6: 6.71
+Species 7: 12.39
+Species 8: 7.4325
+Species 9: 13.2225
+Species 10: 6.76
+
+Population Densities at: 57800
+EMPTY: 0.1375
+Species 1: 13.02
+Species 2: 7.54
+Species 3: 13.04
+Species 4: 7.075
+Species 5: 12.695
+Species 6: 6.995
+Species 7: 12.42
+Species 8: 7.345
+Species 9: 13.14
+Species 10: 6.5925
+
+Population Densities at: 58000
+EMPTY: 0.1525
+Species 1: 12.8975
+Species 2: 7.2375
+Species 3: 12.96
+Species 4: 7.1825
+Species 5: 12.755
+Species 6: 6.97
+Species 7: 12.3925
+Species 8: 7.325
+Species 9: 13.2075
+Species 10: 6.92
+
+Population Densities at: 58200
+EMPTY: 0.125
+Species 1: 12.8175
+Species 2: 7.405
+Species 3: 13.0725
+Species 4: 7.0325
+Species 5: 12.54
+Species 6: 6.89
+Species 7: 12.535
+Species 8: 7.32
+Species 9: 13.245
+Species 10: 7.0175
+
+Population Densities at: 58400
+EMPTY: 0.15
+Species 1: 12.83
+Species 2: 7.345
+Species 3: 13.0725
+Species 4: 7.005
+Species 5: 12.5525
+Species 6: 6.96
+Species 7: 12.4475
+Species 8: 7.305
+Species 9: 13.2375
+Species 10: 7.095
+
+Population Densities at: 58600
+EMPTY: 0.15
+Species 1: 12.755
+Species 2: 7.2175
+Species 3: 13.195
+Species 4: 7.0625
+Species 5: 12.6325
+Species 6: 6.8575
+Species 7: 12.3475
+Species 8: 7.315
+Species 9: 13.38
+Species 10: 7.0875
+
+Population Densities at: 58800
+EMPTY: 0.125
+Species 1: 12.655
+Species 2: 7.405
+Species 3: 13.0775
+Species 4: 7.1
+Species 5: 12.5425
+Species 6: 6.6825
+Species 7: 12.6525
+Species 8: 7.4875
+Species 9: 13.2925
+Species 10: 6.98
+
+Population Densities at: 59000
+EMPTY: 0.155
+Species 1: 12.89
+Species 2: 7.65
+Species 3: 13.1225
+Species 4: 6.9275
+Species 5: 12.4275
+Species 6: 7.07
+Species 7: 12.5275
+Species 8: 7.44
+Species 9: 12.9775
+Species 10: 6.8125
+
+Population Densities at: 59200
+EMPTY: 0.1225
+Species 1: 12.8775
+Species 2: 7.6375
+Species 3: 13.1175
+Species 4: 6.9
+Species 5: 12.49
+Species 6: 7.0675
+Species 7: 12.5125
+Species 8: 7.2225
+Species 9: 13.2575
+Species 10: 6.795
+
+Population Densities at: 59400
+EMPTY: 0.1775
+Species 1: 12.8525
+Species 2: 7.4325
+Species 3: 13.155
+Species 4: 6.7825
+Species 5: 12.59
+Species 6: 7.115
+Species 7: 12.405
+Species 8: 7.305
+Species 9: 13.21
+Species 10: 6.975
+
+Population Densities at: 59600
+EMPTY: 0.175
+Species 1: 12.8525
+Species 2: 7.4525
+Species 3: 13.1175
+Species 4: 6.835
+Species 5: 12.6675
+Species 6: 7.2175
+Species 7: 12.25
+Species 8: 7.3625
+Species 9: 13.1475
+Species 10: 6.9225
+
+Population Densities at: 59800
+EMPTY: 0.17
+Species 1: 12.8075
+Species 2: 7.315
+Species 3: 12.845
+Species 4: 6.9625
+Species 5: 12.7925
+Species 6: 7.135
+Species 7: 12.4175
+Species 8: 7.155
+Species 9: 13.375
+Species 10: 7.025
+
+Population Densities at: 60000
+EMPTY: 0.1375
+Species 1: 12.75
+Species 2: 7.12
+Species 3: 12.865
+Species 4: 6.92
+Species 5: 12.8675
+Species 6: 7.085
+Species 7: 12.2825
+Species 8: 7.395
+Species 9: 13.525
+Species 10: 7.0525
+
+Refreshing random numbers...
+
+Population Densities at: 60200
+EMPTY: 0.18
+Species 1: 12.705
+Species 2: 7.2725
+Species 3: 12.9625
+Species 4: 7.0925
+Species 5: 12.785
+Species 6: 6.94
+Species 7: 12.6375
+Species 8: 7.13
+Species 9: 13.3725
+Species 10: 6.9225
+
+Population Densities at: 60400
+EMPTY: 0.1775
+Species 1: 12.7975
+Species 2: 7.2425
+Species 3: 13.1025
+Species 4: 7.105
+Species 5: 12.52
+Species 6: 6.9875
+Species 7: 12.5925
+Species 8: 7.2475
+Species 9: 13.345
+Species 10: 6.8825
+
+Population Densities at: 60600
+EMPTY: 0.14
+Species 1: 12.725
+Species 2: 7.2175
+Species 3: 12.9225
+Species 4: 6.975
+Species 5: 12.8075
+Species 6: 6.91
+Species 7: 12.7075
+Species 8: 6.9525
+Species 9: 13.695
+Species 10: 6.9475
+
+Population Densities at: 60800
+EMPTY: 0.15
+Species 1: 12.6075
+Species 2: 7.0175
+Species 3: 13.2575
+Species 4: 7.175
+Species 5: 12.6325
+Species 6: 6.8225
+Species 7: 12.4975
+Species 8: 7.3575
+Species 9: 13.51
+Species 10: 6.9725
+
+Population Densities at: 61000
+EMPTY: 0.1625
+Species 1: 12.79
+Species 2: 7.06
+Species 3: 13.16
+Species 4: 7.11
+Species 5: 12.55
+Species 6: 6.9325
+Species 7: 12.47
+Species 8: 7.415
+Species 9: 13.44
+Species 10: 6.91
+
+Population Densities at: 61200
+EMPTY: 0.1475
+Species 1: 12.54
+Species 2: 7.2825
+Species 3: 12.9125
+Species 4: 7.225
+Species 5: 12.7525
+Species 6: 6.73
+Species 7: 12.6175
+Species 8: 7.44
+Species 9: 13.435
+Species 10: 6.9175
+
+Population Densities at: 61400
+EMPTY: 0.155
+Species 1: 12.735
+Species 2: 7.1475
+Species 3: 13.02
+Species 4: 7.2075
+Species 5: 12.5625
+Species 6: 7.0175
+Species 7: 12.55
+Species 8: 7.4425
+Species 9: 13.44
+Species 10: 6.7225
+
+Population Densities at: 61600
+EMPTY: 0.1825
+Species 1: 12.8325
+Species 2: 7.1675
+Species 3: 13.18
+Species 4: 7.015
+Species 5: 12.4575
+Species 6: 7.005
+Species 7: 12.6475
+Species 8: 7.5725
+Species 9: 13.135
+Species 10: 6.805
+
+Population Densities at: 61800
+EMPTY: 0.1875
+Species 1: 12.7725
+Species 2: 7.2475
+Species 3: 13.0225
+Species 4: 7.0175
+Species 5: 12.5775
+Species 6: 6.875
+Species 7: 12.7825
+Species 8: 7.29
+Species 9: 13.325
+Species 10: 6.9025
+
+Population Densities at: 62000
+EMPTY: 0.135
+Species 1: 12.7125
+Species 2: 7.2175
+Species 3: 13.0425
+Species 4: 6.98
+Species 5: 12.6375
+Species 6: 6.9525
+Species 7: 12.7175
+Species 8: 7.3075
+Species 9: 13.39
+Species 10: 6.9075
+
+Population Densities at: 62200
+EMPTY: 0.1225
+Species 1: 12.8425
+Species 2: 7.2475
+Species 3: 13.0475
+Species 4: 6.9825
+Species 5: 12.5175
+Species 6: 7.16
+Species 7: 12.645
+Species 8: 7.2475
+Species 9: 13.32
+Species 10: 6.8675
+
+Population Densities at: 62400
+EMPTY: 0.11
+Species 1: 12.95
+Species 2: 7.1075
+Species 3: 13.1425
+Species 4: 6.7125
+Species 5: 12.7475
+Species 6: 6.92
+Species 7: 12.725
+Species 8: 7.18
+Species 9: 13.335
+Species 10: 7.07
+
+Refreshing random numbers...
+
+Population Densities at: 62600
+EMPTY: 0.1425
+Species 1: 12.8275
+Species 2: 7.365
+Species 3: 13.1575
+Species 4: 6.9025
+Species 5: 12.6475
+Species 6: 6.695
+Species 7: 12.835
+Species 8: 7.1775
+Species 9: 13.5275
+Species 10: 6.7225
+
+Population Densities at: 62800
+EMPTY: 0.16
+Species 1: 13.0225
+Species 2: 7.2575
+Species 3: 13.1625
+Species 4: 7.01
+Species 5: 12.5225
+Species 6: 6.9175
+Species 7: 12.83
+Species 8: 7.14
+Species 9: 13.385
+Species 10: 6.5925
+
+Population Densities at: 63000
+EMPTY: 0.19
+Species 1: 12.9275
+Species 2: 7.155
+Species 3: 13.145
+Species 4: 6.8475
+Species 5: 12.6425
+Species 6: 6.92
+Species 7: 12.83
+Species 8: 7.3925
+Species 9: 13.35
+Species 10: 6.6
+
+Population Densities at: 63200
+EMPTY: 0.155
+Species 1: 12.79
+Species 2: 7.2425
+Species 3: 13.1125
+Species 4: 7.05
+Species 5: 12.605
+Species 6: 7.1225
+Species 7: 12.6925
+Species 8: 7.1575
+Species 9: 13.3775
+Species 10: 6.695
+
+Population Densities at: 63400
+EMPTY: 0.1475
+Species 1: 12.815
+Species 2: 7.275
+Species 3: 12.995
+Species 4: 6.9225
+Species 5: 12.59
+Species 6: 7.03
+Species 7: 12.79
+Species 8: 7.1525
+Species 9: 13.4375
+Species 10: 6.845
+
+Population Densities at: 63600
+EMPTY: 0.1675
+Species 1: 12.81
+Species 2: 7.1575
+Species 3: 13.0525
+Species 4: 7
+Species 5: 12.6925
+Species 6: 7.1675
+Species 7: 12.69
+Species 8: 7.25
+Species 9: 13.3725
+Species 10: 6.64
+
+Population Densities at: 63800
+EMPTY: 0.13
+Species 1: 12.89
+Species 2: 7.1775
+Species 3: 13.1375
+Species 4: 6.7675
+Species 5: 12.745
+Species 6: 6.985
+Species 7: 12.96
+Species 8: 7.19
+Species 9: 13.22
+Species 10: 6.7975
+
+Population Densities at: 64000
+EMPTY: 0.18
+Species 1: 13.0625
+Species 2: 7.0125
+Species 3: 13.125
+Species 4: 6.9075
+Species 5: 12.625
+Species 6: 7.1075
+Species 7: 12.68
+Species 8: 7.075
+Species 9: 13.295
+Species 10: 6.93
+
+Population Densities at: 64200
+EMPTY: 0.1525
+Species 1: 13.0725
+Species 2: 6.9525
+Species 3: 13.12
+Species 4: 7.1375
+Species 5: 12.8625
+Species 6: 7.0425
+Species 7: 12.465
+Species 8: 7.015
+Species 9: 13.3975
+Species 10: 6.7825
+
+Population Densities at: 64400
+EMPTY: 0.1475
+Species 1: 12.9775
+Species 2: 7.095
+Species 3: 13.0725
+Species 4: 7.2225
+Species 5: 12.7225
+Species 6: 6.8575
+Species 7: 12.5275
+Species 8: 7.2175
+Species 9: 13.37
+Species 10: 6.79
+
+Population Densities at: 64600
+EMPTY: 0.1675
+Species 1: 12.875
+Species 2: 7.1125
+Species 3: 13.175
+Species 4: 7.0725
+Species 5: 12.645
+Species 6: 7.025
+Species 7: 12.52
+Species 8: 7.2825
+Species 9: 13.1875
+Species 10: 6.9375
+
+Population Densities at: 64800
+EMPTY: 0.185
+Species 1: 12.7775
+Species 2: 7.2125
+Species 3: 12.9075
+Species 4: 7.34
+Species 5: 12.7075
+Species 6: 6.8675
+Species 7: 12.5625
+Species 8: 7.35
+Species 9: 13.245
+Species 10: 6.845
+
+Population Densities at: 65000
+EMPTY: 0.175
+Species 1: 12.745
+Species 2: 7.095
+Species 3: 13.2
+Species 4: 7.1975
+Species 5: 12.5525
+Species 6: 6.97
+Species 7: 12.69
+Species 8: 7.225
+Species 9: 13.3425
+Species 10: 6.8075
+
+Refreshing random numbers...
+
+Population Densities at: 65200
+EMPTY: 0.1375
+Species 1: 12.8525
+Species 2: 7.115
+Species 3: 13.1225
+Species 4: 6.9775
+Species 5: 12.5925
+Species 6: 6.9325
+Species 7: 12.925
+Species 8: 7.2725
+Species 9: 13.4
+Species 10: 6.6725
+
+Population Densities at: 65400
+EMPTY: 0.11
+Species 1: 12.865
+Species 2: 7.1275
+Species 3: 13.09
+Species 4: 6.92
+Species 5: 12.6475
+Species 6: 7.13
+Species 7: 12.8625
+Species 8: 7.25
+Species 9: 13.1625
+Species 10: 6.835
+
+Population Densities at: 65600
+EMPTY: 0.16
+Species 1: 13.0925
+Species 2: 7.24
+Species 3: 12.96
+Species 4: 7.1775
+Species 5: 12.5725
+Species 6: 7.035
+Species 7: 12.6425
+Species 8: 7.09
+Species 9: 13.29
+Species 10: 6.74
+
+Population Densities at: 65800
+EMPTY: 0.1225
+Species 1: 12.9225
+Species 2: 7.0875
+Species 3: 13.0575
+Species 4: 7.155
+Species 5: 12.61
+Species 6: 6.92
+Species 7: 12.6625
+Species 8: 7.0825
+Species 9: 13.505
+Species 10: 6.875
+
+Population Densities at: 66000
+EMPTY: 0.1575
+Species 1: 12.7875
+Species 2: 7.1075
+Species 3: 13.435
+Species 4: 6.975
+Species 5: 12.6225
+Species 6: 6.91
+Species 7: 12.6575
+Species 8: 7.325
+Species 9: 13.3275
+Species 10: 6.695
+
+Population Densities at: 66200
+EMPTY: 0.115
+Species 1: 12.735
+Species 2: 7.11
+Species 3: 13.3525
+Species 4: 7.015
+Species 5: 12.55
+Species 6: 6.8825
+Species 7: 12.655
+Species 8: 7.515
+Species 9: 13.4625
+Species 10: 6.6075
+
+Population Densities at: 66400
+EMPTY: 0.11
+Species 1: 13.055
+Species 2: 7.4
+Species 3: 13.225
+Species 4: 7.07
+Species 5: 12.265
+Species 6: 6.9775
+Species 7: 12.7825
+Species 8: 7.385
+Species 9: 13.1975
+Species 10: 6.5325
+
+Population Densities at: 66600
+EMPTY: 0.1525
+Species 1: 12.9575
+Species 2: 7.115
+Species 3: 13.33
+Species 4: 6.9475
+Species 5: 12.4275
+Species 6: 6.9825
+Species 7: 12.6375
+Species 8: 7.305
+Species 9: 13.225
+Species 10: 6.92
+
+Population Densities at: 66800
+EMPTY: 0.1675
+Species 1: 12.795
+Species 2: 7.21
+Species 3: 13.3175
+Species 4: 7.0225
+Species 5: 12.465
+Species 6: 6.9425
+Species 7: 12.6625
+Species 8: 7.3375
+Species 9: 13.3075
+Species 10: 6.7725
+
+Population Densities at: 67000
+EMPTY: 0.1
+Species 1: 12.815
+Species 2: 7.3225
+Species 3: 13.1075
+Species 4: 7.0325
+Species 5: 12.495
+Species 6: 6.985
+Species 7: 12.94
+Species 8: 7.2075
+Species 9: 13.13
+Species 10: 6.865
+
+Population Densities at: 67200
+EMPTY: 0.175
+Species 1: 12.83
+Species 2: 7.115
+Species 3: 13.185
+Species 4: 7.0375
+Species 5: 12.5025
+Species 6: 7.035
+Species 7: 12.7425
+Species 8: 7.2475
+Species 9: 13.235
+Species 10: 6.895
+
+Population Densities at: 67400
+EMPTY: 0.2225
+Species 1: 12.8775
+Species 2: 7.315
+Species 3: 12.8475
+Species 4: 6.9975
+Species 5: 12.455
+Species 6: 7.07
+Species 7: 12.84
+Species 8: 7.315
+Species 9: 13.225
+Species 10: 6.835
+
+Refreshing random numbers...
+
+Population Densities at: 67600
+EMPTY: 0.17
+Species 1: 12.97
+Species 2: 7.135
+Species 3: 12.98
+Species 4: 6.8825
+Species 5: 12.54
+Species 6: 7.0925
+Species 7: 12.7025
+Species 8: 7.42
+Species 9: 13.235
+Species 10: 6.8725
+
+Population Densities at: 67800
+EMPTY: 0.1425
+Species 1: 12.905
+Species 2: 7.055
+Species 3: 12.8825
+Species 4: 7.0375
+Species 5: 12.4575
+Species 6: 6.9425
+Species 7: 12.7525
+Species 8: 7.3525
+Species 9: 13.5325
+Species 10: 6.94
+
+Population Densities at: 68000
+EMPTY: 0.1775
+Species 1: 13.0125
+Species 2: 6.9425
+Species 3: 12.955
+Species 4: 7.095
+Species 5: 12.635
+Species 6: 7.0075
+Species 7: 12.5175
+Species 8: 7.455
+Species 9: 13.2175
+Species 10: 6.985
+
+Population Densities at: 68200
+EMPTY: 0.13
+Species 1: 12.9175
+Species 2: 7.0725
+Species 3: 12.91
+Species 4: 7.0425
+Species 5: 12.8025
+Species 6: 6.95
+Species 7: 12.6575
+Species 8: 7.43
+Species 9: 13.085
+Species 10: 7.0025
+
+Population Densities at: 68400
+EMPTY: 0.165
+Species 1: 12.89
+Species 2: 6.835
+Species 3: 13.0925
+Species 4: 7.0575
+Species 5: 12.7375
+Species 6: 6.97
+Species 7: 12.6375
+Species 8: 7.3775
+Species 9: 13.255
+Species 10: 6.9825
+
+Population Densities at: 68600
+EMPTY: 0.1225
+Species 1: 12.685
+Species 2: 7.0875
+Species 3: 12.9375
+Species 4: 7.11
+Species 5: 12.6525
+Species 6: 6.965
+Species 7: 12.715
+Species 8: 7.47
+Species 9: 13.2975
+Species 10: 6.9575
+
+Population Densities at: 68800
+EMPTY: 0.135
+Species 1: 12.8125
+Species 2: 7.0675
+Species 3: 12.9275
+Species 4: 7.0875
+Species 5: 12.86
+Species 6: 6.8225
+Species 7: 12.415
+Species 8: 7.4675
+Species 9: 13.235
+Species 10: 7.17
+
+Population Densities at: 69000
+EMPTY: 0.17
+Species 1: 12.48
+Species 2: 7.065
+Species 3: 12.9175
+Species 4: 7.21
+Species 5: 12.7975
+Species 6: 6.85
+Species 7: 12.5075
+Species 8: 7.64
+Species 9: 13.3075
+Species 10: 7.055
+
+Population Densities at: 69200
+EMPTY: 0.165
+Species 1: 12.635
+Species 2: 7.0925
+Species 3: 12.98
+Species 4: 7.2725
+Species 5: 12.785
+Species 6: 6.81
+Species 7: 12.4925
+Species 8: 7.62
+Species 9: 13.3125
+Species 10: 6.835
+
+Population Densities at: 69400
+EMPTY: 0.16
+Species 1: 12.5825
+Species 2: 7.25
+Species 3: 13.06
+Species 4: 7.185
+Species 5: 12.6875
+Species 6: 6.6725
+Species 7: 12.7125
+Species 8: 7.575
+Species 9: 13.235
+Species 10: 6.88
+
+Population Densities at: 69600
+EMPTY: 0.1375
+Species 1: 12.625
+Species 2: 7.375
+Species 3: 13.32
+Species 4: 7.0225
+Species 5: 12.4675
+Species 6: 6.605
+Species 7: 12.76
+Species 8: 7.705
+Species 9: 13.23
+Species 10: 6.7525
+
+Population Densities at: 69800
+EMPTY: 0.205
+Species 1: 12.7575
+Species 2: 7.405
+Species 3: 13.235
+Species 4: 6.8975
+Species 5: 12.3825
+Species 6: 6.8325
+Species 7: 12.815
+Species 8: 7.5975
+Species 9: 13.095
+Species 10: 6.7775
+
+Population Densities at: 70000
+EMPTY: 0.1575
+Species 1: 12.9675
+Species 2: 7.4
+Species 3: 13.255
+Species 4: 6.9875
+Species 5: 12.485
+Species 6: 6.625
+Species 7: 12.845
+Species 8: 7.545
+Species 9: 12.895
+Species 10: 6.8375
+
+Refreshing random numbers...
+
+Population Densities at: 70200
+EMPTY: 0.1275
+Species 1: 12.9675
+Species 2: 7.4775
+Species 3: 12.98
+Species 4: 6.9575
+Species 5: 12.415
+Species 6: 7.1475
+Species 7: 12.74
+Species 8: 7.3425
+Species 9: 12.945
+Species 10: 6.9
+
+Population Densities at: 70400
+EMPTY: 0.16
+Species 1: 12.6375
+Species 2: 7.2575
+Species 3: 12.9325
+Species 4: 6.885
+Species 5: 12.845
+Species 6: 6.96
+Species 7: 12.635
+Species 8: 7.6075
+Species 9: 12.9775
+Species 10: 7.1025
+
+Population Densities at: 70600
+EMPTY: 0.175
+Species 1: 12.845
+Species 2: 7.185
+Species 3: 12.89
+Species 4: 6.9375
+Species 5: 12.7975
+Species 6: 7.1325
+Species 7: 12.555
+Species 8: 7.3975
+Species 9: 13.025
+Species 10: 7.06
+
+Population Densities at: 70800
+EMPTY: 0.1775
+Species 1: 12.4575
+Species 2: 7.3475
+Species 3: 13.045
+Species 4: 6.94
+Species 5: 12.805
+Species 6: 6.8275
+Species 7: 12.49
+Species 8: 7.535
+Species 9: 13.085
+Species 10: 7.29
+
+Population Densities at: 71000
+EMPTY: 0.1625
+Species 1: 12.4375
+Species 2: 7.31
+Species 3: 12.9075
+Species 4: 7.1825
+Species 5: 12.6975
+Species 6: 7.0425
+Species 7: 12.58
+Species 8: 7.3825
+Species 9: 13.1725
+Species 10: 7.125
+
+Population Densities at: 71200
+EMPTY: 0.1325
+Species 1: 12.355
+Species 2: 7.15
+Species 3: 12.8675
+Species 4: 7.1925
+Species 5: 12.8675
+Species 6: 7.06
+Species 7: 12.55
+Species 8: 7.37
+Species 9: 13.255
+Species 10: 7.2
+
+Population Densities at: 71400
+EMPTY: 0.1425
+Species 1: 12.26
+Species 2: 7.34
+Species 3: 13.0975
+Species 4: 6.98
+Species 5: 12.7625
+Species 6: 7.0075
+Species 7: 12.55
+Species 8: 7.46
+Species 9: 13.205
+Species 10: 7.195
+
+Population Densities at: 71600
+EMPTY: 0.185
+Species 1: 12.185
+Species 2: 7.235
+Species 3: 13.2475
+Species 4: 7.0875
+Species 5: 12.7375
+Species 6: 6.815
+Species 7: 12.5275
+Species 8: 7.6725
+Species 9: 13.215
+Species 10: 7.0925
+
+Population Densities at: 71800
+EMPTY: 0.15
+Species 1: 12.25
+Species 2: 7.425
+Species 3: 13.17
+Species 4: 6.9875
+Species 5: 12.575
+Species 6: 6.8775
+Species 7: 12.7525
+Species 8: 7.5875
+Species 9: 13.2425
+Species 10: 6.9825
+
+Population Densities at: 72000
+EMPTY: 0.1275
+Species 1: 12.395
+Species 2: 7.57
+Species 3: 13.145
+Species 4: 6.8775
+Species 5: 12.555
+Species 6: 7.0275
+Species 7: 12.6425
+Species 8: 7.7175
+Species 9: 13.16
+Species 10: 6.7825
+
+Population Densities at: 72200
+EMPTY: 0.1425
+Species 1: 12.3
+Species 2: 7.7525
+Species 3: 13.0525
+Species 4: 6.8025
+Species 5: 12.55
+Species 6: 7.3825
+Species 7: 12.71
+Species 8: 7.5225
+Species 9: 13
+Species 10: 6.785
+
+Population Densities at: 72400
+EMPTY: 0.1325
+Species 1: 12.495
+Species 2: 7.5
+Species 3: 13.085
+Species 4: 6.83
+Species 5: 12.8425
+Species 6: 7.335
+Species 7: 12.5075
+Species 8: 7.5075
+Species 9: 12.9475
+Species 10: 6.8175
+
+Refreshing random numbers...
+
+Population Densities at: 72600
+EMPTY: 0.175
+Species 1: 12.34
+Species 2: 7.56
+Species 3: 13.05
+Species 4: 6.87
+Species 5: 12.715
+Species 6: 7.3425
+Species 7: 12.4525
+Species 8: 7.5825
+Species 9: 13.0125
+Species 10: 6.9
+
+Population Densities at: 72800
+EMPTY: 0.14
+Species 1: 12.2075
+Species 2: 7.45
+Species 3: 13.13
+Species 4: 6.9475
+Species 5: 12.775
+Species 6: 7.0675
+Species 7: 12.59
+Species 8: 7.725
+Species 9: 13.005
+Species 10: 6.9625
+
+Population Densities at: 73000
+EMPTY: 0.115
+Species 1: 12.39
+Species 2: 7.4275
+Species 3: 12.955
+Species 4: 6.9925
+Species 5: 12.7425
+Species 6: 6.95
+Species 7: 12.8525
+Species 8: 7.8
+Species 9: 13.0125
+Species 10: 6.7625
+
+Population Densities at: 73200
+EMPTY: 0.135
+Species 1: 12.44
+Species 2: 7.2975
+Species 3: 13.04
+Species 4: 6.84
+Species 5: 12.985
+Species 6: 7.0525
+Species 7: 12.8875
+Species 8: 7.585
+Species 9: 12.8925
+Species 10: 6.845
+
+Population Densities at: 73400
+EMPTY: 0.1475
+Species 1: 12.4325
+Species 2: 7.355
+Species 3: 13.0225
+Species 4: 6.97
+Species 5: 12.6325
+Species 6: 7.22
+Species 7: 12.6925
+Species 8: 7.6475
+Species 9: 13.11
+Species 10: 6.77
+
+Population Densities at: 73600
+EMPTY: 0.1575
+Species 1: 12.5175
+Species 2: 7.305
+Species 3: 13.0825
+Species 4: 6.8925
+Species 5: 12.7825
+Species 6: 7.035
+Species 7: 12.645
+Species 8: 7.525
+Species 9: 13.13
+Species 10: 6.9275
+
+Population Densities at: 73800
+EMPTY: 0.145
+Species 1: 12.67
+Species 2: 7.295
+Species 3: 13.02
+Species 4: 6.985
+Species 5: 12.7375
+Species 6: 7.27
+Species 7: 12.6175
+Species 8: 7.505
+Species 9: 13.12
+Species 10: 6.635
+
+Population Densities at: 74000
+EMPTY: 0.155
+Species 1: 12.7075
+Species 2: 7.56
+Species 3: 13.0825
+Species 4: 6.815
+Species 5: 12.7275
+Species 6: 7.17
+Species 7: 12.735
+Species 8: 7.5475
+Species 9: 12.95
+Species 10: 6.55
+
+Population Densities at: 74200
+EMPTY: 0.1625
+Species 1: 13.0625
+Species 2: 7.5775
+Species 3: 12.8775
+Species 4: 6.735
+Species 5: 12.8325
+Species 6: 7.0375
+Species 7: 12.8225
+Species 8: 7.3725
+Species 9: 12.9025
+Species 10: 6.6175
+
+Population Densities at: 74400
+EMPTY: 0.1775
+Species 1: 12.7225
+Species 2: 7.2625
+Species 3: 12.9325
+Species 4: 6.85
+Species 5: 12.8875
+Species 6: 6.9275
+Species 7: 12.6225
+Species 8: 7.7825
+Species 9: 13.0275
+Species 10: 6.8075
+
+Population Densities at: 74600
+EMPTY: 0.1525
+Species 1: 13.005
+Species 2: 7.3475
+Species 3: 12.825
+Species 4: 6.87
+Species 5: 12.765
+Species 6: 7.2125
+Species 7: 12.5475
+Species 8: 7.6875
+Species 9: 13.03
+Species 10: 6.5575
+
+Population Densities at: 74800
+EMPTY: 0.145
+Species 1: 12.8425
+Species 2: 7.295
+Species 3: 12.8925
+Species 4: 6.85
+Species 5: 13.005
+Species 6: 7.0225
+Species 7: 12.575
+Species 8: 7.85
+Species 9: 12.765
+Species 10: 6.7575
+
+Population Densities at: 75000
+EMPTY: 0.135
+Species 1: 12.85
+Species 2: 7.3425
+Species 3: 12.65
+Species 4: 7.1725
+Species 5: 12.97
+Species 6: 6.91
+Species 7: 12.425
+Species 8: 7.715
+Species 9: 12.8325
+Species 10: 6.9975
+
+Refreshing random numbers...
+
+Population Densities at: 75200
+EMPTY: 0.1525
+Species 1: 12.755
+Species 2: 7.1925
+Species 3: 12.625
+Species 4: 7.265
+Species 5: 12.795
+Species 6: 7.065
+Species 7: 12.3725
+Species 8: 7.8875
+Species 9: 12.8575
+Species 10: 7.0325
+
+Population Densities at: 75400
+EMPTY: 0.175
+Species 1: 12.6575
+Species 2: 7.335
+Species 3: 12.7525
+Species 4: 7.11
+Species 5: 12.77
+Species 6: 6.98
+Species 7: 12.5175
+Species 8: 7.87
+Species 9: 12.9375
+Species 10: 6.895
+
+Population Densities at: 75600
+EMPTY: 0.1825
+Species 1: 12.635
+Species 2: 7.4575
+Species 3: 12.865
+Species 4: 7.0075
+Species 5: 12.7
+Species 6: 7.035
+Species 7: 12.6025
+Species 8: 7.91
+Species 9: 12.73
+Species 10: 6.875
+
+Population Densities at: 75800
+EMPTY: 0.1475
+Species 1: 12.8125
+Species 2: 7.4025
+Species 3: 12.7
+Species 4: 7.0775
+Species 5: 12.575
+Species 6: 7.1225
+Species 7: 12.3975
+Species 8: 7.7325
+Species 9: 13.01
+Species 10: 7.0225
+
+Population Densities at: 76000
+EMPTY: 0.1675
+Species 1: 13
+Species 2: 7.63
+Species 3: 12.63
+Species 4: 6.9975
+Species 5: 12.58
+Species 6: 7.2575
+Species 7: 12.31
+Species 8: 7.5
+Species 9: 12.8925
+Species 10: 7.035
+
+Population Densities at: 76200
+EMPTY: 0.115
+Species 1: 12.6025
+Species 2: 7.38
+Species 3: 12.56
+Species 4: 7.2
+Species 5: 12.76
+Species 6: 7.2625
+Species 7: 12.215
+Species 8: 7.63
+Species 9: 13.02
+Species 10: 7.255
+
+Population Densities at: 76400
+EMPTY: 0.1675
+Species 1: 12.7825
+Species 2: 7.1675
+Species 3: 12.63
+Species 4: 7.33
+Species 5: 12.68
+Species 6: 7.235
+Species 7: 12.19
+Species 8: 7.6925
+Species 9: 13.1275
+Species 10: 6.9975
+
+Population Densities at: 76600
+EMPTY: 0.175
+Species 1: 12.505
+Species 2: 7.3225
+Species 3: 12.8825
+Species 4: 7.075
+Species 5: 12.6075
+Species 6: 6.9975
+Species 7: 12.2475
+Species 8: 7.98
+Species 9: 12.9825
+Species 10: 7.225
+
+Population Densities at: 76800
+EMPTY: 0.155
+Species 1: 12.6025
+Species 2: 7.405
+Species 3: 12.795
+Species 4: 7.385
+Species 5: 12.5575
+Species 6: 6.915
+Species 7: 12.395
+Species 8: 7.6975
+Species 9: 13.03
+Species 10: 7.0625
+
+Population Densities at: 77000
+EMPTY: 0.16
+Species 1: 12.6025
+Species 2: 7.2775
+Species 3: 12.93
+Species 4: 7.0325
+Species 5: 12.505
+Species 6: 6.96
+Species 7: 12.5575
+Species 8: 7.8
+Species 9: 12.9575
+Species 10: 7.2175
+
+Population Densities at: 77200
+EMPTY: 0.12
+Species 1: 12.6
+Species 2: 7.2975
+Species 3: 12.735
+Species 4: 7.0875
+Species 5: 12.4925
+Species 6: 7.03
+Species 7: 12.83
+Species 8: 7.6675
+Species 9: 13.145
+Species 10: 6.995
+
+Population Densities at: 77400
+EMPTY: 0.1625
+Species 1: 12.5675
+Species 2: 7.1125
+Species 3: 13.07
+Species 4: 7.055
+Species 5: 12.54
+Species 6: 7.175
+Species 7: 12.5975
+Species 8: 7.7925
+Species 9: 13.0075
+Species 10: 6.92
+
+Refreshing random numbers...
+
+Population Densities at: 77600
+EMPTY: 0.1625
+Species 1: 12.49
+Species 2: 7.0975
+Species 3: 12.9525
+Species 4: 7.2275
+Species 5: 12.5375
+Species 6: 7.0175
+Species 7: 12.61
+Species 8: 7.6975
+Species 9: 13.2175
+Species 10: 6.99
+
+Population Densities at: 77800
+EMPTY: 0.125
+Species 1: 12.54
+Species 2: 7.1575
+Species 3: 12.9225
+Species 4: 7.5075
+Species 5: 12.43
+Species 6: 7.04
+Species 7: 12.5125
+Species 8: 7.615
+Species 9: 13.1275
+Species 10: 7.0225
+
+Population Densities at: 78000
+EMPTY: 0.1425
+Species 1: 12.3425
+Species 2: 7.0925
+Species 3: 13.055
+Species 4: 7.2875
+Species 5: 12.585
+Species 6: 7.01
+Species 7: 12.8
+Species 8: 7.7375
+Species 9: 12.885
+Species 10: 7.0625
+
+Population Densities at: 78200
+EMPTY: 0.145
+Species 1: 12.425
+Species 2: 7.15
+Species 3: 13.32
+Species 4: 7.355
+Species 5: 12.4225
+Species 6: 6.86
+Species 7: 12.615
+Species 8: 7.7125
+Species 9: 12.9775
+Species 10: 7.0175
+
+Population Densities at: 78400
+EMPTY: 0.14
+Species 1: 12.375
+Species 2: 7.3225
+Species 3: 13.14
+Species 4: 7.3
+Species 5: 12.4025
+Species 6: 7.0425
+Species 7: 12.645
+Species 8: 7.67
+Species 9: 13.06
+Species 10: 6.9025
+
+Population Densities at: 78600
+EMPTY: 0.17
+Species 1: 12.6925
+Species 2: 7.3125
+Species 3: 13.2625
+Species 4: 7.1025
+Species 5: 12.5075
+Species 6: 7.005
+Species 7: 12.4225
+Species 8: 7.925
+Species 9: 12.815
+Species 10: 6.785
+
+Population Densities at: 78800
+EMPTY: 0.13
+Species 1: 12.56
+Species 2: 7.0775
+Species 3: 13.07
+Species 4: 7.29
+Species 5: 12.41
+Species 6: 6.975
+Species 7: 12.51
+Species 8: 7.675
+Species 9: 13.0825
+Species 10: 7.22
+
+Population Densities at: 79000
+EMPTY: 0.1525
+Species 1: 12.72
+Species 2: 7.1575
+Species 3: 13.325
+Species 4: 7.265
+Species 5: 12.3375
+Species 6: 6.885
+Species 7: 12.48
+Species 8: 7.7775
+Species 9: 12.98
+Species 10: 6.92
+
+Population Densities at: 79200
+EMPTY: 0.17
+Species 1: 12.6275
+Species 2: 7.21
+Species 3: 13.28
+Species 4: 7.175
+Species 5: 12.535
+Species 6: 6.81
+Species 7: 12.7
+Species 8: 7.645
+Species 9: 12.945
+Species 10: 6.9025
+
+Population Densities at: 79400
+EMPTY: 0.1375
+Species 1: 13.005
+Species 2: 7.1175
+Species 3: 13.2275
+Species 4: 7.2875
+Species 5: 12.3225
+Species 6: 6.9775
+Species 7: 12.52
+Species 8: 7.4275
+Species 9: 13.1125
+Species 10: 6.865
+
+Population Densities at: 79600
+EMPTY: 0.1625
+Species 1: 12.6975
+Species 2: 7.1025
+Species 3: 13.3275
+Species 4: 7.1075
+Species 5: 12.63
+Species 6: 6.82
+Species 7: 12.5825
+Species 8: 7.46
+Species 9: 12.85
+Species 10: 7.26
+
+Population Densities at: 79800
+EMPTY: 0.17
+Species 1: 12.765
+Species 2: 7.085
+Species 3: 13.11
+Species 4: 7.35
+Species 5: 12.5275
+Species 6: 6.81
+Species 7: 12.745
+Species 8: 7.355
+Species 9: 13.055
+Species 10: 7.0275
+
+Population Densities at: 80000
+EMPTY: 0.1475
+Species 1: 12.715
+Species 2: 6.825
+Species 3: 13.4425
+Species 4: 7.2125
+Species 5: 12.5
+Species 6: 6.87
+Species 7: 12.7175
+Species 8: 7.725
+Species 9: 12.935
+Species 10: 6.91
+
+Refreshing random numbers...
+
+Population Densities at: 80200
+EMPTY: 0.165
+Species 1: 12.755
+Species 2: 7.185
+Species 3: 13.485
+Species 4: 7.355
+Species 5: 12.1875
+Species 6: 6.755
+Species 7: 12.69
+Species 8: 7.545
+Species 9: 13.0125
+Species 10: 6.865
+
+Population Densities at: 80400
+EMPTY: 0.155
+Species 1: 12.705
+Species 2: 7.15
+Species 3: 13.4425
+Species 4: 7.135
+Species 5: 12.2875
+Species 6: 6.83
+Species 7: 12.8925
+Species 8: 7.7525
+Species 9: 12.825
+Species 10: 6.825
+
+Population Densities at: 80600
+EMPTY: 0.17
+Species 1: 12.71
+Species 2: 7.2925
+Species 3: 13.32
+Species 4: 7.29
+Species 5: 12.17
+Species 6: 6.84
+Species 7: 12.905
+Species 8: 7.6925
+Species 9: 12.91
+Species 10: 6.7
+
+Population Densities at: 80800
+EMPTY: 0.1975
+Species 1: 12.645
+Species 2: 7.495
+Species 3: 13.1975
+Species 4: 7.115
+Species 5: 12.1725
+Species 6: 7.0275
+Species 7: 12.8875
+Species 8: 7.68
+Species 9: 12.8175
+Species 10: 6.765
+
+Population Densities at: 81000
+EMPTY: 0.15
+Species 1: 12.8825
+Species 2: 7.305
+Species 3: 13.2675
+Species 4: 7.0225
+Species 5: 12.24
+Species 6: 6.9975
+Species 7: 12.81
+Species 8: 7.6775
+Species 9: 12.6575
+Species 10: 6.99
+
+Population Densities at: 81200
+EMPTY: 0.1425
+Species 1: 13.0875
+Species 2: 7.25
+Species 3: 13.0425
+Species 4: 7.09
+Species 5: 12.275
+Species 6: 7.2
+Species 7: 12.7475
+Species 8: 7.6025
+Species 9: 12.615
+Species 10: 6.9475
+
+Population Densities at: 81400
+EMPTY: 0.18
+Species 1: 12.8675
+Species 2: 7.2525
+Species 3: 12.8675
+Species 4: 7.0425
+Species 5: 12.535
+Species 6: 7.205
+Species 7: 12.735
+Species 8: 7.515
+Species 9: 12.7225
+Species 10: 7.0775
+
+Population Densities at: 81600
+EMPTY: 0.175
+Species 1: 12.97
+Species 2: 7.02
+Species 3: 13.015
+Species 4: 7.0375
+Species 5: 12.6625
+Species 6: 7.045
+Species 7: 12.69
+Species 8: 7.5425
+Species 9: 12.56
+Species 10: 7.2825
+
+Population Densities at: 81800
+EMPTY: 0.1475
+Species 1: 12.8675
+Species 2: 7.255
+Species 3: 12.8425
+Species 4: 7.1775
+Species 5: 12.4675
+Species 6: 7.0925
+Species 7: 12.835
+Species 8: 7.4525
+Species 9: 12.7
+Species 10: 7.1625
+
+Population Densities at: 82000
+EMPTY: 0.1275
+Species 1: 13.0175
+Species 2: 7.125
+Species 3: 12.7375
+Species 4: 7.175
+Species 5: 12.45
+Species 6: 7.22
+Species 7: 12.7675
+Species 8: 7.57
+Species 9: 12.585
+Species 10: 7.225
+
+Population Densities at: 82200
+EMPTY: 0.135
+Species 1: 12.935
+Species 2: 7.195
+Species 3: 12.8325
+Species 4: 7.3675
+Species 5: 12.515
+Species 6: 7.1675
+Species 7: 12.5225
+Species 8: 7.39
+Species 9: 12.8425
+Species 10: 7.0975
+
+Population Densities at: 82400
+EMPTY: 0.1225
+Species 1: 12.9675
+Species 2: 7.37
+Species 3: 12.8125
+Species 4: 7.1275
+Species 5: 12.445
+Species 6: 7.2675
+Species 7: 12.6125
+Species 8: 7.31
+Species 9: 12.6525
+Species 10: 7.3125
+
+Refreshing random numbers...
+
+Population Densities at: 82600
+EMPTY: 0.155
+Species 1: 12.995
+Species 2: 7.1125
+Species 3: 12.6
+Species 4: 7.1575
+Species 5: 12.665
+Species 6: 7.2475
+Species 7: 12.385
+Species 8: 7.46
+Species 9: 12.94
+Species 10: 7.2825
+
+Population Densities at: 82800
+EMPTY: 0.155
+Species 1: 12.715
+Species 2: 7.2725
+Species 3: 12.7625
+Species 4: 7.33
+Species 5: 12.5375
+Species 6: 7.1275
+Species 7: 12.315
+Species 8: 7.6625
+Species 9: 12.9975
+Species 10: 7.125
+
+Population Densities at: 83000
+EMPTY: 0.14
+Species 1: 12.7025
+Species 2: 7.515
+Species 3: 12.7575
+Species 4: 7.26
+Species 5: 12.4675
+Species 6: 7.36
+Species 7: 12.38
+Species 8: 7.52
+Species 9: 12.6075
+Species 10: 7.29
+
+Population Densities at: 83200
+EMPTY: 0.125
+Species 1: 12.615
+Species 2: 7.575
+Species 3: 12.8025
+Species 4: 7.405
+Species 5: 12.32
+Species 6: 7.2675
+Species 7: 12.34
+Species 8: 7.575
+Species 9: 12.97
+Species 10: 7.005
+
+Population Densities at: 83400
+EMPTY: 0.1675
+Species 1: 12.68
+Species 2: 7.2775
+Species 3: 12.7825
+Species 4: 7.425
+Species 5: 12.3575
+Species 6: 7.405
+Species 7: 12.43
+Species 8: 7.37
+Species 9: 13.0525
+Species 10: 7.0525
+
+Population Densities at: 83600
+EMPTY: 0.165
+Species 1: 12.535
+Species 2: 7.33
+Species 3: 12.7975
+Species 4: 7.53
+Species 5: 12.2425
+Species 6: 7.4725
+Species 7: 12.41
+Species 8: 7.6475
+Species 9: 12.7975
+Species 10: 7.0725
+
+Population Densities at: 83800
+EMPTY: 0.185
+Species 1: 12.44
+Species 2: 7.41
+Species 3: 12.7325
+Species 4: 7.605
+Species 5: 12.3175
+Species 6: 7.3425
+Species 7: 12.4225
+Species 8: 7.7225
+Species 9: 12.785
+Species 10: 7.0375
+
+Population Densities at: 84000
+EMPTY: 0.125
+Species 1: 12.6
+Species 2: 7.6475
+Species 3: 12.55
+Species 4: 7.5325
+Species 5: 12.195
+Species 6: 7.355
+Species 7: 12.285
+Species 8: 7.9125
+Species 9: 12.85
+Species 10: 6.9475
+
+Population Densities at: 84200
+EMPTY: 0.16
+Species 1: 12.405
+Species 2: 7.4375
+Species 3: 12.875
+Species 4: 7.4625
+Species 5: 12.445
+Species 6: 7.38
+Species 7: 12.43
+Species 8: 7.955
+Species 9: 12.53
+Species 10: 6.92
+
+Population Densities at: 84400
+EMPTY: 0.1575
+Species 1: 12.5275
+Species 2: 7.5075
+Species 3: 12.7425
+Species 4: 7.44
+Species 5: 12.3425
+Species 6: 7.255
+Species 7: 12.5675
+Species 8: 7.74
+Species 9: 12.74
+Species 10: 6.98
+
+Population Densities at: 84600
+EMPTY: 0.17
+Species 1: 12.4725
+Species 2: 7.3075
+Species 3: 13.075
+Species 4: 7.3675
+Species 5: 12.2725
+Species 6: 7.325
+Species 7: 12.3025
+Species 8: 7.9575
+Species 9: 12.6525
+Species 10: 7.0975
+
+Population Densities at: 84800
+EMPTY: 0.1525
+Species 1: 12.4125
+Species 2: 7.3825
+Species 3: 12.9675
+Species 4: 7.5175
+Species 5: 12.2425
+Species 6: 7.4175
+Species 7: 12.415
+Species 8: 7.8275
+Species 9: 12.655
+Species 10: 7.01
+
+Population Densities at: 85000
+EMPTY: 0.13
+Species 1: 12.3825
+Species 2: 7.52
+Species 3: 13.02
+Species 4: 7.4425
+Species 5: 12.1625
+Species 6: 7.3175
+Species 7: 12.33
+Species 8: 8.0175
+Species 9: 12.6325
+Species 10: 7.045
+
+Refreshing random numbers...
+
+Population Densities at: 85200
+EMPTY: 0.165
+Species 1: 12.4525
+Species 2: 7.5125
+Species 3: 13.03
+Species 4: 7.3825
+Species 5: 12.345
+Species 6: 7.325
+Species 7: 12.44
+Species 8: 7.8325
+Species 9: 12.5975
+Species 10: 6.9175
+
+Population Densities at: 85400
+EMPTY: 0.1575
+Species 1: 12.62
+Species 2: 7.37
+Species 3: 13.0175
+Species 4: 7.3225
+Species 5: 12.2675
+Species 6: 7.48
+Species 7: 12.3175
+Species 8: 8.015
+Species 9: 12.54
+Species 10: 6.8925
+
+Population Densities at: 85600
+EMPTY: 0.1525
+Species 1: 12.435
+Species 2: 7.6525
+Species 3: 12.98
+Species 4: 7.37
+Species 5: 12.105
+Species 6: 7.36
+Species 7: 12.6575
+Species 8: 7.7325
+Species 9: 12.565
+Species 10: 6.99
+
+Population Densities at: 85800
+EMPTY: 0.1425
+Species 1: 12.7
+Species 2: 7.6125
+Species 3: 13.1325
+Species 4: 7.245
+Species 5: 12.0275
+Species 6: 7.62
+Species 7: 12.5325
+Species 8: 7.8875
+Species 9: 12.3525
+Species 10: 6.7475
+
+Population Densities at: 86000
+EMPTY: 0.1375
+Species 1: 12.765
+Species 2: 7.6575
+Species 3: 13.04
+Species 4: 7.18
+Species 5: 12.2475
+Species 6: 7.73
+Species 7: 12.42
+Species 8: 7.7325
+Species 9: 12.2175
+Species 10: 6.8725
+
+Population Densities at: 86200
+EMPTY: 0.145
+Species 1: 12.5575
+Species 2: 7.505
+Species 3: 12.9
+Species 4: 7.245
+Species 5: 12.47
+Species 6: 7.685
+Species 7: 12.4825
+Species 8: 7.575
+Species 9: 12.3525
+Species 10: 7.0825
+
+Population Densities at: 86400
+EMPTY: 0.1525
+Species 1: 12.71
+Species 2: 7.445
+Species 3: 12.9525
+Species 4: 7.2575
+Species 5: 12.32
+Species 6: 7.6275
+Species 7: 12.165
+Species 8: 7.71
+Species 9: 12.5075
+Species 10: 7.1525
+
+Population Densities at: 86600
+EMPTY: 0.145
+Species 1: 12.435
+Species 2: 7.6125
+Species 3: 12.8725
+Species 4: 7.1525
+Species 5: 12.5575
+Species 6: 7.4475
+Species 7: 12.4975
+Species 8: 7.735
+Species 9: 12.19
+Species 10: 7.355
+
+Population Densities at: 86800
+EMPTY: 0.1775
+Species 1: 12.625
+Species 2: 7.68
+Species 3: 12.8825
+Species 4: 7.16
+Species 5: 12.3125
+Species 6: 7.635
+Species 7: 12.3475
+Species 8: 7.53
+Species 9: 12.4075
+Species 10: 7.2425
+
+Population Densities at: 87000
+EMPTY: 0.16
+Species 1: 12.415
+Species 2: 7.51
+Species 3: 12.7775
+Species 4: 7.245
+Species 5: 12.565
+Species 6: 7.5325
+Species 7: 12.2975
+Species 8: 7.495
+Species 9: 12.625
+Species 10: 7.3775
+
+Population Densities at: 87200
+EMPTY: 0.16
+Species 1: 12.785
+Species 2: 7.495
+Species 3: 12.8675
+Species 4: 7.295
+Species 5: 12.2775
+Species 6: 7.725
+Species 7: 12.31
+Species 8: 7.4375
+Species 9: 12.5625
+Species 10: 7.085
+
+Population Densities at: 87400
+EMPTY: 0.135
+Species 1: 12.59
+Species 2: 7.365
+Species 3: 12.6775
+Species 4: 7.3375
+Species 5: 12.5725
+Species 6: 7.4975
+Species 7: 12.1725
+Species 8: 7.6975
+Species 9: 12.5875
+Species 10: 7.3675
+
+Refreshing random numbers...
+
+Population Densities at: 87600
+EMPTY: 0.1675
+Species 1: 12.5075
+Species 2: 7.205
+Species 3: 12.8675
+Species 4: 7.6
+Species 5: 12.565
+Species 6: 7.3275
+Species 7: 12.1625
+Species 8: 7.655
+Species 9: 12.76
+Species 10: 7.1825
+
+Population Densities at: 87800
+EMPTY: 0.1525
+Species 1: 12.5
+Species 2: 7.4075
+Species 3: 13.085
+Species 4: 7.6275
+Species 5: 12.3675
+Species 6: 7.1375
+Species 7: 12.2425
+Species 8: 7.7025
+Species 9: 12.64
+Species 10: 7.1375
+
+Population Densities at: 88000
+EMPTY: 0.1725
+Species 1: 12.4775
+Species 2: 7.385
+Species 3: 12.895
+Species 4: 7.46
+Species 5: 12.485
+Species 6: 7.465
+Species 7: 12.3475
+Species 8: 7.54
+Species 9: 12.535
+Species 10: 7.2375
+
+Population Densities at: 88200
+EMPTY: 0.1875
+Species 1: 12.5425
+Species 2: 7.265
+Species 3: 13.035
+Species 4: 7.5925
+Species 5: 12.465
+Species 6: 7.3725
+Species 7: 12.0725
+Species 8: 7.7325
+Species 9: 12.6275
+Species 10: 7.1075
+
+Population Densities at: 88400
+EMPTY: 0.155
+Species 1: 12.5325
+Species 2: 7.68
+Species 3: 12.995
+Species 4: 7.2425
+Species 5: 12.4325
+Species 6: 7.25
+Species 7: 12.395
+Species 8: 7.705
+Species 9: 12.4
+Species 10: 7.2125
+
+Population Densities at: 88600
+EMPTY: 0.1625
+Species 1: 12.6725
+Species 2: 7.505
+Species 3: 12.79
+Species 4: 7.605
+Species 5: 12.35
+Species 6: 7.3825
+Species 7: 12.3125
+Species 8: 7.7225
+Species 9: 12.3525
+Species 10: 7.145
+
+Population Densities at: 88800
+EMPTY: 0.1525
+Species 1: 12.6075
+Species 2: 7.4275
+Species 3: 12.9925
+Species 4: 7.39
+Species 5: 12.4775
+Species 6: 7.5625
+Species 7: 12.2275
+Species 8: 7.7025
+Species 9: 12.1925
+Species 10: 7.2675
+
+Population Densities at: 89000
+EMPTY: 0.16
+Species 1: 12.455
+Species 2: 7.5225
+Species 3: 13.09
+Species 4: 7.43
+Species 5: 12.4475
+Species 6: 7.36
+Species 7: 12.405
+Species 8: 7.615
+Species 9: 12.34
+Species 10: 7.175
+
+Population Densities at: 89200
+EMPTY: 0.1775
+Species 1: 12.55
+Species 2: 7.1525
+Species 3: 13.1275
+Species 4: 7.315
+Species 5: 12.465
+Species 6: 7.5875
+Species 7: 12.3575
+Species 8: 7.845
+Species 9: 12.275
+Species 10: 7.1475
+
+Population Densities at: 89400
+EMPTY: 0.15
+Species 1: 12.6375
+Species 2: 7.41
+Species 3: 12.94
+Species 4: 7.4675
+Species 5: 12.455
+Species 6: 7.445
+Species 7: 12.4575
+Species 8: 7.635
+Species 9: 12.21
+Species 10: 7.1925
+
+Population Densities at: 89600
+EMPTY: 0.15
+Species 1: 12.59
+Species 2: 7.115
+Species 3: 13.075
+Species 4: 7.63
+Species 5: 12.415
+Species 6: 7.4825
+Species 7: 12.3575
+Species 8: 7.7175
+Species 9: 12.285
+Species 10: 7.1825
+
+Population Densities at: 89800
+EMPTY: 0.17
+Species 1: 12.65
+Species 2: 7.1825
+Species 3: 13.01
+Species 4: 7.62
+Species 5: 12.5125
+Species 6: 7.2
+Species 7: 12.5
+Species 8: 7.7075
+Species 9: 12.365
+Species 10: 7.0825
+
+Population Densities at: 90000
+EMPTY: 0.1675
+Species 1: 12.4875
+Species 2: 7.3225
+Species 3: 13.1625
+Species 4: 7.5625
+Species 5: 12.685
+Species 6: 7.2325
+Species 7: 12.1875
+Species 8: 7.9775
+Species 9: 12.075
+Species 10: 7.14
+
+Refreshing random numbers...
+
+Population Densities at: 90200
+EMPTY: 0.13
+Species 1: 12.415
+Species 2: 7.4175
+Species 3: 12.985
+Species 4: 7.8375
+Species 5: 12.5725
+Species 6: 7.0675
+Species 7: 12.1775
+Species 8: 7.9725
+Species 9: 12.385
+Species 10: 7.04
+
+Population Densities at: 90400
+EMPTY: 0.1675
+Species 1: 12.41
+Species 2: 7.41
+Species 3: 13.0725
+Species 4: 7.675
+Species 5: 12.5525
+Species 6: 7.1975
+Species 7: 12.255
+Species 8: 8.0825
+Species 9: 12.15
+Species 10: 7.0275
+
+Population Densities at: 90600
+EMPTY: 0.19
+Species 1: 12.425
+Species 2: 7.395
+Species 3: 13.0175
+Species 4: 7.85
+Species 5: 12.4425
+Species 6: 7.345
+Species 7: 12.2625
+Species 8: 7.8675
+Species 9: 12.2225
+Species 10: 6.9825
+
+Population Densities at: 90800
+EMPTY: 0.1675
+Species 1: 12.4125
+Species 2: 7.4275
+Species 3: 13.1025
+Species 4: 7.51
+Species 5: 12.345
+Species 6: 7.42
+Species 7: 12.3025
+Species 8: 8.1325
+Species 9: 12.0725
+Species 10: 7.1075
+
+Population Densities at: 91000
+EMPTY: 0.1825
+Species 1: 12.3825
+Species 2: 7.5325
+Species 3: 12.8925
+Species 4: 7.7975
+Species 5: 12.49
+Species 6: 7.2625
+Species 7: 12.375
+Species 8: 7.655
+Species 9: 12.14
+Species 10: 7.29
+
+Population Densities at: 91200
+EMPTY: 0.1425
+Species 1: 12.4775
+Species 2: 7.5125
+Species 3: 12.9775
+Species 4: 7.855
+Species 5: 12.29
+Species 6: 7.4925
+Species 7: 12.1775
+Species 8: 7.885
+Species 9: 12.165
+Species 10: 7.025
+
+Population Densities at: 91400
+EMPTY: 0.1525
+Species 1: 12.375
+Species 2: 7.5525
+Species 3: 12.8775
+Species 4: 7.585
+Species 5: 12.47
+Species 6: 7.5325
+Species 7: 12.37
+Species 8: 7.705
+Species 9: 11.9825
+Species 10: 7.3975
+
+Population Densities at: 91600
+EMPTY: 0.185
+Species 1: 12.255
+Species 2: 7.5675
+Species 3: 13.045
+Species 4: 7.5725
+Species 5: 12.395
+Species 6: 7.46
+Species 7: 12.1875
+Species 8: 7.935
+Species 9: 11.9825
+Species 10: 7.415
+
+Population Densities at: 91800
+EMPTY: 0.13
+Species 1: 12.415
+Species 2: 7.555
+Species 3: 12.925
+Species 4: 7.695
+Species 5: 12.21
+Species 6: 7.415
+Species 7: 12.17
+Species 8: 7.7875
+Species 9: 12.32
+Species 10: 7.3775
+
+Population Densities at: 92000
+EMPTY: 0.1825
+Species 1: 12.59
+Species 2: 7.3125
+Species 3: 12.8675
+Species 4: 7.5975
+Species 5: 12.58
+Species 6: 7.455
+Species 7: 12.1975
+Species 8: 7.8475
+Species 9: 11.9575
+Species 10: 7.4125
+
+Population Densities at: 92200
+EMPTY: 0.145
+Species 1: 12.5725
+Species 2: 7.355
+Species 3: 12.7825
+Species 4: 7.83
+Species 5: 12.365
+Species 6: 7.555
+Species 7: 12.0675
+Species 8: 7.7725
+Species 9: 12.325
+Species 10: 7.23
+
+Population Densities at: 92400
+EMPTY: 0.18
+Species 1: 12.4375
+Species 2: 7.335
+Species 3: 12.895
+Species 4: 7.79
+Species 5: 12.5675
+Species 6: 7.2375
+Species 7: 12.09
+Species 8: 7.8975
+Species 9: 12.2075
+Species 10: 7.3625
+
+Refreshing random numbers...
+
+Population Densities at: 92600
+EMPTY: 0.1775
+Species 1: 12.605
+Species 2: 7.5175
+Species 3: 12.805
+Species 4: 7.625
+Species 5: 12.53
+Species 6: 7.3875
+Species 7: 12.1825
+Species 8: 7.8225
+Species 9: 12.085
+Species 10: 7.2625
+
+Population Densities at: 92800
+EMPTY: 0.17
+Species 1: 12.5875
+Species 2: 7.4775
+Species 3: 12.84
+Species 4: 7.59
+Species 5: 12.625
+Species 6: 7.395
+Species 7: 12.08
+Species 8: 7.7225
+Species 9: 12.105
+Species 10: 7.4075
+
+Population Densities at: 93000
+EMPTY: 0.13
+Species 1: 12.2875
+Species 2: 7.455
+Species 3: 13.065
+Species 4: 7.7225
+Species 5: 12.555
+Species 6: 7.28
+Species 7: 11.9075
+Species 8: 8.0925
+Species 9: 12.095
+Species 10: 7.41
+
+Population Densities at: 93200
+EMPTY: 0.1375
+Species 1: 12.3075
+Species 2: 7.635
+Species 3: 13.0025
+Species 4: 7.7125
+Species 5: 12.3625
+Species 6: 7.3825
+Species 7: 12.02
+Species 8: 7.9175
+Species 9: 12.1575
+Species 10: 7.365
+
+Population Densities at: 93400
+EMPTY: 0.125
+Species 1: 12.3975
+Species 2: 7.525
+Species 3: 12.775
+Species 4: 7.59
+Species 5: 12.645
+Species 6: 7.2225
+Species 7: 12.085
+Species 8: 7.7525
+Species 9: 12.3625
+Species 10: 7.52
+
+Population Densities at: 93600
+EMPTY: 0.1425
+Species 1: 12.1275
+Species 2: 7.595
+Species 3: 12.8975
+Species 4: 7.5575
+Species 5: 12.6125
+Species 6: 7.115
+Species 7: 12.1775
+Species 8: 8.0725
+Species 9: 12.19
+Species 10: 7.5125
+
+Population Densities at: 93800
+EMPTY: 0.1225
+Species 1: 12.0725
+Species 2: 7.8175
+Species 3: 12.9125
+Species 4: 7.585
+Species 5: 12.3325
+Species 6: 7.3525
+Species 7: 12.125
+Species 8: 8.115
+Species 9: 12.17
+Species 10: 7.395
+
+Population Densities at: 94000
+EMPTY: 0.11
+Species 1: 12.335
+Species 2: 7.815
+Species 3: 12.7675
+Species 4: 7.725
+Species 5: 12.3875
+Species 6: 7.2975
+Species 7: 12.25
+Species 8: 7.825
+Species 9: 12.1225
+Species 10: 7.365
+
+Population Densities at: 94200
+EMPTY: 0.135
+Species 1: 12.28
+Species 2: 7.885
+Species 3: 12.89
+Species 4: 7.6025
+Species 5: 12.3225
+Species 6: 7.3075
+Species 7: 12.1775
+Species 8: 8.085
+Species 9: 12.0275
+Species 10: 7.2875
+
+Population Densities at: 94400
+EMPTY: 0.145
+Species 1: 12.4525
+Species 2: 7.805
+Species 3: 12.7675
+Species 4: 7.6525
+Species 5: 12.4075
+Species 6: 7.4
+Species 7: 12.085
+Species 8: 7.995
+Species 9: 12.045
+Species 10: 7.245
+
+Population Densities at: 94600
+EMPTY: 0.1625
+Species 1: 12.275
+Species 2: 8.0975
+Species 3: 12.5625
+Species 4: 7.7275
+Species 5: 12.42
+Species 6: 7.36
+Species 7: 12.285
+Species 8: 7.835
+Species 9: 12.04
+Species 10: 7.235
+
+Population Densities at: 94800
+EMPTY: 0.145
+Species 1: 12.03
+Species 2: 7.98
+Species 3: 12.73
+Species 4: 7.74
+Species 5: 12.5125
+Species 6: 7.2375
+Species 7: 12.0325
+Species 8: 8.11
+Species 9: 12.1425
+Species 10: 7.34
+
+Population Densities at: 95000
+EMPTY: 0.175
+Species 1: 12.3425
+Species 2: 8.0375
+Species 3: 12.6875
+Species 4: 7.435
+Species 5: 12.5175
+Species 6: 7.2775
+Species 7: 12.145
+Species 8: 8.0875
+Species 9: 12.11
+Species 10: 7.185
+
+Refreshing random numbers...
+
+Population Densities at: 95200
+EMPTY: 0.1475
+Species 1: 12.19
+Species 2: 8.1225
+Species 3: 12.43
+Species 4: 7.59
+Species 5: 12.59
+Species 6: 7.3225
+Species 7: 12.2475
+Species 8: 8.1325
+Species 9: 12.015
+Species 10: 7.2125
+
+Population Densities at: 95400
+EMPTY: 0.18
+Species 1: 12.4125
+Species 2: 8.09
+Species 3: 12.445
+Species 4: 7.6
+Species 5: 12.4175
+Species 6: 7.3075
+Species 7: 12.3025
+Species 8: 8.14
+Species 9: 11.9875
+Species 10: 7.1175
+
+Population Densities at: 95600
+EMPTY: 0.1525
+Species 1: 12.41
+Species 2: 7.94
+Species 3: 12.5825
+Species 4: 7.6
+Species 5: 12.33
+Species 6: 7.2675
+Species 7: 12.3175
+Species 8: 8.2225
+Species 9: 11.9275
+Species 10: 7.25
+
+Population Densities at: 95800
+EMPTY: 0.185
+Species 1: 12.4625
+Species 2: 8.12
+Species 3: 12.49
+Species 4: 7.58
+Species 5: 12.3075
+Species 6: 7.5075
+Species 7: 12.1525
+Species 8: 8.1
+Species 9: 11.8075
+Species 10: 7.2875
+
+Population Densities at: 96000
+EMPTY: 0.16
+Species 1: 12.4075
+Species 2: 8.1525
+Species 3: 12.415
+Species 4: 7.5325
+Species 5: 12.38
+Species 6: 7.4125
+Species 7: 12.0725
+Species 8: 8.125
+Species 9: 12.0125
+Species 10: 7.33
+
+Population Densities at: 96200
+EMPTY: 0.17
+Species 1: 12.5675
+Species 2: 7.895
+Species 3: 12.4725
+Species 4: 7.4725
+Species 5: 12.3875
+Species 6: 7.45
+Species 7: 12.26
+Species 8: 7.915
+Species 9: 12.135
+Species 10: 7.275
+
+Population Densities at: 96400
+EMPTY: 0.18
+Species 1: 12.2625
+Species 2: 8.05
+Species 3: 12.4975
+Species 4: 7.59
+Species 5: 12.42
+Species 6: 7.365
+Species 7: 12.0875
+Species 8: 8.06
+Species 9: 11.9425
+Species 10: 7.545
+
+Population Densities at: 96600
+EMPTY: 0.175
+Species 1: 12.27
+Species 2: 7.8225
+Species 3: 12.4
+Species 4: 7.7275
+Species 5: 12.48
+Species 6: 7.5025
+Species 7: 12.035
+Species 8: 8.0475
+Species 9: 12.0275
+Species 10: 7.5125
+
+Population Densities at: 96800
+EMPTY: 0.165
+Species 1: 12.3825
+Species 2: 8.055
+Species 3: 12.355
+Species 4: 7.6475
+Species 5: 12.5275
+Species 6: 7.3775
+Species 7: 12.055
+Species 8: 8.0725
+Species 9: 11.8375
+Species 10: 7.525
+
+Population Densities at: 97000
+EMPTY: 0.175
+Species 1: 12.5025
+Species 2: 7.8975
+Species 3: 12.4175
+Species 4: 7.54
+Species 5: 12.39
+Species 6: 7.5475
+Species 7: 12.04
+Species 8: 8.1075
+Species 9: 11.9
+Species 10: 7.4825
+
+Population Densities at: 97200
+EMPTY: 0.1275
+Species 1: 12.4125
+Species 2: 7.9625
+Species 3: 12.385
+Species 4: 7.5425
+Species 5: 12.5525
+Species 6: 7.5975
+Species 7: 12.0225
+Species 8: 7.94
+Species 9: 11.975
+Species 10: 7.4825
+
+Population Densities at: 97400
+EMPTY: 0.14
+Species 1: 12.465
+Species 2: 7.8175
+Species 3: 12.2325
+Species 4: 7.8175
+Species 5: 12.515
+Species 6: 7.8925
+Species 7: 11.795
+Species 8: 7.8725
+Species 9: 12.1175
+Species 10: 7.335
+
+Refreshing random numbers...
+
+Population Densities at: 97600
+EMPTY: 0.15
+Species 1: 12.1925
+Species 2: 7.945
+Species 3: 12.5225
+Species 4: 7.5975
+Species 5: 12.6775
+Species 6: 7.455
+Species 7: 11.8
+Species 8: 7.9575
+Species 9: 12.145
+Species 10: 7.5575
+
+Population Densities at: 97800
+EMPTY: 0.13
+Species 1: 12.2925
+Species 2: 7.8975
+Species 3: 12.7325
+Species 4: 7.44
+Species 5: 12.62
+Species 6: 7.535
+Species 7: 11.68
+Species 8: 7.9975
+Species 9: 12.2125
+Species 10: 7.4625
+
+Population Densities at: 98000
+EMPTY: 0.12
+Species 1: 12.2375
+Species 2: 7.9475
+Species 3: 12.49
+Species 4: 7.3975
+Species 5: 12.7325
+Species 6: 7.57
+Species 7: 11.96
+Species 8: 7.9225
+Species 9: 12.12
+Species 10: 7.5025
+
+Population Densities at: 98200
+EMPTY: 0.13
+Species 1: 12.37
+Species 2: 7.635
+Species 3: 12.73
+Species 4: 7.3825
+Species 5: 12.9175
+Species 6: 7.5425
+Species 7: 11.7475
+Species 8: 7.91
+Species 9: 12.2125
+Species 10: 7.4225
+
+Population Densities at: 98400
+EMPTY: 0.13
+Species 1: 12.1725
+Species 2: 7.81
+Species 3: 12.8825
+Species 4: 7.535
+Species 5: 12.805
+Species 6: 7.46
+Species 7: 11.8575
+Species 8: 7.765
+Species 9: 12.1425
+Species 10: 7.44
+
+Population Densities at: 98600
+EMPTY: 0.11
+Species 1: 12.2825
+Species 2: 8.0875
+Species 3: 12.83
+Species 4: 7.625
+Species 5: 12.51
+Species 6: 7.395
+Species 7: 11.9075
+Species 8: 7.695
+Species 9: 12.0825
+Species 10: 7.475
+
+Population Densities at: 98800
+EMPTY: 0.1875
+Species 1: 12.095
+Species 2: 7.7925
+Species 3: 12.7025
+Species 4: 7.635
+Species 5: 12.7225
+Species 6: 7.485
+Species 7: 11.77
+Species 8: 7.835
+Species 9: 12.1775
+Species 10: 7.5975
+
+Population Densities at: 99000
+EMPTY: 0.18
+Species 1: 12.1325
+Species 2: 7.725
+Species 3: 12.9225
+Species 4: 7.68
+Species 5: 12.78
+Species 6: 7.2925
+Species 7: 11.78
+Species 8: 7.725
+Species 9: 12.3725
+Species 10: 7.41
+
+Population Densities at: 99200
+EMPTY: 0.1475
+Species 1: 12.175
+Species 2: 7.86
+Species 3: 12.845
+Species 4: 7.8825
+Species 5: 12.51
+Species 6: 7.2275
+Species 7: 11.8025
+Species 8: 7.845
+Species 9: 12.4425
+Species 10: 7.2625
+
+Population Densities at: 99400
+EMPTY: 0.165
+Species 1: 12.2325
+Species 2: 7.81
+Species 3: 12.96
+Species 4: 7.6625
+Species 5: 12.595
+Species 6: 7.265
+Species 7: 11.915
+Species 8: 7.885
+Species 9: 12.1975
+Species 10: 7.3125
+
+Population Densities at: 99600
+EMPTY: 0.1625
+Species 1: 12.3975
+Species 2: 7.705
+Species 3: 13.0525
+Species 4: 7.6325
+Species 5: 12.5125
+Species 6: 7.2275
+Species 7: 11.7925
+Species 8: 8.0075
+Species 9: 12.235
+Species 10: 7.275
+
+Population Densities at: 99800
+EMPTY: 0.165
+Species 1: 12.255
+Species 2: 8.005
+Species 3: 12.7525
+Species 4: 7.575
+Species 5: 12.815
+Species 6: 7.115
+Species 7: 11.755
+Species 8: 7.815
+Species 9: 12.265
+Species 10: 7.4825
+
+Population Densities at: 100000
+EMPTY: 0.165
+Species 1: 12.175
+Species 2: 7.77
+Species 3: 12.905
+Species 4: 7.425
+Species 5: 12.875
+Species 6: 7.0875
+Species 7: 11.8275
+Species 8: 8.065
+Species 9: 12.255
+Species 10: 7.45
+
+Refreshing random numbers...
+
+Simulation Complete.

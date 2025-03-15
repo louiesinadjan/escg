@@ -134,7 +134,7 @@ void importCSVToParams(Params& p) { // Imports the parameters (except resume) fr
     file.close();
 }
 
-int importCSVToDominance(int* &dominates) {  // `dominates` passed by reference
+int importCSVToDominance(int*& dominates) { // `dominates` passed by reference
     std::ifstream file("dominance.csv");
     if (!file) {
         std::cerr << "Error: Could not open file dominance.csv for reading." << std::endl;
@@ -201,6 +201,15 @@ void exportDominanceToCSV(int* dominates, int species, Params p) {
 void generateCircularAdjacencyMatrix(int* dominance, int speciesCount) {
     // Choose default offsets based on species count
     std::vector<int> offsets = (speciesCount >= 5) ? std::vector<int>{1, 3} : std::vector<int>{1};
+    if (speciesCount < 2) {
+        offsets = {};
+    } else if (speciesCount < 5) {
+        offsets = {1};
+    } else if (speciesCount >= 5 && speciesCount < 8) {
+        offsets = {1, 3};
+    } else {
+        offsets = {1, 3, 5, 7};
+    }
 
     // Initialize dominance matrix (1D representation of speciesCount x speciesCount)
     for (int i = 0; i < speciesCount * speciesCount; i++) {

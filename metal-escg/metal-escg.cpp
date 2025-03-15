@@ -610,7 +610,7 @@ int main(int argc, const char* argv[]) {
 
     for (int mcs = currentMCS; mcs <= MCS; mcs++) {                                        // Monte Carlos
         densities(grid, N, mcs, gridCtx, metalCtx, params.printFrequency, params.species); // Every MCS, call densities to add to density vectors for visualisation after simulation
-        if (mcs == 2000 || mcs == 6000 || mcs == 20000 || mcs == 100000) {
+        if (mcs == 2000 || mcs == 6000 || (mcs > 6000 && mcs % 5000 == 0)) {
             plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
             exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
         }
