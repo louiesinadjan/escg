@@ -97,7 +97,7 @@ int importCSVToGrid(int* grid, int N) {
     }
 }
 
-void importCSVToParams(Params& p) { // Imports the parameters from the csv file
+void importCSVToParams(Params& p) { // Imports the parameters (except resume) from the csv file
     std::ifstream file("params.csv");
     if (!file) {
         std::cerr << "Error: Could not open file params.csv for reading." << std::endl;
@@ -134,31 +134,45 @@ void importCSVToParams(Params& p) { // Imports the parameters from the csv file
     file.close();
 }
 
-void importCSVToDominance(int* dominates, int species) {
+int importCSVToDominance(int*& dominates) { // `dominates` passed by reference
     std::ifstream file("dominance.csv");
     if (!file) {
         std::cerr << "Error: Could not open file dominance.csv for reading." << std::endl;
-        return;
+        return -1; // Return error code
     }
 
+    std::vector<std::vector<int>> matrix; // Temporary 2D matrix
     std::string line;
-    int row = 0;
 
-    while (std::getline(file, line) && row < species) {
+    // Read the file line by line
+    while (std::getline(file, line)) {
         std::stringstream ss(line);
         std::string cell;
-        int col = 0;
+        std::vector<int> rowValues;
 
-        while (std::getline(ss, cell, ',') && col < species) {
-            // Convert adjacency matrix from 2D to 1D format
-            dominates[row * species + col] = std::stoi(cell);
-            col++;
+        while (std::getline(ss, cell, ',')) {
+            rowValues.push_back(std::stoi(cell)); // Convert CSV values to integers
         }
 
-        row++;
+        matrix.push_back(rowValues);
     }
 
     file.close();
+
+    // Get species count (assume square matrix)
+    int species = matrix.size();
+
+    // Allocate memory for `dominates` (caller must free it)
+    dominates = new int[species * species];
+
+    // Flatten the 2D matrix into the 1D array
+    for (int i = 0; i < species; i++) {
+        for (int j = 0; j < species; j++) {
+            dominates[i * species + j] = matrix[i][j]; // Row-major flattening
+        }
+    }
+
+    return species; // Return species count
 }
 
 void exportDominanceToCSV(int* dominates, int species, Params p) {
@@ -184,15 +198,29 @@ void exportDominanceToCSV(int* dominates, int species, Params p) {
     file.close();
 }
 
-std::vector<std::vector<int>> generateCircularAdjacencyMatrix(int speciesCount, const std::vector<int>& offsets) {
-    std::vector<std::vector<int>> adjacencyMatrix(speciesCount, std::vector<int>(speciesCount, 0));
+void generateCircularAdjacencyMatrix(int* dominance, int speciesCount) {
+    // Choose default offsets based on species count
+    std::vector<int> offsets = (speciesCount >= 5) ? std::vector<int>{1, 3} : std::vector<int>{1};
+    if (speciesCount < 2) {
+        offsets = {};
+    } else if (speciesCount < 5) {
+        offsets = {1};
+    } else if (speciesCount >= 5 && speciesCount < 8) {
+        offsets = {1, 3};
+    } else {
+        offsets = {1, 3, 5, 7};
+    }
 
+    // Initialise dominance matrix (1D representation of speciesCount x speciesCount)
+    for (int i = 0; i < speciesCount * speciesCount; i++) {
+        dominance[i] = 0; // Set everything to 0
+    }
+
+    // Fill the adjacency matrix
     for (int species = 0; species < speciesCount; species++) {
         for (int offset : offsets) {
             int target = (species + offset) % speciesCount; // Circular wrap-around
-            adjacencyMatrix[species][target] = 1;
+            dominance[species * speciesCount + target] = 1; // Row-major storage
         }
     }
-
-    return adjacencyMatrix;
 }

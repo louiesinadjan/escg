@@ -24,7 +24,9 @@ struct Params {
     int species = 5;            // Number of species (Rock, Paper, Scissors, Lizard, Spock)
     bool flux = true;           // Flux boundary conditions
     float emptyProbability = 0; // Initial empty cell probability
-    bool resume = false;        // Resume simulation from given files
+
+    bool dominance = false;
+    bool resume = false; // Resume simulation from given files
 
     std::string outputDir; // Output directory for simulation files
 };
@@ -53,6 +55,7 @@ struct MetalContext {
     MTL::Buffer* cellsBuffer;                     // Cells to process
     MTL::Buffer* neighboursDirsBuffer;            // Neighbour directions to process
     MTL::Buffer* actionProbabilitiesBuffer;       // Actions to take
+    MTL::Buffer* dominanceBuffer;                 // Dominance Matrix
     MTL::Buffer* stepGridBuffer;                  // Grid
 
     int threads;
@@ -76,6 +79,9 @@ struct GridContext {
     std::vector<double> densityScissors;
     std::vector<double> densityLizard;
     std::vector<double> densitySpock;
+
+    std::vector<std::vector<int>> speciesCounters;
+    std::vector<std::vector<double>> speciesDensities;
 };
 
 //------------------------------------------------------------------------------

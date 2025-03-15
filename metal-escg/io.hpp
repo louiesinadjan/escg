@@ -10,5 +10,7 @@ void exportParamsToCSV(Params p);
 int importCSVToGrid(int* grid, int N); // Returns the MCS to resume from
 void importCSVToParams(Params& p); // Imports the parameters from the csv file
 
-void importCSVToDominance(int* dominates, int species);
-void exportDominanceToCSV(int* dominates, int species, Params p);
+int importCSVToDominance(int* &dominance);
+void exportDominanceToCSV(int* dominance, int species, Params p);
+
+void generateCircularAdjacencyMatrix(int* dominance, int speciesCount);
