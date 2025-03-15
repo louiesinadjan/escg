@@ -2,39 +2,50 @@
 #include <sstream>
 
 void plot_densities(GridContext g, Params p) {
-    // plt::figure_size(2000, 800);
-    // plt::tight_layout();
+    plt::figure_size(2000, 800);
+    plt::tight_layout();
 
-    // // Plot each density with a different color
-    // plt::semilogx(g.steps, g.densityRock, "b-");
-    // plt::semilogx(g.steps, g.densityPaper, "c-");
-    // plt::semilogx(g.steps, g.densityScissors, "g-");
-    // plt::semilogx(g.steps, g.densityLizard, "y-");
-    // plt::semilogx(g.steps, g.densitySpock, "r-");
+    // Define a set of colors to cycle through
+    std::vector<std::string> colors = {"b-", "c-", "g-", "y-", "r-", "m-", "k-", "orange", "pink", "purple"};
+    
+    // Ensure speciesDensities is not empty
+    if (!g.speciesDensities.empty()) {
+        size_t speciesCount = g.speciesDensities[0].size(); // Get number of species
 
-    // // Add legend (labels in the same order as plots)
-    // plt::legend();
+        for (size_t i = 0; i < speciesCount; i++) {
+            std::string color = colors[i % colors.size()]; // Cycle through colors
+            std::vector<double> speciesDensity;
+            
+            // Extract the density evolution for species `i`
+            for (size_t step = 0; step < g.speciesDensities.size(); step++) {
+                speciesDensity.push_back(g.speciesDensities[step][i]);
+            }
 
-    // // Axis labels and title
-    // plt::xlabel("Steps");
-    // plt::ylabel("$\\rho_i$"); // LaTeX style for rho_i
-    // plt::title("Density Evolution Over Time");
+            plt::semilogx(g.steps, speciesDensity, color);
+        }
 
-    // bool moore = p.neighbourhood == 8;
-    // std::string length = "l" + std::to_string(p.L);
-    // std::string height = "h" + std::to_string(p.H);
-    // std::string neighbourhood = moore ? "Moore" : "VN";
+        plt::legend();
+    }
+    // Axis labels and title
+    plt::xlabel("Steps");
+    plt::ylabel("$\\rho_i$"); // LaTeX style for rho_i
+    plt::title("Density Evolution Over Time");
 
-    // // Convert to scientific notation
-    // std::ostringstream oss;
-    // oss.precision(2);
-    // oss << std::scientific << p.mobility;
-    // std::string mobility_str = "M" + oss.str();
-    // std::string flux = p.flux ? "flux" : "noflux";
-    // std::string species = std::to_string(p.species) + "species";
+    bool moore = p.neighbourhood == 8;
+    std::string length = "l" + std::to_string(p.L);
+    std::string height = "h" + std::to_string(p.H);
+    std::string neighbourhood = moore ? "Moore" : "VN";
 
-    // plt::title(length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species);
-    // plt::save("./" + p.outputDir + "/densities.png");
+    // Convert to scientific notation
+    std::ostringstream oss;
+    oss.precision(2);
+    oss << std::scientific << p.mobility;
+    std::string mobility_str = "M" + oss.str();
+    std::string flux = p.flux ? "flux" : "noflux";
+    std::string species = std::to_string(p.species) + "species";
+
+    plt::title(length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species);
+    plt::save("./" + p.outputDir + "/densities.png");
 }
 
 // https://github.com/lava/matplotlib-cpp/blob/master/examples/imshow.cpp
