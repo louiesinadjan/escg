@@ -7,7 +7,7 @@ inline bool dominates(int specie, int neighbour, int speciesNum, constant int* d
         return false; // Empty spaces don't dominate anything
     }
     return dominance[((specie-1) * speciesNum + (neighbour - 1))] == 1;
-    
+
 }
 
 inline int action(float action_prob, float mu, float sigma) {
@@ -33,6 +33,9 @@ kernel void step(
     device atomic_int *grid [[ buffer(8) ]],
     constant int *dominance [[ buffer(9) ]],
     constant int &speciesNum [[ buffer(10) ]],
+    constant int &numRandoms [[ buffer(11) ]],
+    constant bool &maxStep [[ buffer(12) ]],
+
     uint id [[ thread_position_in_grid ]]) {
 
     const int N = L * H;
@@ -49,7 +52,7 @@ kernel void step(
         {1, 1} // Down-Right
     };
 
-    int cellsPerThread = N / 1000;
+    int cellsPerThread = maxStep ? numRandoms / 1000 : N / 1000;
 
     for (int i = 0; i < cellsPerThread; i++) {
 
