@@ -533,13 +533,6 @@ int main(int argc, const char* argv[]) {
         params.outputDir = length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species;
     }
 
-    // Create the directory
-    if (std::filesystem::create_directory(params.outputDir)) {
-        std::cout << "Directory created: " << params.outputDir << std::endl;
-    } else {
-        std::cout << "Failed to create or already exists: " << params.outputDir << std::endl;
-    }
-
     if (params.dominance) {
         params.species = importCSVToDominance(dominance);
     } else {
@@ -548,6 +541,14 @@ int main(int argc, const char* argv[]) {
     }
 
     if (params.save) {
+        // Create the directory
+        if (std::filesystem::create_directory(params.outputDir)) {
+            std::cout << "Directory created: " << params.outputDir << std::endl;
+        } else {
+            std::cout << "Failed to create or already exists: " << params.outputDir << std::endl;
+        }
+
+        // Export simulation metadata to directory
         exportParamsToCSV(params);                 // Export the parameters to a csv file
         exportGridToCSV(grid, params, currentMCS); // Export the grid to a csv file
         exportDominanceToCSV(dominance, params.species, params);
@@ -661,7 +662,9 @@ int main(int argc, const char* argv[]) {
         }
     }
 
-    show(gridCtx, params); // Plot density against steps
+    if (params.save) {
+        show(gridCtx, params); // Plot density against steps
+    }
 
     std::cout << "Simulation Complete.";
 
