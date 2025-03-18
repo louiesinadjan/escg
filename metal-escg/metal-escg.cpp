@@ -155,8 +155,9 @@ Params parseArgs(int argc, char* argv[]) {
                 break;
             }
             case 'R':
-                params.numRandoms = std::stoi(optarg);
+                params.numRandoms = std::stof(optarg);
                 if (params.numRandoms < 1000000) {
+                    std::cout << "Entered: " << params.numRandoms << std::endl;
                     std::cerr << "Error: Random numbers must be at least 1,000,000." << std::endl;
                     exit(EXIT_FAILURE);
                 }
