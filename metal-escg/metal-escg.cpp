@@ -32,6 +32,10 @@ Params parseArgs(int argc, char* argv[]) {
         {"flux", required_argument, 0, 'f'},
         {"empty", required_argument, 0, 'w'},
         {"dominance", required_argument, 0, 'd'},
+        {"save", required_argument, 0, 's'},
+        {"resume", required_argument, 0, 'r'},
+        {"numRandoms", required_argument, 0, 'R'},
+        {"maxStep", required_argument, 0, 'x'},
         {0, 0, 0, 0} // End of options
     };
 
@@ -39,14 +43,15 @@ Params parseArgs(int argc, char* argv[]) {
     int option_index = 0;
 
     // Dominance refers to importing a dominance.csv as the dominance adjacency matrix
-    std::string usage = " [--mcs <MCS>] [--length <Lattice Length>] [--height <Lattice Height>] "
-                        " [--printFrequency <Print Frequency>] [--empty <Initial Empty Cell Probability >] "
+    std::string usage = "[--mcs <MCS>] [--length <Lattice Length>] [--height <Lattice Height>] "
+                        "[--printFrequency <Print Frequency>] [--empty <Initial Empty Cell Probability >] "
                         "[--neighbourhood <Neighbourhood 4/8>] [--mobility <Mobility>] "
                         "[--species <int>] [--flux <true|false>] [--dominance <true|false]"
-                        "[--resume <true|false>]";
+                        "[--numRandoms <int>][--maxStep <true|false]"
+                        "[--save <true|false>] [--resume <true|false>]";
 
     // Parse the command line arguments
-    while ((opt = getopt_long(argc, argv, "m:l:h:p:n:M:s:f:e:r:d:", long_options, &option_index)) != -1) {
+    while ((opt = getopt_long(argc, argv, "m:l:h:p:n:M:s:f:e:r:d:S:x:R:", long_options, &option_index)) != -1) {
         switch (opt) {
             case 'm':
                 params.MCS = std::stoi(optarg);
@@ -123,6 +128,40 @@ Params parseArgs(int argc, char* argv[]) {
                 }
                 break;
             }
+            case 'S': {
+                std::string saveStr(optarg);
+                // Convert the argument to lowercase for easier comparison
+                for (auto& c : saveStr) {
+                    c = tolower(c);
+                }
+                if (saveStr == "true" || saveStr == "1" || saveStr == "yes") {
+                    params.save = true;
+                } else {
+                    params.save = false;
+                }
+                break;
+            }
+            case 'x': {
+                std::string maxStepStr(optarg);
+                // Convert the argument to lowercase for easier comparison
+                for (auto& c : maxStepStr) {
+                    c = tolower(c);
+                }
+                if (maxStepStr == "true" || maxStepStr == "1" || maxStepStr == "yes") {
+                    params.maxStep = true;
+                } else {
+                    params.maxStep = false;
+                }
+                break;
+            }
+            case 'R':
+                params.numRandoms = std::stof(optarg);
+                if (params.numRandoms < 1000000) {
+                    std::cout << "Entered: " << params.numRandoms << std::endl;
+                    std::cerr << "Error: Random numbers must be at least 1,000,000." << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+                break;
             default:
                 std::cerr << "Usage: " << argv[0] << usage << std::endl;
                 exit(EXIT_FAILURE);
@@ -134,7 +173,7 @@ Params parseArgs(int argc, char* argv[]) {
 //------------------------------------------------------------------------------
 // Initialisation: Create device, load library, compile pipelines, create buffers
 //------------------------------------------------------------------------------
-bool initMetalContext(MetalContext& ctx, int N, int randomNums) {
+bool initMetalContext(MetalContext& ctx, int N, int randomNums, int speciesNum) {
     ctx.numRandomNumbers = randomNums;          // 100,000,000  random numbers per shader
     ctx.threads = ctx.numRandomNumbers / 10000; // 10,000 numbers per thread
 
@@ -206,8 +245,8 @@ bool initMetalContext(MetalContext& ctx, int N, int randomNums) {
     ctx.resultBufferNeighbours = ctx.device->newBuffer(sizeof(uint32_t) * ctx.numRandomNumbers, MTL::ResourceStorageModeShared);
 
     // Densities
-    ctx.gridBuffer = ctx.device->newBuffer(sizeof(int) * N, MTL::ResourceStorageModeShared);           // Buffer size of L * L
-    ctx.densityResultsBuffer = ctx.device->newBuffer(sizeof(int) * 6, MTL::ResourceStorageModeShared); // 6 species counts (RPSLS + E)
+    ctx.gridBuffer = ctx.device->newBuffer(sizeof(int) * N, MTL::ResourceStorageModeShared);                          // Buffer size of L * H
+    ctx.densityResultsBuffer = ctx.device->newBuffer(sizeof(int) * (speciesNum + 1), MTL::ResourceStorageModeShared); // speciesNum + 1 --> e.g., E + RPSLS
 
     return true;
 }
@@ -382,7 +421,7 @@ void show(GridContext& gridCtx, Params params) { plot_densities(gridCtx, params)
 // Initialise metal step buffers and pipelines
 // Computes the step functionality
 //------------------------------------------------------------------------------
-void initMetalStep(MetalContext& ctx, int N, int species) {
+void initMetalStep(MetalContext& ctx, int N, int species, bool maxStep, int numRandoms) {
     NS::Error* error = nullptr;
 
     // Load the step function from the library
@@ -398,15 +437,22 @@ void initMetalStep(MetalContext& ctx, int N, int species) {
         return;
     }
 
-    ctx.cellsBuffer = ctx.device->newBuffer(sizeof(int) * N, MTL::ResourceStorageModeShared);
-    ctx.neighboursDirsBuffer = ctx.device->newBuffer(sizeof(int) * N, MTL::ResourceStorageModeShared);
-    ctx.actionProbabilitiesBuffer = ctx.device->newBuffer(sizeof(float) * N, MTL::ResourceStorageModeShared);
+    if (maxStep) { // Process (numRandoms / N) MCS per Metal call
+        ctx.cellsBuffer = ctx.device->newBuffer(sizeof(int) * numRandoms, MTL::ResourceStorageModeShared);
+        ctx.neighboursDirsBuffer = ctx.device->newBuffer(sizeof(int) * numRandoms, MTL::ResourceStorageModeShared);
+        ctx.actionProbabilitiesBuffer = ctx.device->newBuffer(sizeof(float) * numRandoms, MTL::ResourceStorageModeShared);
+    } else { // Process 1 MCS per Metal call
+        ctx.cellsBuffer = ctx.device->newBuffer(sizeof(int) * N, MTL::ResourceStorageModeShared);
+        ctx.neighboursDirsBuffer = ctx.device->newBuffer(sizeof(int) * N, MTL::ResourceStorageModeShared);
+        ctx.actionProbabilitiesBuffer = ctx.device->newBuffer(sizeof(float) * N, MTL::ResourceStorageModeShared);
+    }
+
     ctx.stepGridBuffer = ctx.device->newBuffer(sizeof(int) * N, MTL::ResourceStorageModeShared);
     ctx.dominanceBuffer = ctx.device->newBuffer(sizeof(int) * species * species, MTL::ResourceStorageModeShared);
 }
 
 // ------------------------------------------------------------------------------
-// Metal step shader
+// Metal step shader - 1 MCS per call
 // ------------------------------------------------------------------------------
 void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, int N, Params& p, int* grid, int* dominance) {
     MTL::CommandBuffer* commandBuffer = ctx.commandQueue->commandBuffer();
@@ -433,6 +479,52 @@ void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, i
     encoder->setBytes(&p.H, sizeof(int), 6);
     encoder->setBytes(&p.flux, sizeof(bool), 7);
     encoder->setBytes(&p.species, sizeof(bool), 10);
+    encoder->setBytes(&p.numRandoms, sizeof(int), 11);
+    encoder->setBytes(&p.maxStep, sizeof(bool), 12);
+
+    // Set the grid buffer
+    encoder->setBuffer(ctx.stepGridBuffer, 0, 8);
+
+    MTL::Size threadsPerGrid = MTL::Size(1000, 1, 1); // 40,000 cells, 1,000 threads --> 40 cells per thread
+    MTL::Size threadGroupSize = MTL::Size(ctx.pipelineStateStep->maxTotalThreadsPerThreadgroup(), 1, 1);
+
+    encoder->dispatchThreads(threadsPerGrid, threadGroupSize);
+    encoder->endEncoding();
+
+    commandBuffer->commit();
+    commandBuffer->waitUntilCompleted();
+}
+
+// ------------------------------------------------------------------------------
+// Metal step shader - (numRandoms / N) MCS per call
+// ------------------------------------------------------------------------------
+void maxMetalStep(MetalContext& ctx, uint32_t* cells, uint32_t* neighbours, float* action_probs, float mu, float sigma, int N, Params& p, int* grid, int* dominance) {
+    MTL::CommandBuffer* commandBuffer = ctx.commandQueue->commandBuffer();
+    MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
+
+    // Assign to the buffers
+    std::memcpy(ctx.cellsBuffer->contents(), cells, sizeof(int) * p.numRandoms);
+    std::memcpy(ctx.neighboursDirsBuffer->contents(), neighbours, sizeof(int) * p.numRandoms);
+    std::memcpy(ctx.actionProbabilitiesBuffer->contents(), action_probs, sizeof(float) * p.numRandoms);
+    std::memcpy(ctx.stepGridBuffer->contents(), grid, sizeof(int) * N);
+    std::memcpy(ctx.dominanceBuffer->contents(), dominance, sizeof(int) * p.species * p.species);
+
+    // Create buffers for cells, neighbour directions, action probabilities
+    encoder->setComputePipelineState(ctx.pipelineStateStep);
+    encoder->setBuffer(ctx.cellsBuffer, 0, 0);
+    encoder->setBuffer(ctx.neighboursDirsBuffer, 0, 1);
+    encoder->setBuffer(ctx.actionProbabilitiesBuffer, 0, 2);
+    encoder->setBuffer(ctx.dominanceBuffer, 0, 9);
+
+    // Using `setBytes()` for scalar values (floats)
+    encoder->setBytes(&mu, sizeof(float), 3);
+    encoder->setBytes(&sigma, sizeof(float), 4);
+    encoder->setBytes(&p.L, sizeof(int), 5);
+    encoder->setBytes(&p.H, sizeof(int), 6);
+    encoder->setBytes(&p.flux, sizeof(bool), 7);
+    encoder->setBytes(&p.species, sizeof(bool), 10);
+    encoder->setBytes(&p.numRandoms, sizeof(int), 11);
+    encoder->setBytes(&p.maxStep, sizeof(bool), 12);
 
     // Set the grid buffer
     encoder->setBuffer(ctx.stepGridBuffer, 0, 8);
@@ -464,7 +556,7 @@ void initialiseGrid(int* grid, Params p) {
     }
 }
 
-bool stasis(std::set<int> speciesSet) { return speciesSet.size() == 1; }
+bool stasis(std::set<int> speciesSet) { return speciesSet.size() <= 1; }
 
 int main(int argc, const char* argv[]) {
     // ------------------- Parse Command Line Arguments -------------------
@@ -528,13 +620,6 @@ int main(int argc, const char* argv[]) {
         params.outputDir = length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species;
     }
 
-    // Create the directory
-    if (std::filesystem::create_directory(params.outputDir)) {
-        std::cout << "Directory created: " << params.outputDir << std::endl;
-    } else {
-        std::cout << "Failed to create or already exists: " << params.outputDir << std::endl;
-    }
-
     if (params.dominance) {
         params.species = importCSVToDominance(dominance);
     } else {
@@ -542,9 +627,21 @@ int main(int argc, const char* argv[]) {
         generateCircularAdjacencyMatrix(dominance, params.species);
     }
 
-    exportParamsToCSV(params);                 // Export the parameters to a csv file
-    exportGridToCSV(grid, params, currentMCS); // Export the grid to a csv file
-    exportDominanceToCSV(dominance, params.species, params);
+    if (params.save) {
+        // Create the directory
+        if (std::filesystem::create_directory(params.outputDir)) {
+            std::cout << "Directory created: " << params.outputDir << std::endl;
+        } else {
+            std::cout << "Failed to create or already exists: " << params.outputDir << std::endl;
+        }
+
+        // Export simulation metadata to directory
+        exportParamsToCSV(params);                 // Export the parameters to a csv file
+        exportGridToCSV(grid, params, currentMCS); // Export the grid to a csv file
+        exportDominanceToCSV(dominance, params.species, params);
+    }
+
+    params.numRandoms = (params.numRandoms / N) * N;
 
     std::cout << "------------------- Parameters -------------------\n";
     std::cout << "MCS: " << params.MCS << "\n";
@@ -556,19 +653,22 @@ int main(int argc, const char* argv[]) {
     std::cout << "Species: " << params.species << "\n";
     std::cout << "Flux: " << params.flux << "\n";
     std::cout << "Print Frequency: " << params.printFrequency << "\n";
+    std::cout << "Random Numbers: " << params.numRandoms << "\n";
+    std::cout << "Save: " << params.save << "\n";
     std::cout << "Resume: " << params.resume << "\n";
     std::cout << "-------------------------------------------------\n";
 
     // ------------------- Metal Parameters -------------------
 
-    const int numRandomNumbers = 100000000;
-    float* action_probabilities = new float[numRandomNumbers];
-    uint32_t* cells = new uint32_t[numRandomNumbers];
-    uint32_t* neighbours = new uint32_t[numRandomNumbers];
+    // const int numRandomNumbers = (params.numRandoms / N) * N; // Ensures numRandomNumbers % N == 0
+
+    float* action_probabilities = new float[params.numRandoms];
+    uint32_t* cells = new uint32_t[params.numRandoms];
+    uint32_t* neighbours = new uint32_t[params.numRandoms];
     int index = 0;
 
     MetalContext metalCtx;
-    if (!initMetalContext(metalCtx, N, numRandomNumbers)) {
+    if (!initMetalContext(metalCtx, N, params.numRandoms, params.species)) {
         std::cerr << "Failed to initialise Metal context." << std::endl;
         return -1;
     }
@@ -580,11 +680,17 @@ int main(int argc, const char* argv[]) {
     GridContext gridCtx;
     StepContext stepCtx;
 
-    stepCtx.cells = new int[N];
-    stepCtx.neighbour_dirs = new int[N];
-    stepCtx.action_probabilities = new float[N];
+    if (params.maxStep) {
+        // stepCtx.cells = new int[params.numRandoms];
+        // stepCtx.neighbour_dirs = new int[params.numRandoms];
+        // stepCtx.action_probabilities = new float[params.numRandoms];
+    } else {
+        stepCtx.cells = new int[N];
+        stepCtx.neighbour_dirs = new int[N];
+        stepCtx.action_probabilities = new float[N];
+    }
 
-    initMetalStep(metalCtx, N, params.species); // Initialise Metal step buffers and pipelines
+    initMetalStep(metalCtx, N, params.species, params.maxStep, params.numRandoms); // Initialise Metal step buffers and pipelines
 
     float M = params.mobility; // Mobility 'since it is proportional to the typical area
                                // explored by one mobile individual per unit time'
@@ -612,43 +718,78 @@ int main(int argc, const char* argv[]) {
 
     // ------------------- Start Simulating -------------------
 
-    densities(grid, N, currentMCS, gridCtx, metalCtx, 1, params.species, speciesSet); // Print initial densities
-    plot_snapshot(grid, currentMCS, params);                                          // Plot snapshots at specific MCS
-    exportGridToCSV(grid, params, currentMCS);                                        // Export the grid to a csv file
+    // To avoid duplicate prints (densities is printed at start of simulation loop)
+    if (currentMCS != 0) { // Print initial densities at currentMCS
+        densities(grid, N, currentMCS, gridCtx, metalCtx, 1, params.species, speciesSet);
+    }
 
-    for (int mcs = currentMCS; mcs <= MCS; mcs++) {                                                    // Monte Carlos
-        densities(grid, N, mcs, gridCtx, metalCtx, params.printFrequency, params.species, speciesSet); // Every MCS, call densities to add to density vectors for visualisation after simulation
-        if (mcs == 2000 || mcs == 6000 || (mcs > 6000 && mcs % 5000 == 0 && mcs <= 100000) || (mcs > 100000 && mcs % 20000 == 0)) {
-            plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
-            exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
-        }
+    if (params.save) {
+        plot_snapshot(grid, currentMCS, params);   // Plot snapshots at specific MCS
+        exportGridToCSV(grid, params, currentMCS); // Export the grid to a csv file
+    }
 
-        // Fill the arrays with the next N cells, neighbour directions, and action probabilities
-        for (int i = 0; i < N; i++) {
-            if (index >= numRandomNumbers) {
-                refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours, N, moore); // Fill random numbers
-                index = 0;                                                                         // Reset index after refreshing random numbers
+    if (params.maxStep) { // Process (numRandoms / N) MCS per Metal call
+        for (int mcs = currentMCS; mcs <= MCS; mcs += params.numRandoms / N) {
+            densities(grid, N, mcs, gridCtx, metalCtx, 1, params.species, speciesSet); // Every MCS, call densities to add to density vectors for visualisation after simulation
+            if ((mcs <= 10000 || (mcs > 10000 && mcs % 10000 == 0)) && params.save) {
+                plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
+                exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
             }
 
-            stepCtx.cells[i] = cells[index];
-            stepCtx.neighbour_dirs[i] = neighbours[index];
-            stepCtx.action_probabilities[i] = action_probabilities[index];
-            index++;
+            std::memcpy(metalCtx.stepGridBuffer->contents(), grid, sizeof(int) * N);
+            maxMetalStep(metalCtx, cells, neighbours, action_probabilities, mu, sigma, N, params, grid, dominance);
+            std::memcpy(grid, metalCtx.stepGridBuffer->contents(), sizeof(int) * N);
+
+            refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours, N, moore);
+
+            if (stasis(speciesSet)) {
+                if (params.save) {
+                    plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
+                    exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
+                }
+                densities(grid, N, mcs + 1, gridCtx, metalCtx, 1, params.species, speciesSet);
+                break;
+            }
         }
+    } else { // Process 1 MCS per Metal Call
+        for (int mcs = currentMCS; mcs <= MCS; mcs++) {
+            densities(grid, N, mcs, gridCtx, metalCtx, params.printFrequency, params.species, speciesSet); // Every MCS, call densities to add to density vectors for visualisation after simulation
+            if ((mcs == 2000 || mcs == 6000 || (mcs > 6000 && mcs % 5000 == 0 && mcs <= 100000) || (mcs > 100000 && mcs % 20000 == 0)) && params.save) {
+                plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
+                exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
+            }
 
-        std::memcpy(metalCtx.stepGridBuffer->contents(), grid, sizeof(int) * N);
-        metalStep(metalCtx, stepCtx, mu, sigma, N, params, grid, dominance);
-        std::memcpy(grid, metalCtx.stepGridBuffer->contents(), sizeof(int) * N);
+            // Fill the arrays with the next N cells, neighbour directions, and action probabilities
+            for (int i = 0; i < N; i++) {
+                if (index >= params.numRandoms) {
+                    refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours, N, moore); // Fill random numbers
+                    index = 0;                                                                         // Reset index after refreshing random numbers
+                }
 
-        if (stasis(speciesSet)) {
-            plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
-            exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
-            densities(grid, N, mcs + 1, gridCtx, metalCtx, params.printFrequency, params.species, speciesSet);
-            break;
+                stepCtx.cells[i] = cells[index];
+                stepCtx.neighbour_dirs[i] = neighbours[index];
+                stepCtx.action_probabilities[i] = action_probabilities[index];
+                index++;
+            }
+
+            std::memcpy(metalCtx.stepGridBuffer->contents(), grid, sizeof(int) * N);
+            metalStep(metalCtx, stepCtx, mu, sigma, N, params, grid, dominance);
+            std::memcpy(grid, metalCtx.stepGridBuffer->contents(), sizeof(int) * N);
+
+            if (stasis(speciesSet)) {
+                if (params.save) {
+                    plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
+                    exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
+                }
+                densities(grid, N, mcs + 1, gridCtx, metalCtx, 1, params.species, speciesSet);
+                break;
+            }
         }
     }
 
-    show(gridCtx, params); // Plot density against steps
+    if (params.save) {
+        show(gridCtx, params); // Plot density against steps
+    }
 
     std::cout << "Simulation Complete.";
 
@@ -656,6 +797,13 @@ int main(int argc, const char* argv[]) {
     delete[] action_probabilities;
     delete[] cells;
     delete[] neighbours;
+
+    delete[] grid;
+    delete[] dominance;
+
+    delete[] stepCtx.action_probabilities;
+    delete[] stepCtx.cells;
+    delete[] stepCtx.neighbour_dirs;
 
     return 0;
 }

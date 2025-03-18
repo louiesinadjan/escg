@@ -2,29 +2,15 @@
 using namespace metal;
 
  // Species dominates neighbour? 
-bool dominates(int specie, int neighbour, int speciesNum, constant int* dominance) {
+inline bool dominates(int specie, int neighbour, int speciesNum, constant int* dominance) {
     if (specie == 0 || neighbour == 0) {
         return false; // Empty spaces don't dominate anything
     }
     return dominance[((specie-1) * speciesNum + (neighbour - 1))] == 1;
 
-    // switch (specie) {
-    //     case 1: // ROCK (crushes 3: SCISSORS, crushes 4: LIZARD)
-    //         return neighbour == 4; // Absence of Rock - Scissors interaction
-    //     case 2: // PAPER (covers 1: ROCK, disproves 5: SPOCK)
-    //         return (neighbour == 1 || neighbour == 5);
-    //     case 3: // SCISSORS (cuts 2: PAPER, decapitates 4: LIZARD)
-    //         return (neighbour == 2 || neighbour == 4);
-    //     case 4: // LIZARD (poisons 5: SPOCK, eats 2: PAPER)
-    //         return (neighbour == 5 || neighbour == 2);
-    //     case 5: // SPOCK (smashes 3: SCISSORS, vaporises 1: ROCK)
-    //         return (neighbour == 3 || neighbour == 1);
-    //     default: // 0 (EMPTY) or any invalid integer
-    //         return false;
-    // }
 }
 
-int action(float action_prob, float mu, float sigma) {
+inline int action(float action_prob, float mu, float sigma) {
     if (action_prob < mu) {
         return 1; // Interaction
     } else if (action_prob < mu + sigma) {
@@ -47,6 +33,9 @@ kernel void step(
     device atomic_int *grid [[ buffer(8) ]],
     constant int *dominance [[ buffer(9) ]],
     constant int &speciesNum [[ buffer(10) ]],
+    constant int &numRandoms [[ buffer(11) ]],
+    constant bool &maxStep [[ buffer(12) ]],
+
     uint id [[ thread_position_in_grid ]]) {
 
     const int N = L * H;
@@ -63,7 +52,7 @@ kernel void step(
         {1, 1} // Down-Right
     };
 
-    int cellsPerThread = N / 1000;
+    int cellsPerThread = maxStep ? numRandoms / 1000 : N / 1000;
 
     for (int i = 0; i < cellsPerThread; i++) {
 

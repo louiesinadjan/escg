@@ -24,9 +24,13 @@ struct Params {
     int species = 5;            // Number of species (Rock, Paper, Scissors, Lizard, Spock)
     bool flux = true;           // Flux boundary conditions
     float emptyProbability = 0; // Initial empty cell probability
+    int numRandoms = 100000000;
 
-    bool dominance = false;
-    bool resume = false; // Resume simulation from given files
+    bool save = false;      // Save grid and snapshots?
+    bool dominance = false; // Import dominance.csv?
+    bool resume = false;    // Resume simulation from given files?
+
+    bool maxStep = false; // Process numRandoms number of MCS per metal call 
 
     std::string outputDir; // Output directory for simulation files
 };

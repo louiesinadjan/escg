@@ -74,7 +74,7 @@ void plot_snapshot(const int* grid, int mcs, Params p) {
     // Change colormap as desired
     std::map<std::string, std::string> keywords;
 
-    if (p.species < 5) {
+    if (p.species <= 5) {
         keywords = {{"cmap", "cividis"}};
     } else {
         keywords = {{"cmap", "tab20b"}};
