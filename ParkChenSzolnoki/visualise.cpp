@@ -52,6 +52,7 @@ void plot_densities(GridContext g, Params p) {
 // https://github.com/lava/matplotlib-cpp/blob/master/examples/imshow.cpp
 void plot_snapshot(const int* grid, int mcs, Params p) {
     bool moore = p.neighbourhood == 8;
+    p.H = p.L; // Paper only explores square lattices
 
     plt::figure_size(2000, 2000);
     plt::tight_layout();

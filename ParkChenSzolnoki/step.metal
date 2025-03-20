@@ -107,11 +107,11 @@ kernel void step(
             }
         } else if(specie == 2 && neighbour_specie == 6 ){ // 2 beats 6 with probability beta
             if(invasion_prob < beta){
-                atomic_store_explicit(&grid[neighbour_index], specie, memory_order_relaxed);
+                atomic_store_explicit(&grid[neighbour_index], 2, memory_order_relaxed);
             }
         } else if (specie == 0 && neighbour_specie == 4){ // 4 beats 0 with probability beta
             if(invasion_prob < beta){
-                atomic_store_explicit(&grid[cell_index], neighbour_specie, memory_order_relaxed);
+                atomic_store_explicit(&grid[cell_index], 4, memory_order_relaxed);
             }
         }
     }
