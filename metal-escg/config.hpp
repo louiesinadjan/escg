@@ -97,6 +97,13 @@ struct StepContext {
     float* action_probabilities;
 };
 
+
+struct RandomCommandBuffers {
+    MTL::CommandBuffer* cellsCommandBuffer;
+    MTL::CommandBuffer* neighboursCommandBuffer;
+    MTL::CommandBuffer* actionCommandBuffer;
+};
+
 // Include CoreGraphics in Makefile or else the following error will occur:
 //      Error: No Metal device available.
 //      Failed to initialise Metal context.

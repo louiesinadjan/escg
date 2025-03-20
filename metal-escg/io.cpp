@@ -59,6 +59,9 @@ void exportParamsToCSV(Params p) {
     file << "Species," << p.species << "\n";
     file << "Flux," << p.flux << "\n";
     file << "Print Frequency," << p.printFrequency << "\n";
+    file << "Number of Randoms," << p.numRandoms << "\n";
+    file << "Max Step," << p.maxStep << "\n";
+    
 
     file.close();
     std::cout << "Finished exporting parameters to csv" << std::endl;

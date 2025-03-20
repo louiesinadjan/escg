@@ -254,50 +254,55 @@ bool initMetalContext(MetalContext& ctx, int N, int randomNums, int speciesNum) 
 //------------------------------------------------------------------------------
 // Refresh: Use existing pipeline and buffer objects to generate new random numbers
 //------------------------------------------------------------------------------
-void refreshRandomNumbers(MetalContext& ctx, float* action_probabilities, uint32_t* cells, uint32_t* neighbours, int N, bool moore) {
-    std::cout << "Refreshing random numbers...\n" << std::endl;
+RandomCommandBuffers refreshRandomNumbers(MetalContext& ctx, float* action_probabilities, uint32_t* cells, uint32_t* neighbours, int N, bool moore) {
+    // std::cout << "Refreshing random numbers...\n" << std::endl;
 
     // Setup common dispatch parameters
     MTL::Size gridSize = MTL::Size(ctx.threads, 1, 1);
     MTL::Size threadGroupSize = MTL::Size(ctx.pipelineStateActions->maxTotalThreadsPerThreadgroup(), 1, 1);
 
     // Refresh random actions buffers
-    MTL::CommandBuffer* commandBuffer = ctx.commandQueue->commandBuffer();
-    MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
-    encoder->setComputePipelineState(ctx.pipelineStateActions);
-    encoder->setBuffer(ctx.seedBuffer, 0, 0);
-    encoder->setBuffer(ctx.resultBufferActions, 0, 1);
-    encoder->dispatchThreads(gridSize, threadGroupSize);
-    encoder->endEncoding();
-    commandBuffer->commit();
-    commandBuffer->waitUntilCompleted();
-    std::memcpy(action_probabilities, ctx.resultBufferActions->contents(), sizeof(float) * ctx.numRandomNumbers);
+    MTL::CommandBuffer* actionCommandBuffer = ctx.commandQueue->commandBuffer();
+    MTL::ComputeCommandEncoder* encoder1 = actionCommandBuffer->computeCommandEncoder();
+    encoder1->setComputePipelineState(ctx.pipelineStateActions);
+    encoder1->setBuffer(ctx.seedBuffer, 0, 0);
+    encoder1->setBuffer(ctx.resultBufferActions, 0, 1);
+    encoder1->dispatchThreads(gridSize, threadGroupSize);
+    encoder1->endEncoding();
+    actionCommandBuffer->commit(); // Commit without waiting
 
     // Refresh random cells buffers
-    commandBuffer = ctx.commandQueue->commandBuffer();
-    encoder = commandBuffer->computeCommandEncoder();
-    encoder->setComputePipelineState(ctx.pipelineStateCells);
-    encoder->setBuffer(ctx.seedBuffer, 0, 0);
-    encoder->setBuffer(ctx.resultBufferCells, 0, 1);
-    encoder->setBytes(&N, sizeof(int), 2); // Size of grid, pick a random number from 0 to N - 1
-    encoder->dispatchThreads(gridSize, threadGroupSize);
-    encoder->endEncoding();
-    commandBuffer->commit();
-    commandBuffer->waitUntilCompleted();
-    std::memcpy(cells, ctx.resultBufferCells->contents(), sizeof(uint32_t) * ctx.numRandomNumbers);
+    MTL::CommandBuffer* cellCommandBuffer = ctx.commandQueue->commandBuffer();
+    MTL::ComputeCommandEncoder* encoder2 = cellCommandBuffer->computeCommandEncoder();
+    encoder2->setComputePipelineState(ctx.pipelineStateCells);
+    encoder2->setBuffer(ctx.seedBuffer, 0, 0);
+    encoder2->setBuffer(ctx.resultBufferCells, 0, 1);
+    encoder2->setBytes(&N, sizeof(int), 2);
+    encoder2->dispatchThreads(gridSize, threadGroupSize);
+    encoder2->endEncoding();
+    cellCommandBuffer->commit(); // Commit without waiting
 
     // Refresh random neighbours buffers
-    commandBuffer = ctx.commandQueue->commandBuffer();
-    encoder = commandBuffer->computeCommandEncoder();
-    encoder->setComputePipelineState(ctx.pipelineStateNeighbours);
-    encoder->setBuffer(ctx.seedBuffer, 0, 0);
-    encoder->setBuffer(ctx.resultBufferNeighbours, 0, 1);
-    encoder->setBytes(&moore, sizeof(bool), 2); // Moore or Von Neumann neighbourhood
-    encoder->dispatchThreads(gridSize, threadGroupSize);
-    encoder->endEncoding();
-    commandBuffer->commit();
-    commandBuffer->waitUntilCompleted();
-    std::memcpy(neighbours, ctx.resultBufferNeighbours->contents(), sizeof(uint32_t) * ctx.numRandomNumbers);
+    MTL::CommandBuffer* neighbourCommandBuffer = ctx.commandQueue->commandBuffer();
+    MTL::ComputeCommandEncoder* encoder3 = neighbourCommandBuffer->computeCommandEncoder();
+    encoder3->setComputePipelineState(ctx.pipelineStateNeighbours);
+    encoder3->setBuffer(ctx.seedBuffer, 0, 0);
+    encoder3->setBuffer(ctx.resultBufferNeighbours, 0, 1);
+    encoder3->setBytes(&moore, sizeof(bool), 2);
+    encoder3->dispatchThreads(gridSize, threadGroupSize);
+    encoder3->endEncoding();
+    neighbourCommandBuffer->commit(); // Commit without waiting
+
+    return {cellCommandBuffer, neighbourCommandBuffer, actionCommandBuffer};
+    // // Wait only once for all buffers to complete
+    // actionCommandBuffer->waitUntilCompleted();
+    // commandBuffer2->waitUntilCompleted();
+    // neighbourCommandBuffer->waitUntilCompleted();
+
+    // // Copy data to CPU memory
+    // std::memcpy(action_probabilities, ctx.resultBufferActions->contents(), sizeof(float) * ctx.numRandomNumbers);
+    // std::memcpy(cells, ctx.resultBufferCells->contents(), sizeof(uint32_t) * ctx.numRandomNumbers);
+    // std::memcpy(neighbours, ctx.resultBufferNeighbours->contents(), sizeof(uint32_t) * ctx.numRandomNumbers);
 }
 
 //------------------------------------------------------------------------------
@@ -656,6 +661,7 @@ int main(int argc, const char* argv[]) {
     std::cout << "Random Numbers: " << params.numRandoms << "\n";
     std::cout << "Save: " << params.save << "\n";
     std::cout << "Resume: " << params.resume << "\n";
+    std::cout << "Max Step: " << params.maxStep << "\n";
     std::cout << "-------------------------------------------------\n";
 
     // ------------------- Metal Parameters -------------------
@@ -673,7 +679,16 @@ int main(int argc, const char* argv[]) {
         return -1;
     }
 
-    refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours, N, moore);
+    RandomCommandBuffers cmdBuffers = refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours, N, moore);
+
+    cmdBuffers.actionCommandBuffer->waitUntilCompleted();
+    cmdBuffers.cellsCommandBuffer->waitUntilCompleted();
+    cmdBuffers.neighboursCommandBuffer->waitUntilCompleted();
+
+    // Copy data to CPU memory
+    std::memcpy(action_probabilities, metalCtx.resultBufferActions->contents(), sizeof(float) * metalCtx.numRandomNumbers);
+    std::memcpy(cells, metalCtx.resultBufferCells->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
+    std::memcpy(neighbours, metalCtx.resultBufferNeighbours->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
 
     // ------------------- Simulation Parameters -------------------
 
@@ -736,11 +751,20 @@ int main(int argc, const char* argv[]) {
                 exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
             }
 
+            cmdBuffers = refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours, N, moore);
+
             std::memcpy(metalCtx.stepGridBuffer->contents(), grid, sizeof(int) * N);
             maxMetalStep(metalCtx, cells, neighbours, action_probabilities, mu, sigma, N, params, grid, dominance);
             std::memcpy(grid, metalCtx.stepGridBuffer->contents(), sizeof(int) * N);
 
-            refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours, N, moore);
+            // Copy data to CPU memory
+            cmdBuffers.actionCommandBuffer->waitUntilCompleted();
+            cmdBuffers.cellsCommandBuffer->waitUntilCompleted();
+            cmdBuffers.neighboursCommandBuffer->waitUntilCompleted();
+
+            std::memcpy(action_probabilities, metalCtx.resultBufferActions->contents(), sizeof(float) * metalCtx.numRandomNumbers);
+            std::memcpy(cells, metalCtx.resultBufferCells->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
+            std::memcpy(neighbours, metalCtx.resultBufferNeighbours->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
 
             if (stasis(speciesSet)) {
                 if (params.save) {
@@ -761,9 +785,19 @@ int main(int argc, const char* argv[]) {
 
             // Fill the arrays with the next N cells, neighbour directions, and action probabilities
             for (int i = 0; i < N; i++) {
+                if (index == 0) {
+                    cmdBuffers = refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours, N, moore); // Fill random numbers
+                }
                 if (index >= params.numRandoms) {
-                    refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours, N, moore); // Fill random numbers
-                    index = 0;                                                                         // Reset index after refreshing random numbers
+                    // Copy data to CPU memory
+                    cmdBuffers.actionCommandBuffer->waitUntilCompleted();
+                    cmdBuffers.cellsCommandBuffer->waitUntilCompleted();
+                    cmdBuffers.neighboursCommandBuffer->waitUntilCompleted();
+
+                    std::memcpy(action_probabilities, metalCtx.resultBufferActions->contents(), sizeof(float) * metalCtx.numRandomNumbers);
+                    std::memcpy(cells, metalCtx.resultBufferCells->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
+                    std::memcpy(neighbours, metalCtx.resultBufferNeighbours->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
+                    index = 0; // Reset index after refreshing random numbers
                 }
 
                 stepCtx.cells[i] = cells[index];
