@@ -1,0 +1,234 @@
+Alpha:  0.00   Beta:  0.00   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.00   Beta:  0.05   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.00   Beta:  0.10   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.00   Beta:  0.15   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.00   Beta:  0.20   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.00   Beta:  0.25   Trial:  1	|	Stasis reached at MCS: 60000
+Alpha:  0.00   Beta:  0.30   Trial:  1	|	Stasis reached at MCS: 60000
+Alpha:  0.00   Beta:  0.35   Trial:  1
+Alpha:  0.00   Beta:  0.40   Trial:  1
+Alpha:  0.00   Beta:  0.45   Trial:  1
+Alpha:  0.00   Beta:  0.50   Trial:  1
+Alpha:  0.00   Beta:  0.55   Trial:  1
+Alpha:  0.00   Beta:  0.60   Trial:  1
+Alpha:  0.00   Beta:  0.65   Trial:  1
+Alpha:  0.00   Beta:  0.70   Trial:  1
+Alpha:  0.00   Beta:  0.75   Trial:  1
+Alpha:  0.00   Beta:  0.80   Trial:  1
+Alpha:  0.00   Beta:  0.85   Trial:  1
+Alpha:  0.00   Beta:  0.90   Trial:  1
+Alpha:  0.00   Beta:  0.95   Trial:  1
+Alpha:  0.05   Beta:  0.00   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.05   Beta:  0.05   Trial:  1
+Alpha:  0.05   Beta:  0.10   Trial:  1
+Alpha:  0.05   Beta:  0.15   Trial:  1
+Alpha:  0.05   Beta:  0.20   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.05   Beta:  0.25   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.05   Beta:  0.30   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.05   Beta:  0.35   Trial:  1	|	Stasis reached at MCS: 70000
+Alpha:  0.05   Beta:  0.40   Trial:  1
+Alpha:  0.05   Beta:  0.45   Trial:  1
+Alpha:  0.05   Beta:  0.50   Trial:  1
+Alpha:  0.05   Beta:  0.55   Trial:  1	|	Stasis reached at MCS: 30000
+Alpha:  0.05   Beta:  0.60   Trial:  1
+Alpha:  0.05   Beta:  0.65   Trial:  1
+Alpha:  0.05   Beta:  0.70   Trial:  1
+Alpha:  0.05   Beta:  0.75   Trial:  1
+Alpha:  0.05   Beta:  0.80   Trial:  1
+Alpha:  0.05   Beta:  0.85   Trial:  1
+Alpha:  0.05   Beta:  0.90   Trial:  1
+Alpha:  0.05   Beta:  0.95   Trial:  1
+Alpha:  0.10   Beta:  0.00   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.10   Beta:  0.05   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.10   Beta:  0.10   Trial:  1
+Alpha:  0.10   Beta:  0.15   Trial:  1
+Alpha:  0.10   Beta:  0.20   Trial:  1
+Alpha:  0.10   Beta:  0.25   Trial:  1
+Alpha:  0.10   Beta:  0.30   Trial:  1
+Alpha:  0.10   Beta:  0.35   Trial:  1
+Alpha:  0.10   Beta:  0.40   Trial:  1
+Alpha:  0.10   Beta:  0.45   Trial:  1	|	Stasis reached at MCS: 70000
+Alpha:  0.10   Beta:  0.50   Trial:  1
+Alpha:  0.10   Beta:  0.55   Trial:  1
+Alpha:  0.10   Beta:  0.60   Trial:  1
+Alpha:  0.10   Beta:  0.65   Trial:  1
+Alpha:  0.10   Beta:  0.70   Trial:  1
+Alpha:  0.10   Beta:  0.75   Trial:  1
+Alpha:  0.10   Beta:  0.80   Trial:  1
+Alpha:  0.10   Beta:  0.85   Trial:  1
+Alpha:  0.10   Beta:  0.90   Trial:  1
+Alpha:  0.10   Beta:  0.95   Trial:  1
+Alpha:  0.15   Beta:  0.00   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.15   Beta:  0.05   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.15   Beta:  0.10   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.15   Beta:  0.15   Trial:  1
+Alpha:  0.15   Beta:  0.20   Trial:  1
+Alpha:  0.15   Beta:  0.25   Trial:  1
+Alpha:  0.15   Beta:  0.30   Trial:  1
+Alpha:  0.15   Beta:  0.35   Trial:  1
+Alpha:  0.15   Beta:  0.40   Trial:  1	|	Stasis reached at MCS: 30000
+Alpha:  0.15   Beta:  0.45   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.15   Beta:  0.50   Trial:  1
+Alpha:  0.15   Beta:  0.55   Trial:  1
+Alpha:  0.15   Beta:  0.60   Trial:  1
+Alpha:  0.15   Beta:  0.65   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.15   Beta:  0.70   Trial:  1	|	Stasis reached at MCS: 30000
+Alpha:  0.15   Beta:  0.75   Trial:  1
+Alpha:  0.15   Beta:  0.80   Trial:  1	|	Stasis reached at MCS: 90000
+Alpha:  0.15   Beta:  0.85   Trial:  1
+Alpha:  0.15   Beta:  0.90   Trial:  1
+Alpha:  0.15   Beta:  0.95   Trial:  1
+Alpha:  0.20   Beta:  0.00   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.20   Beta:  0.05   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.20   Beta:  0.10   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.20   Beta:  0.15   Trial:  1
+Alpha:  0.20   Beta:  0.20   Trial:  1
+Alpha:  0.20   Beta:  0.25   Trial:  1
+Alpha:  0.20   Beta:  0.30   Trial:  1
+Alpha:  0.20   Beta:  0.35   Trial:  1
+Alpha:  0.20   Beta:  0.40   Trial:  1
+Alpha:  0.20   Beta:  0.45   Trial:  1
+Alpha:  0.20   Beta:  0.50   Trial:  1
+Alpha:  0.20   Beta:  0.55   Trial:  1
+Alpha:  0.20   Beta:  0.60   Trial:  1
+Alpha:  0.20   Beta:  0.65   Trial:  1
+Alpha:  0.20   Beta:  0.70   Trial:  1
+Alpha:  0.20   Beta:  0.75   Trial:  1
+Alpha:  0.20   Beta:  0.80   Trial:  1
+Alpha:  0.20   Beta:  0.85   Trial:  1
+Alpha:  0.20   Beta:  0.90   Trial:  1
+Alpha:  0.20   Beta:  0.95   Trial:  1
+Alpha:  0.25   Beta:  0.00   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.25   Beta:  0.05   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.25   Beta:  0.10   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.25   Beta:  0.15   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.25   Beta:  0.20   Trial:  1
+Alpha:  0.25   Beta:  0.25   Trial:  1
+Alpha:  0.25   Beta:  0.30   Trial:  1
+Alpha:  0.25   Beta:  0.35   Trial:  1
+Alpha:  0.25   Beta:  0.40   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.25   Beta:  0.45   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.25   Beta:  0.50   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.25   Beta:  0.55   Trial:  1
+Alpha:  0.25   Beta:  0.60   Trial:  1
+Alpha:  0.25   Beta:  0.65   Trial:  1
+Alpha:  0.25   Beta:  0.70   Trial:  1	|	Stasis reached at MCS: 50000
+Alpha:  0.25   Beta:  0.75   Trial:  1
+Alpha:  0.25   Beta:  0.80   Trial:  1
+Alpha:  0.25   Beta:  0.85   Trial:  1
+Alpha:  0.25   Beta:  0.90   Trial:  1
+Alpha:  0.25   Beta:  0.95   Trial:  1
+Alpha:  0.30   Beta:  0.00   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.30   Beta:  0.05   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.30   Beta:  0.10   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.30   Beta:  0.15   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.30   Beta:  0.20   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.30   Beta:  0.25   Trial:  1
+Alpha:  0.30   Beta:  0.30   Trial:  1
+Alpha:  0.30   Beta:  0.35   Trial:  1
+Alpha:  0.30   Beta:  0.40   Trial:  1
+Alpha:  0.30   Beta:  0.45   Trial:  1
+Alpha:  0.30   Beta:  0.50   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.30   Beta:  0.55   Trial:  1	|	Stasis reached at MCS: 20000
+Alpha:  0.30   Beta:  0.60   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.30   Beta:  0.65   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.30   Beta:  0.70   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.30   Beta:  0.75   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.30   Beta:  0.80   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.30   Beta:  0.85   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.30   Beta:  0.90   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.30   Beta:  0.95   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.00   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.05   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.10   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.15   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.20   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.25   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.30   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.35   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.40   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.45   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.50   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.55   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.60   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.65   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.70   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.75   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.80   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.85   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.90   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.35   Beta:  0.95   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.00   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.05   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.10   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.15   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.20   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.25   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.30   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.35   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.40   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.45   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.50   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.55   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.60   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.65   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.70   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.75   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.80   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.85   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.90   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.40   Beta:  0.95   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.00   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.05   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.10   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.15   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.20   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.25   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.30   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.35   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.40   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.45   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.50   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.55   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.60   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.65   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.70   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.75   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.80   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.85   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.90   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.45   Beta:  0.95   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.00   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.05   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.10   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.15   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.20   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.25   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.30   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.35   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.40   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.45   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.50   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.55   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.60   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.65   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.70   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.75   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.80   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.85   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.90   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.50   Beta:  0.95   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.55   Beta:  0.00   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.55   Beta:  0.05   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.55   Beta:  0.10   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.55   Beta:  0.15   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.55   Beta:  0.20   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.55   Beta:  0.25   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.55   Beta:  0.30   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.55   Beta:  0.35   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.55   Beta:  0.40   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.55   Beta:  0.45   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.55   Beta:  0.50   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.55   Beta:  0.55   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.55   Beta:  0.60   Trial:  1	|	Stasis reached at MCS: 10000
+Alpha:  0.55   Beta:  0.65   Trial:  1	|	Stasis reached at MCS: 10000

@@ -294,15 +294,6 @@ RandomCommandBuffers refreshRandomNumbers(MetalContext& ctx, float* action_proba
     neighbourCommandBuffer->commit(); // Commit without waiting
 
     return {cellCommandBuffer, neighbourCommandBuffer, actionCommandBuffer};
-    // // Wait only once for all buffers to complete
-    // actionCommandBuffer->waitUntilCompleted();
-    // commandBuffer2->waitUntilCompleted();
-    // neighbourCommandBuffer->waitUntilCompleted();
-
-    // // Copy data to CPU memory
-    // std::memcpy(action_probabilities, ctx.resultBufferActions->contents(), sizeof(float) * ctx.numRandomNumbers);
-    // std::memcpy(cells, ctx.resultBufferCells->contents(), sizeof(uint32_t) * ctx.numRandomNumbers);
-    // std::memcpy(neighbours, ctx.resultBufferNeighbours->contents(), sizeof(uint32_t) * ctx.numRandomNumbers);
 }
 
 //------------------------------------------------------------------------------
@@ -751,6 +742,7 @@ int main(int argc, const char* argv[]) {
                 exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
             }
 
+            // Start refreshing on GPU before the step
             cmdBuffers = refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours, N, moore);
 
             std::memcpy(metalCtx.stepGridBuffer->contents(), grid, sizeof(int) * N);
@@ -786,6 +778,7 @@ int main(int argc, const char* argv[]) {
             // Fill the arrays with the next N cells, neighbour directions, and action probabilities
             for (int i = 0; i < N; i++) {
                 if (index == 0) {
+                    // Start refreshing on GPU before the step
                     cmdBuffers = refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours, N, moore); // Fill random numbers
                 }
                 if (index >= params.numRandoms) {

@@ -90,6 +90,8 @@ struct StepContext {
     float* invasion_probabilities;
 };
 
-// Include CoreGraphics in Makefile or else the following error will occur:
-//      Error: No Metal device available.
-//      Failed to initialise Metal context.
+struct RandomCommandBuffers {
+    MTL::CommandBuffer* cellsCommandBuffer;
+    MTL::CommandBuffer* neighboursCommandBuffer;
+    MTL::CommandBuffer* invasionsCommandBuffer;
+};

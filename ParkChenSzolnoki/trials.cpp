@@ -9,6 +9,7 @@
 #include <chrono>
 #include <fstream>
 #include <getopt.h>
+#include <iomanip>
 #include <iostream>
 #include <random>
 #include <set>
@@ -512,7 +513,6 @@ int main(int argc, const char* argv[]) {
     // ------------------- Parse Command Line Arguments -------------------
     Params params = parseArgs(argc, const_cast<char**>(argv));
 
-    int currentMCS = 0;
     int MCS = params.MCS;
     int L;      // Length of lattice
     int H;      // Height of lattice
@@ -534,57 +534,13 @@ int main(int argc, const char* argv[]) {
     moore = params.neighbourhood == 8;
     grid = new int[N];
     prevGrid = new int[N];
-    std::memset(prevGrid, -1, sizeof(int) * N);
-
-    // Creating output directory
-    std::string length = "l" + std::to_string(L);
-    std::string neighbourhood = moore ? "Moore" : "VN";
-    std::ostringstream oss;
-    oss.precision(2);
-    oss << std::scientific << params.mobility;
-    std::string mobility_str = "M" + oss.str();
-    std::string flux = params.flux ? "flux" : "noflux";
-    std::string species = std::to_string(params.species) + "species";
-    params.outputDir = length + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species;
 
     dominance = new float[64]; // 8x8 matrix
     generateDominance(dominance, params.alpha, params.beta, params.gamma);
 
     params.species = 8; // Park Chen Szolnoki
     params.maxStep = true;
-
-    if (params.save) {
-        // Create the directory
-        if (std::filesystem::create_directory(params.outputDir)) {
-            std::cout << "Directory created: " << params.outputDir << std::endl;
-        } else {
-            std::cout << "Failed to create or already exists: " << params.outputDir << std::endl;
-        }
-
-        // Export simulation metadata to directory
-        exportParamsToCSV(params);                 // Export the parameters to a csv file
-        exportGridToCSV(grid, params, currentMCS); // Export the grid to a csv file
-        exportDominanceToCSV(dominance, params.species, params);
-    }
-
-    // exportDominanceToCSV(dominance, 8, params);
-
     params.numRandoms = (params.numRandoms / N) * N;
-
-    // std::cout << "------------------- Parameters -------------------\n";
-    // std::cout << "MCS: " << params.MCS << "\n";
-    // std::cout << "Lattice Length: " << params.L << "\n";
-    // std::cout << "Lattice Height: " << params.H << "\n";
-    // std::cout << "Initial Empty Cell Probability: " << params.emptyProbability << "\n";
-    // std::cout << "Mobility: " << params.mobility << "\n";
-    // std::cout << "Species: " << params.species << "\n";
-    // std::cout << "Random Numbers: " << params.numRandoms << "\n";
-    // std::cout << "Save: " << params.save << "\n";
-
-    // std::cout << "Alpha: " << params.alpha << "\n";
-    // std::cout << "Beta: " << params.beta << "\n";
-    // std::cout << "Gamma: " << params.gamma << "\n";
-    // std::cout << "-------------------------------------------------\n";
 
     // ------------------- Metal Parameters -------------------
 
@@ -593,103 +549,92 @@ int main(int argc, const char* argv[]) {
     float* invasion_probabilities = new float[params.numRandoms];
     uint32_t* cells = new uint32_t[params.numRandoms];
     uint32_t* neighbours = new uint32_t[params.numRandoms];
-    int index = 0;
 
     MetalContext metalCtx;
     if (!initMetalContext(metalCtx, N, params.numRandoms, params.species)) {
         std::cerr << "Failed to initialise Metal context." << std::endl;
         return -1;
     }
-
-    RandomCommandBuffers cmdBuffers = refreshRandomNumbers(metalCtx, invasion_probabilities, cells, neighbours, N, moore);
-
-    cmdBuffers.cellsCommandBuffer->waitUntilCompleted();
-    cmdBuffers.neighboursCommandBuffer->waitUntilCompleted();
-    cmdBuffers.invasionsCommandBuffer->waitUntilCompleted();
-
-    std::memcpy(cells, metalCtx.resultBufferCells->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
-    std::memcpy(neighbours, metalCtx.resultBufferNeighbours->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
-    std::memcpy(invasion_probabilities, metalCtx.resultBufferInvasions->contents(), sizeof(float) * metalCtx.numRandomNumbers);
-
-    // ------------------- Simulation Parameters -------------------
-
+    initMetalStep(metalCtx, N, params.species, params.maxStep, params.numRandoms); // Initialise Metal step buffers and pipelines
     GridContext gridCtx;
 
-    initMetalStep(metalCtx, N, params.species, params.maxStep, params.numRandoms); // Initialise Metal step buffers and pipelines
+    for (int trial = 1; trial < 11; trial++) { // 10 IID trials
+        for (float alpha = 0.0f; alpha <= 1.0f; alpha += 0.05f) {
+            for (float beta = 0.0f; beta <= 1.0f; beta += 0.05f) {
+                std::memset(grid, -1, sizeof(int) * N);
+                std::memset(prevGrid, -2, sizeof(int) * N);
 
-    if (params.resume) {
-        std::cout << "Resuming simulation from MCS: " << currentMCS << std::endl;
-    } else {
-        initialiseGrid(grid, params); // Initialise the grid
-    }
+                params.alpha = alpha;
+                params.beta = beta;
 
-    std::set<int> speciesSet;
-    for (int i = 0; i < params.species; i++) {
-        speciesSet.insert(i);
-    }
+                std::cout << std::fixed << std::setprecision(2) << "Alpha: " << std::setw(5) << alpha << "   Beta: " << std::setw(5) << beta << "   Trial: " << std::setw(2) << trial;
 
-    // ------------------- Start Simulating -------------------
+                RandomCommandBuffers cmdBuffers = refreshRandomNumbers(metalCtx, invasion_probabilities, cells, neighbours, N, moore);
 
-    // To avoid duplicate prints (densities is printed at start of simulation loop)
-    if (currentMCS != 0) { // Print initial densities at currentMCS
-        densities(grid, N, currentMCS, gridCtx, metalCtx, 1, params.species, speciesSet);
-    }
+                cmdBuffers.cellsCommandBuffer->waitUntilCompleted();
+                cmdBuffers.neighboursCommandBuffer->waitUntilCompleted();
+                cmdBuffers.invasionsCommandBuffer->waitUntilCompleted();
 
-    if (params.save) {
-        plot_snapshot(grid, currentMCS, params);   // Plot snapshots at specific MCS
-        exportGridToCSV(grid, params, currentMCS); // Export the grid to a csv file
-    }
+                std::memcpy(cells, metalCtx.resultBufferCells->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
+                std::memcpy(neighbours, metalCtx.resultBufferNeighbours->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
+                std::memcpy(invasion_probabilities, metalCtx.resultBufferInvasions->contents(), sizeof(float) * metalCtx.numRandomNumbers);
 
-    for (int mcs = currentMCS; mcs <= MCS; mcs += params.numRandoms / N) {
-        if (compareGrid(grid, prevGrid, L, mcs, params)) {
-            break;
-        }
+                // ------------------- Simulation Parameters -------------------
 
-        if (params.save) {
-            plot_snapshot(grid, mcs, params);
-        }
+                initialiseGrid(grid, params); // Initialise the grid
 
-        // densities(grid, N, mcs, gridCtx, metalCtx, params.printFrequency, params.species, speciesSet);
-        if (mcs == L * L || mcs == 50000 || mcs == 100000) {
-            writeResults(grid, L, mcs, params.alpha, params.beta, false);
-        }
+                std::set<int> speciesSet;
+                for (int i = 0; i < params.species; i++) {
+                    speciesSet.insert(i);
+                }
 
-        cmdBuffers = refreshRandomNumbers(metalCtx, invasion_probabilities, cells, neighbours, N, moore);
+                // ------------------- Start Simulating -------------------
 
-        std::memcpy(metalCtx.stepGridBuffer->contents(), grid, sizeof(int) * N);
-        maxMetalStep(metalCtx, cells, neighbours, invasion_probabilities, params.alpha, params.beta, params.gamma, N, params, grid, dominance);
+                for (int mcs = 0; mcs <= MCS; mcs += params.numRandoms / N) {
+                    if (compareGrid(grid, prevGrid, L, mcs, params)) {
+                        std::cout << "\t|\tStasis reached at MCS: " << mcs;
+                        break;
+                    }
 
-        std::memcpy(prevGrid, grid, sizeof(int) * N);
-        std::memcpy(grid, metalCtx.stepGridBuffer->contents(), sizeof(int) * N);
+                    // densities(grid, N, mcs, gridCtx, metalCtx, params.printFrequency, params.species, speciesSet);
+                    if (mcs == L * L || mcs == 50000 || mcs == 100000) {
+                        writeResults(grid, L, mcs, params.alpha, params.beta, false);
+                    }
 
-        std::memcpy(cells, metalCtx.resultBufferCells->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
-        std::memcpy(neighbours, metalCtx.resultBufferNeighbours->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
-        std::memcpy(invasion_probabilities, metalCtx.resultBufferInvasions->contents(), sizeof(float) * metalCtx.numRandomNumbers);
+                    cmdBuffers = refreshRandomNumbers(metalCtx, invasion_probabilities, cells, neighbours, N, moore);
 
-        if (stasis(speciesSet)) {
-            if (params.save) {
-                plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
-                exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
+                    std::memcpy(metalCtx.stepGridBuffer->contents(), grid, sizeof(int) * N);
+                    maxMetalStep(metalCtx, cells, neighbours, invasion_probabilities, params.alpha, params.beta, params.gamma, N, params, grid, dominance);
+
+                    std::memcpy(prevGrid, grid, sizeof(int) * N);
+
+                    std::memcpy(grid, metalCtx.stepGridBuffer->contents(), sizeof(int) * N);
+
+                    std::memcpy(cells, metalCtx.resultBufferCells->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
+                    std::memcpy(neighbours, metalCtx.resultBufferNeighbours->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
+                    std::memcpy(invasion_probabilities, metalCtx.resultBufferInvasions->contents(), sizeof(float) * metalCtx.numRandomNumbers);
+
+                    if (stasis(speciesSet)) {
+                        if (params.save) {
+                            plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
+                            exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
+                        }
+                        if (mcs < 10000) {
+                            writeResults(grid, L, 10000, params.alpha, params.beta, true);
+                            writeResults(grid, L, 50000, params.alpha, params.beta, true);
+                            writeResults(grid, L, 100000, params.alpha, params.beta, true);
+                        } else if (mcs < 50000) {
+                            writeResults(grid, L, 50000, params.alpha, params.beta, true);
+                            writeResults(grid, L, 100000, params.alpha, params.beta, true);
+                        } else if (mcs < 100000) {
+                            writeResults(grid, L, 100000, params.alpha, params.beta, true);
+                        }
+                        break;
+                    }
+                }
+                std::cout << std::endl;
             }
-
-            if (mcs < 10000) {
-                writeResults(grid, L, 10000, params.alpha, params.beta, true);
-                writeResults(grid, L, 50000, params.alpha, params.beta, true);
-                writeResults(grid, L, 100000, params.alpha, params.beta, true);
-            } else if (mcs < 50000) {
-                writeResults(grid, L, 50000, params.alpha, params.beta, true);
-                writeResults(grid, L, 100000, params.alpha, params.beta, true);
-            } else if (mcs < 100000) {
-                writeResults(grid, L, 100000, params.alpha, params.beta, true);
-            }
-
-            // densities(grid, N, mcs + 1, gridCtx, metalCtx, 1, params.species, speciesSet);
-            break;
         }
-    }
-
-    if (params.save) {
-        show(gridCtx, params); // Plot density against steps
     }
 
     destroyMetalContext(metalCtx);

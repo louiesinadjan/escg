@@ -174,7 +174,7 @@ void generateDominance(float* dominance, float alpha, float beta, float gamma) {
     dominance[4 * 8 + 0] = beta; // Species 4 invades species 0
 }
 
-void writeResults(int* grid, int L, int mcs, float alpha, float beta) {
+void writeResults(int* grid, int L, int mcs, float alpha, float beta, bool stable) {
     double sp[] = {0, 0, 0, 0, 0, 0, 0, 0};
     for (int i = 0; i < L * L; i++) {
         sp[grid[i]]++;
@@ -185,8 +185,8 @@ void writeResults(int* grid, int L, int mcs, float alpha, float beta) {
     }
 
     std::ofstream results;
-    results.open("results.csv", std::ios::app);
-    results << alpha << ", " << beta << ", " << mcs << ", " << sp[0] << ", " << sp[1] << ", " << sp[2] << ", " << sp[3] << ", " << sp[4] << ", " << sp[5] << ", " << sp[6] << ", " << sp[7] << ", " << L
+    results.open("results2.csv", std::ios::app);
+    results << alpha << "," << beta << "," << mcs << "," << sp[0] << "," << sp[1] << "," << sp[2] << "," << sp[3] << "," << sp[4] << "," << sp[5] << "," << sp[6] << "," << sp[7] << "," << L << "," << (stable ? "true" : "false")
             << "\n";
     results.close();
 }
