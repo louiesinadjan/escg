@@ -1,0 +1,15 @@
+(normal)
+time ./build/metal -l 100 -m 20000
+    --> Simulation Complete../build/metal -l 100 -m 20000  6.60s user 3.15s system 42% cpu 23.040 total
+
+(with - 03 in CPU)
+Simulation Complete../build/metal -l 100 -m 20000                   3.25s user 2.79s system 28% cpu 21.070 total
+Simulation Complete../build/metal -l 100 -m 20000 -x true           0.88s user 2.53s system 28% cpu 11.919 total
+
+(with - 03 in CPU+GPU)
+Simulation Complete../build/metal -l 100 -m 20000                   6.87s user 2.87s system 41% cpu 23.355 total
+Simulation Complete../build/metal -l 100 -m 20000 -x true           0.93s user 1.77s system 25% cpu 10.777 total
+
+(withCXXFLAGS += -O3 -march=native)
+Simulation Complete../build/metal -l 100 -m 20000                   2.74s user 2.73s system 28% cpu 19.195 total
+./build/metal -l 100 -m 20000 -x true                               0.80s user 1.37s system 24% cpu 8.865 total

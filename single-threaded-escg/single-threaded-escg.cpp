@@ -9,7 +9,7 @@
 #include "visualise.hpp"
 
 int main(int argc, const char* argv[]) {
-    int MCS = 100000; // 100,000  Monte Carlo Steps
+    int MCS = 2000; // 100,000  Monte Carlo Steps
 
     int L = 200;        // Length of lattice
     int N = L * L;      // Elementary time steps

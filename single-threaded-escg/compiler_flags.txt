@@ -1,0 +1,7 @@
+-- for 2000 MCS
+
+(normal)
+./escg              24.37s user 0.25s system 97% cpu 25.267 total
+
+(with -O3)
+./escg              5.99s user 0.11s system 98% cpu 6.172 total
