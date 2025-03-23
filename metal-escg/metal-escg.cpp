@@ -742,6 +742,10 @@ int main(int argc, const char* argv[]) {
                 exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
             }
 
+            if (mcs == MCS) {
+                break;
+            }
+
             // Start refreshing on GPU before the step
             cmdBuffers = refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours, N, moore);
 
@@ -776,6 +780,10 @@ int main(int argc, const char* argv[]) {
             }
 
             // Fill the arrays with the next N cells, neighbour directions, and action probabilities
+            if (mcs == MCS) {
+                break;
+            }
+
             for (int i = 0; i < N; i++) {
                 if (index == 0) {
                     // Start refreshing on GPU before the step
@@ -828,9 +836,11 @@ int main(int argc, const char* argv[]) {
     delete[] grid;
     delete[] dominance;
 
-    delete[] stepCtx.action_probabilities;
-    delete[] stepCtx.cells;
-    delete[] stepCtx.neighbour_dirs;
+    if (!params.maxStep) {
+        delete[] stepCtx.action_probabilities;
+        delete[] stepCtx.cells;
+        delete[] stepCtx.neighbour_dirs;
+    }
 
     return 0;
 }
