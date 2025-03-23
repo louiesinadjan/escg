@@ -70,20 +70,7 @@ struct MetalContext {
 // Structure to hold the grid data and visualisation vectors
 //------------------------------------------------------------------------------
 struct GridContext {
-    int emptyCounter;
-    int rockCounter;
-    int paperCounter;
-    int scissorsCounter;
-    int lizardCounter;
-    int spockCounter;
-
     std::vector<double> steps;
-    std::vector<double> densityRock;
-    std::vector<double> densityPaper;
-    std::vector<double> densityScissors;
-    std::vector<double> densityLizard;
-    std::vector<double> densitySpock;
-
     std::vector<std::vector<int>> speciesCounters;
     std::vector<std::vector<double>> speciesDensities;
 };
