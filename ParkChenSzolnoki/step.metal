@@ -1,13 +1,17 @@
 #include <metal_stdlib>
 using namespace metal;
 
+inline float dominates(int specie, int neighbour, int speciesNum, constant float* dominance) {
+    return dominance[(specie * speciesNum + neighbour)];
+}
+
 // cells[i] will be processed with neighbour_dirs[i] and invasion_probabilities[i]
 kernel void step(
     const device int *cells [[ buffer(0) ]], 
     const device int *neighbour_dirs [[ buffer(1) ]],
     const device float *invasion_probabilities [[ buffer(2) ]],
 
-    constant float &alpha [[ buffer(3) ]], 
+    constant float *dominance [[ buffer(3) ]], 
     constant float &beta [[ buffer(4) ]], 
     constant float &gamma [[ buffer(5) ]], 
 
@@ -97,22 +101,15 @@ kernel void step(
             neighbour_index = temp2;
         }
 
-        if(specie + 1 == neighbour_specie % 8){ // X beats X+1 with probability gamma
-            if(invasion_prob < gamma){
-                atomic_store_explicit(&grid[neighbour_index], specie, memory_order_relaxed);
-            }
-        } else if(specie + 2 == neighbour_specie % 8){ // X beats X+2 with probability alpha
-            if(invasion_prob < alpha){
-                atomic_store_explicit(&grid[neighbour_index], specie, memory_order_relaxed);
-            }
-        } else if(specie == 2 && neighbour_specie == 6 ){ // 2 beats 6 with probability beta
-            if(invasion_prob < beta){
-                atomic_store_explicit(&grid[neighbour_index], 2, memory_order_relaxed);
-            }
-        } else if (specie == 0 && neighbour_specie == 4){ // 4 beats 0 with probability beta
-            if(invasion_prob < beta){
-                atomic_store_explicit(&grid[cell_index], 4, memory_order_relaxed);
-            }
+        float specieDominates = dominates(specie, neighbour_specie, speciesNum, dominance);
+        float neighbourDominates = dominates(neighbour_specie, specie, speciesNum, dominance);
+        if(specieDominates == 0 && neighbourDominates == 0){
+            continue;
+        } else if(invasion_prob < specieDominates){
+            atomic_store_explicit(&grid[neighbour_index], specie, memory_order_relaxed); // Replace neighbour
+        } else if(invasion_prob < neighbourDominates){
+            atomic_store_explicit(&grid[cell_index], neighbour_specie, memory_order_relaxed); // Replace specie
         }
+
     }
 }

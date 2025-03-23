@@ -450,9 +450,11 @@ void maxMetalStep(MetalContext& ctx, uint32_t* cells, uint32_t* neighbours, floa
     encoder->setBuffer(ctx.cellsBuffer, 0, 0);
     encoder->setBuffer(ctx.neighboursDirsBuffer, 0, 1);
     encoder->setBuffer(ctx.invasionProbabilitiesBuffer, 0, 2);
+    encoder->setBuffer(ctx.dominanceBuffer, 0, 3);
+
 
     // Using `setBytes()` for scalar values
-    encoder->setBytes(&alpha, sizeof(float), 3);
+    // encoder->setBytes(&alpha, sizeof(float), 3);
     encoder->setBytes(&beta, sizeof(float), 4);
     encoder->setBytes(&gamma, sizeof(float), 5);
     encoder->setBytes(&p.L, sizeof(int), 6);
@@ -511,6 +513,8 @@ bool compareGrid(int* grid, int* prevGrid, int L, int mcs, Params p) {
 int main(int argc, const char* argv[]) {
     // ------------------- Parse Command Line Arguments -------------------
     Params params = parseArgs(argc, const_cast<char**>(argv));
+    params.species = 8; // Park Chen Szolnoki
+    params.H = params.L;
 
     int currentMCS = 0;
     int MCS = params.MCS;
@@ -526,8 +530,6 @@ int main(int argc, const char* argv[]) {
     // std::cout << "Starting new simulation.\n" << std::endl;
 
     L = params.L;
-    // H = params.H; // Paper only explores square lattices
-    params.H = L;
     N = L * L;
 
     MCS = params.MCS;
@@ -550,7 +552,8 @@ int main(int argc, const char* argv[]) {
     dominance = new float[64]; // 8x8 matrix
     generateDominance(dominance, params.alpha, params.beta, params.gamma);
 
-    params.species = 8; // Park Chen Szolnoki
+    exportDominanceToCSV(dominance, params.species, params);
+
     params.maxStep = true;
 
     if (params.save) {
@@ -571,24 +574,7 @@ int main(int argc, const char* argv[]) {
 
     params.numRandoms = (params.numRandoms / N) * N;
 
-    // std::cout << "------------------- Parameters -------------------\n";
-    // std::cout << "MCS: " << params.MCS << "\n";
-    // std::cout << "Lattice Length: " << params.L << "\n";
-    // std::cout << "Lattice Height: " << params.H << "\n";
-    // std::cout << "Initial Empty Cell Probability: " << params.emptyProbability << "\n";
-    // std::cout << "Mobility: " << params.mobility << "\n";
-    // std::cout << "Species: " << params.species << "\n";
-    // std::cout << "Random Numbers: " << params.numRandoms << "\n";
-    // std::cout << "Save: " << params.save << "\n";
-
-    // std::cout << "Alpha: " << params.alpha << "\n";
-    // std::cout << "Beta: " << params.beta << "\n";
-    // std::cout << "Gamma: " << params.gamma << "\n";
-    // std::cout << "-------------------------------------------------\n";
-
     // ------------------- Metal Parameters -------------------
-
-    // const int numRandomNumbers = (params.numRandoms / N) * N; // Ensures numRandomNumbers % N == 0
 
     float* invasion_probabilities = new float[params.numRandoms];
     uint32_t* cells = new uint32_t[params.numRandoms];
@@ -671,7 +657,6 @@ int main(int argc, const char* argv[]) {
                 plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
                 exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
             }
-
             if (mcs < 10000) {
                 writeResults(grid, L, 10000, params.alpha, params.beta, true);
                 writeResults(grid, L, 50000, params.alpha, params.beta, true);
