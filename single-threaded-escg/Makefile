@@ -1,6 +1,6 @@
 # Compiler and compilation flags
 CXX       = clang++
-CXXFLAGS  = -std=c++17 -Wall -Wno-deprecated-declarations -pg
+CXXFLAGS  = -std=c++17 -Wall -Wno-deprecated-declarations -pg -O3
 
 # Attempt to use --embed; if unavailable, fallback to normal --ldflags
 EMBED_LDFLAGS = $(shell (python3-config --ldflags --embed 2>/dev/null || python3-config --ldflags))
