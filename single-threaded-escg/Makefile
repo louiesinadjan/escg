@@ -19,7 +19,7 @@ INCLUDE_FLAGS = -Isingle-threaded-escg/external/matplotlib-cpp \
 LDFLAGS = $(EMBED_LDFLAGS) -undefined dynamic_lookup
 
 TARGET = escg
-SRCS   = single-threaded-escg.cpp simulation.cpp visualise.cpp timer.cpp
+SRCS   = single-threaded-escg.cpp simulation.cpp visualise.cpp 
 
 all: $(TARGET)
 
