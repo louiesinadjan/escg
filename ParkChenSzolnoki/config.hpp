@@ -69,7 +69,6 @@ struct MetalContext {
     MTL::Buffer* stepGridBuffer;  // Grid
 
     int threads;
-    int numRandomNumbers;
 };
 
 //------------------------------------------------------------------------------
