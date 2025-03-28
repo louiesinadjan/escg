@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Import results.csv
-results = pd.read_csv('results6.csv')
+results = pd.read_csv('results2.csv')
 
 # Clean column names (remove leading/trailing spaces)
 results.columns = results.columns.str.strip()

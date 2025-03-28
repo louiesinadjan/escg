@@ -1,6 +1,6 @@
 # Compiler and flags
 CXX = clang++
-CXXFLAGS = -std=c++17 -Wall -Wextra -I./metal-cpp -fobjc-arc -fsanitize=address -g
+CXXFLAGS = -std=c++17 -Wall -Wextra -I./metal-cpp -fobjc-arc -fsanitize=address -g -O3
 
 # Attempt to use --embed; if unavailable, fallback to normal --ldflags
 EMBED_LDFLAGS = $(shell (python3-config --ldflags --embed 2>/dev/null || python3-config --ldflags))
@@ -55,7 +55,7 @@ $(METAL_LIB): $(METAL_AIR_FILES)
 # Rule to compile each .metal shader into .air
 $(BUILD_DIR)/%.air: %.metal
 	@mkdir -p $(BUILD_DIR)
-	xcrun -sdk macosx metal -c $< -o $@
+	xcrun -sdk macosx metal -O3 -c $< -o $@
 	@echo "Compiled Metal shader $< -> $@"
 
 # Rule to compile .cpp files to .o files

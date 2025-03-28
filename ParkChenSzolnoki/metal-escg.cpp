@@ -184,8 +184,8 @@ Params parseArgs(int argc, char* argv[]) {
 }
 
 bool initMetalContext(MetalContext& ctx, int N, int randomNums, int speciesNum) {
-    ctx.numRandomNumbers = randomNums;          // 100,000,000  random numbers per shader
-    ctx.threads = ctx.numRandomNumbers / 10000; // 10,000 numbers per thread
+    // 100,000,000  random numbers per shader
+    ctx.threads = randomNums / 10000; // 10,000 numbers per thread
 
     ctx.autoreleasePool = NS::AutoreleasePool::alloc()->init();
 
@@ -236,13 +236,11 @@ bool initMetalContext(MetalContext& ctx, int N, int randomNums, int speciesNum) 
     }
 
     // Prepare the seed buffer
-    // random number generator
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dist(1, 1000);
     uint32_t* seeds = new uint32_t[ctx.threads];
     for (int i = 0; i < ctx.threads; i++) {
-        // seeds[i] = i;
         dist(gen);
     }
     ctx.seedBuffer = ctx.device->newBuffer(seeds, sizeof(uint32_t) * ctx.threads, MTL::ResourceStorageModeShared);
@@ -250,9 +248,9 @@ bool initMetalContext(MetalContext& ctx, int N, int randomNums, int speciesNum) 
 
     // Create result buffers
     // Randoms
-    ctx.resultBufferInvasions = ctx.device->newBuffer(sizeof(float) * ctx.numRandomNumbers, MTL::ResourceStorageModeShared);
-    ctx.resultBufferCells = ctx.device->newBuffer(sizeof(uint32_t) * ctx.numRandomNumbers, MTL::ResourceStorageModeShared);
-    ctx.resultBufferNeighbours = ctx.device->newBuffer(sizeof(uint32_t) * ctx.numRandomNumbers, MTL::ResourceStorageModeShared);
+    ctx.resultBufferInvasions = ctx.device->newBuffer(sizeof(float) * randomNums, MTL::ResourceStorageModeShared);
+    ctx.resultBufferCells = ctx.device->newBuffer(sizeof(uint32_t) * randomNums, MTL::ResourceStorageModeShared);
+    ctx.resultBufferNeighbours = ctx.device->newBuffer(sizeof(uint32_t) * randomNums, MTL::ResourceStorageModeShared);
 
     // Densities
     ctx.gridBuffer = ctx.device->newBuffer(sizeof(int) * N, MTL::ResourceStorageModeShared);                          // Buffer size of L * H
@@ -264,8 +262,18 @@ bool initMetalContext(MetalContext& ctx, int N, int randomNums, int speciesNum) 
 //------------------------------------------------------------------------------
 // Refresh: Use existing pipeline and buffer objects to generate new random numbers
 //------------------------------------------------------------------------------
-RandomCommandBuffers refreshRandomNumbers(MetalContext& ctx, float* action_probabilities, uint32_t* cells, uint32_t* neighbours, int N, bool moore) {
+RandomCommandBuffers refreshRandomNumbers(MetalContext& ctx, int N, bool moore) {
     // std::cout << "Refreshing random numbers...\n" << std::endl;
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(1, 1000);
+    uint32_t* seeds = new uint32_t[ctx.threads];
+    for (int i = 0; i < ctx.threads; i++) {
+        dist(gen);
+    }
+    std::memcpy(ctx.seedBuffer->contents(), seeds, sizeof(uint32_t) * ctx.threads);
+    delete[] seeds;
 
     // Setup common dispatch parameters
     MTL::Size gridSize = MTL::Size(ctx.threads, 1, 1);
@@ -377,9 +385,9 @@ void computeDensitiesGPU(MetalContext& ctx, int* grid, int* densities, int N, in
 }
 
 void densities(int* grid, int N, int mcs, GridContext& gridCtx, MetalContext& metalCtx, int printFrequency, int speciesNum, std::set<int>& speciesSet) {
-    int* speciesCounts = new int[speciesNum](); // [species...]
+    int* speciesCounts = new int[8]; // [species...]
+    std::fill_n(speciesCounts, 8, 0);
 
-    speciesCounts[0] = 0;
     for (int i = 0; i < N; i++) {
         speciesCounts[grid[i]]++;
     }
@@ -390,11 +398,13 @@ void densities(int* grid, int N, int mcs, GridContext& gridCtx, MetalContext& me
         }
     }
 
-    std::cout << "Population Densities at: " << mcs << std::endl;
-    for (int i = 0; i < speciesNum; i++) {
-        std::cout << "Species " << i << ": " << speciesCounts[i] << std::endl;
+    if (mcs % printFrequency == 0) {
+        std::cout << "Population Densities at: " << mcs << std::endl;
+        for (int i = 0; i < speciesNum; i++) {
+            std::cout << "Species " << i << ": " << (static_cast<double>(speciesCounts[i]) / N) * 100 << std::endl;
+        }
+        std::cout << std::endl;
     }
-    std::cout << std::endl;
 
     delete[] speciesCounts;
 }
@@ -434,16 +444,16 @@ void initMetalStep(MetalContext& ctx, int N, int species, bool maxStep, int numR
 // ------------------------------------------------------------------------------
 // Metal step shader - (numRandoms / N) MCS per call
 // ------------------------------------------------------------------------------
-void maxMetalStep(MetalContext& ctx, uint32_t* cells, uint32_t* neighbours, float* invasion_probs, float alpha, float beta, float gamma, int N, Params& p, int* grid, float* dominance) {
+void metalStep(MetalContext& ctx, StepContext stepCtx, int N, Params& p, int* grid, float* dominance) {
     MTL::CommandBuffer* commandBuffer = ctx.commandQueue->commandBuffer();
     MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
 
     // Assign to the buffers
-    std::memcpy(ctx.cellsBuffer->contents(), cells, sizeof(int) * p.numRandoms);
-    std::memcpy(ctx.neighboursDirsBuffer->contents(), neighbours, sizeof(int) * p.numRandoms);
-    std::memcpy(ctx.invasionProbabilitiesBuffer->contents(), invasion_probs, sizeof(float) * p.numRandoms);
+    std::memcpy(ctx.cellsBuffer->contents(), stepCtx.cells, sizeof(int) * N);
+    std::memcpy(ctx.neighboursDirsBuffer->contents(), stepCtx.neighbour_dirs, sizeof(int) * N);
+    std::memcpy(ctx.invasionProbabilitiesBuffer->contents(), stepCtx.invasion_probabilities, sizeof(float) * N);
     std::memcpy(ctx.stepGridBuffer->contents(), grid, sizeof(int) * N);
-    std::memcpy(ctx.dominanceBuffer->contents(), dominance, sizeof(int) * p.species * p.species);
+    std::memcpy(ctx.dominanceBuffer->contents(), dominance, sizeof(float) * p.species * p.species);
 
     // Create buffers for cells, neighbour directions, action probabilities
     encoder->setComputePipelineState(ctx.pipelineStateStep);
@@ -452,11 +462,10 @@ void maxMetalStep(MetalContext& ctx, uint32_t* cells, uint32_t* neighbours, floa
     encoder->setBuffer(ctx.invasionProbabilitiesBuffer, 0, 2);
     encoder->setBuffer(ctx.dominanceBuffer, 0, 3);
 
-
     // Using `setBytes()` for scalar values
     // encoder->setBytes(&alpha, sizeof(float), 3);
-    encoder->setBytes(&beta, sizeof(float), 4);
-    encoder->setBytes(&gamma, sizeof(float), 5);
+    encoder->setBytes(&p.beta, sizeof(float), 4);
+    encoder->setBytes(&p.gamma, sizeof(float), 5);
     encoder->setBytes(&p.L, sizeof(int), 6);
     encoder->setBytes(&p.H, sizeof(int), 7);
     encoder->setBytes(&p.flux, sizeof(bool), 8);
@@ -495,15 +504,11 @@ bool compareGrid(int* grid, int* prevGrid, int L, int mcs, Params p) {
     bool same = std::memcmp(grid, prevGrid, sizeof(int) * L * L) == 0;
 
     if (same) {
-        if (mcs < 10000) {
-            writeResults(grid, L, 10000, p.alpha, p.beta, true);
-            writeResults(grid, L, 50000, p.alpha, p.beta, true);
-            writeResults(grid, L, 100000, p.alpha, p.beta, true);
-        } else if (mcs < 50000) {
-            writeResults(grid, L, 50000, p.alpha, p.beta, true);
-            writeResults(grid, L, 100000, p.alpha, p.beta, true);
-        } else if (mcs < 100000) {
-            writeResults(grid, L, 100000, p.alpha, p.beta, true);
+        std::vector<int> thresholds = {10, 50, 100, 1000, 5000, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000};
+        for (int t : thresholds) {
+            if (mcs < t) {
+                writeResults(grid, L, t, p.alpha, p.beta, true);
+            }
         }
     }
 
@@ -515,6 +520,7 @@ int main(int argc, const char* argv[]) {
     Params params = parseArgs(argc, const_cast<char**>(argv));
     params.species = 8; // Park Chen Szolnoki
     params.H = params.L;
+    params.maxStep = false;
 
     int currentMCS = 0;
     int MCS = params.MCS;
@@ -524,6 +530,8 @@ int main(int argc, const char* argv[]) {
     bool moore; // Moore neighbourhood if true, Von Neumann if false
     int* grid;  // Flattened grid size = L x H
     int* prevGrid;
+
+    params.numRandoms = (params.numRandoms / N) * N;
 
     float* dominance;
 
@@ -551,10 +559,7 @@ int main(int argc, const char* argv[]) {
 
     dominance = new float[64]; // 8x8 matrix
     generateDominance(dominance, params.alpha, params.beta, params.gamma);
-
     exportDominanceToCSV(dominance, params.species, params);
-
-    params.maxStep = true;
 
     if (params.save) {
         // Create the directory
@@ -572,8 +577,6 @@ int main(int argc, const char* argv[]) {
 
     // exportDominanceToCSV(dominance, 8, params);
 
-    params.numRandoms = (params.numRandoms / N) * N;
-
     // ------------------- Metal Parameters -------------------
 
     float* invasion_probabilities = new float[params.numRandoms];
@@ -587,15 +590,15 @@ int main(int argc, const char* argv[]) {
         return -1;
     }
 
-    RandomCommandBuffers cmdBuffers = refreshRandomNumbers(metalCtx, invasion_probabilities, cells, neighbours, N, moore);
+    RandomCommandBuffers cmdBuffers = refreshRandomNumbers(metalCtx, N, moore);
 
     cmdBuffers.cellsCommandBuffer->waitUntilCompleted();
     cmdBuffers.neighboursCommandBuffer->waitUntilCompleted();
     cmdBuffers.invasionsCommandBuffer->waitUntilCompleted();
 
-    std::memcpy(cells, metalCtx.resultBufferCells->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
-    std::memcpy(neighbours, metalCtx.resultBufferNeighbours->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
-    std::memcpy(invasion_probabilities, metalCtx.resultBufferInvasions->contents(), sizeof(float) * metalCtx.numRandomNumbers);
+    std::memcpy(cells, metalCtx.resultBufferCells->contents(), sizeof(uint32_t) * params.numRandoms);
+    std::memcpy(neighbours, metalCtx.resultBufferNeighbours->contents(), sizeof(uint32_t) * params.numRandoms);
+    std::memcpy(invasion_probabilities, metalCtx.resultBufferInvasions->contents(), sizeof(float) * params.numRandoms);
 
     // ------------------- Simulation Parameters -------------------
 
@@ -616,61 +619,75 @@ int main(int argc, const char* argv[]) {
 
     // ------------------- Start Simulating -------------------
 
-    // To avoid duplicate prints (densities is printed at start of simulation loop)
-    if (currentMCS != 0) { // Print initial densities at currentMCS
-        densities(grid, N, currentMCS, gridCtx, metalCtx, 1, params.species, speciesSet);
-    }
-
     if (params.save) {
         plot_snapshot(grid, currentMCS, params);   // Plot snapshots at specific MCS
         exportGridToCSV(grid, params, currentMCS); // Export the grid to a csv file
     }
 
-    for (int mcs = currentMCS; mcs <= MCS; mcs += params.numRandoms / N) {
+    StepContext stepCtx;
+    stepCtx.invasion_probabilities = new float[N];
+    stepCtx.cells = new int[N];
+    stepCtx.neighbour_dirs = new int[N];
+
+    if (params.resume) {
+        importCSVToGrid(grid, N);
+    }
+
+    for (int mcs = 0; mcs <= MCS; mcs++) {
         if (compareGrid(grid, prevGrid, L, mcs, params)) {
+            std::cout << "Stasis reached at MCS: " << mcs << std::endl;
             break;
         }
 
-        if (params.save) {
-            plot_snapshot(grid, mcs, params);
+        if (mcs <= 10) {
+            writeResults(grid, L, mcs, params.alpha, params.beta, false);
+            if (params.save) {
+                plot_snapshot(grid, mcs, params);
+            }
+        } else if (mcs == 50 || mcs == 100 || mcs == 1000 || mcs == 5000) {
+            writeResults(grid, L, mcs, params.alpha, params.beta, false);
+            if (params.save) {
+                plot_snapshot(grid, mcs, params);
+            }
+        } else if (mcs % 10000 == 0) {
+            writeResults(grid, L, mcs, params.alpha, params.beta, false);
+            if (params.save) {
+                plot_snapshot(grid, mcs, params);
+            }
         }
 
         // densities(grid, N, mcs, gridCtx, metalCtx, params.printFrequency, params.species, speciesSet);
-        if (mcs == L * L || mcs == 50000 || mcs == 100000) {
-            writeResults(grid, L, mcs, params.alpha, params.beta, false);
+
+        if (mcs == MCS) {
+            break;
         }
 
-        cmdBuffers = refreshRandomNumbers(metalCtx, invasion_probabilities, cells, neighbours, N, moore);
-
         std::memcpy(metalCtx.stepGridBuffer->contents(), grid, sizeof(int) * N);
-        maxMetalStep(metalCtx, cells, neighbours, invasion_probabilities, params.alpha, params.beta, params.gamma, N, params, grid, dominance);
+
+        for (int i = 0; i < N; i++) {
+            if (index == 0) {
+                cmdBuffers = refreshRandomNumbers(metalCtx, N, moore);
+            } else if (index >= params.numRandoms) {
+                cmdBuffers.cellsCommandBuffer->waitUntilCompleted();
+                cmdBuffers.neighboursCommandBuffer->waitUntilCompleted();
+                cmdBuffers.invasionsCommandBuffer->waitUntilCompleted();
+
+                std::memcpy(cells, metalCtx.resultBufferCells->contents(), sizeof(uint32_t) * params.numRandoms);
+                std::memcpy(neighbours, metalCtx.resultBufferNeighbours->contents(), sizeof(uint32_t) * params.numRandoms);
+                std::memcpy(invasion_probabilities, metalCtx.resultBufferInvasions->contents(), sizeof(float) * params.numRandoms);
+                index = 0;
+            }
+
+            stepCtx.cells[i] = cells[index];
+            stepCtx.neighbour_dirs[i] = neighbours[index];
+            stepCtx.invasion_probabilities[i] = invasion_probabilities[index];
+            index++;
+        }
+
+        metalStep(metalCtx, stepCtx, N, params, grid, dominance);
 
         std::memcpy(prevGrid, grid, sizeof(int) * N);
         std::memcpy(grid, metalCtx.stepGridBuffer->contents(), sizeof(int) * N);
-
-        std::memcpy(cells, metalCtx.resultBufferCells->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
-        std::memcpy(neighbours, metalCtx.resultBufferNeighbours->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
-        std::memcpy(invasion_probabilities, metalCtx.resultBufferInvasions->contents(), sizeof(float) * metalCtx.numRandomNumbers);
-
-        if (stasis(speciesSet)) {
-            if (params.save) {
-                plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
-                exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
-            }
-            if (mcs < 10000) {
-                writeResults(grid, L, 10000, params.alpha, params.beta, true);
-                writeResults(grid, L, 50000, params.alpha, params.beta, true);
-                writeResults(grid, L, 100000, params.alpha, params.beta, true);
-            } else if (mcs < 50000) {
-                writeResults(grid, L, 50000, params.alpha, params.beta, true);
-                writeResults(grid, L, 100000, params.alpha, params.beta, true);
-            } else if (mcs < 100000) {
-                writeResults(grid, L, 100000, params.alpha, params.beta, true);
-            }
-
-            // densities(grid, N, mcs + 1, gridCtx, metalCtx, 1, params.species, speciesSet);
-            break;
-        }
     }
 
     if (params.save) {

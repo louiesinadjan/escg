@@ -162,15 +162,11 @@ bool compareGrid(int* grid, int* prevGrid, int L, int mcs, Params p) {
     bool same = std::memcmp(grid, prevGrid, sizeof(int) * L * L) == 0;
 
     if (same) {
-        if (mcs < 10000) {
-            writeResults(grid, L, 10000, p.alpha, p.beta, true);
-            writeResults(grid, L, 50000, p.alpha, p.beta, true);
-            writeResults(grid, L, 100000, p.alpha, p.beta, true);
-        } else if (mcs < 50000) {
-            writeResults(grid, L, 50000, p.alpha, p.beta, true);
-            writeResults(grid, L, 100000, p.alpha, p.beta, true);
-        } else if (mcs < 100000) {
-            writeResults(grid, L, 100000, p.alpha, p.beta, true);
+        std::vector<int> thresholds = {10, 50, 100, 1000, 5000, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000};
+        for (int t : thresholds) {
+            if (mcs < t) {
+                writeResults(grid, L, t, p.alpha, p.beta, true);
+            }
         }
     }
 
@@ -207,7 +203,7 @@ int main(int argc, const char* argv[]) {
             break;
         }
 
-        densities(gridCtx, grid, p, mcs); // Every MCS, call densities to add to density vectors for visualisation after simulation
+        // densities(gridCtx, grid, p, mcs);
 
         if (mcs <= 10) {
             writeResults(grid, L, mcs, p.alpha, p.beta, false);
@@ -233,7 +229,7 @@ int main(int argc, const char* argv[]) {
 
     plot_densities(gridCtx, p);
 
-    std::cout << "Simulation Complete." << std::endl;
+    // std::cout << "Simulation Complete." << std::endl;
 
     delete[] grid;
     delete[] prevGrid;

@@ -44,19 +44,13 @@ kernel void step(
 
     for (int i = 0; i < cellsPerThread; i++) {
 
-        // Get the flattened index of the current cell.
         int cell_index = cells[id * cellsPerThread + i];
-
         if (cell_index <= -1 || cell_index >= N) {
             return;
         }
 
-        // Read the species from the grid atomically
         int specie = atomic_load_explicit(&grid[cell_index], memory_order_relaxed);
-        
-        
-        // Get the neighbor direction:
-        // 0 = up, 1 = down, 2 = left, 3 = right.
+
         int n_dir = neighbour_dirs[id * cellsPerThread + i];
         
         // Convert the 1D cell index to 2D coordinates.
