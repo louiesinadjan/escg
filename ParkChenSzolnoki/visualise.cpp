@@ -76,9 +76,9 @@ void plot_snapshot(const int* grid, int mcs, Params p) {
     std::map<std::string, std::string> keywords;
 
     if (p.species <= 5) {
-        keywords = {{"cmap", "cividis"}};
+        keywords = {{"cmap", "cividis"}, {"vmin", "0"}, {"vmax", "5"}};
     } else {
-        keywords = {{"cmap", "tab20"}};
+        keywords = {{"cmap", "tab10"}, {"vmin", "0"}, {"vmax", "7"}};
     }
 
     plt::imshow(gridPtr, p.H, p.L, 1, keywords);
