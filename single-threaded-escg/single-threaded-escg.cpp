@@ -307,5 +307,8 @@ int main(int argc, const char* argv[]) {
 
     std::cout << "Simulation Complete." << std::endl;
 
+    delete[] grid;
+    delete[] dominance;
+    
     return 0;
 }
