@@ -113,7 +113,7 @@ def visualise(directory=None):
         return
 
     for csv_file in csv_files:
-        if csv_file.lower() == "params.csv" or csv_file.lower() == "densities.csv" or if csv_file.lower() == "dominance.csv":
+        if csv_file.lower() == "params.csv" or csv_file.lower() == "densities.csv" or csv_file.lower() == "dominance.csv":
             continue
         plot_matrix_snapshot(csv_file, directory)
 

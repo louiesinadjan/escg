@@ -11,7 +11,7 @@ NVCCFLAGS = -std=c++14 -Xcompiler "-Wall -Wextra -Werror"  -O3
 TARGET = cuda-escg
 
 # Source Files
-SRC = cuda-escg.cu io.cu
+SRC = cuda-escg.cu io.cu kernels.cu
 
 # Default Rule
 all: $(TARGET)
