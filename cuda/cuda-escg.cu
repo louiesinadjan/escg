@@ -1,61 +1,50 @@
-#include <cuda_runtime.h>
-#include <curand_kernel.h>
-#include <device_atomic_functions.h>
+#include "config.cuh"
+#include "io.cuh"
+#include "kernels.cuh"
+#include <chrono>
+#include <cstdlib>
 #include <fstream>
 #include <getopt.h>
 #include <iostream>
+#include <random>
+#include <set>
 #include <sstream>
 #include <vector>
-
-struct Params {
-    int MCS = 100000;         // Monte Carlo Steps
-    int L = 200;              // Length of lattice
-    int H = 200;              // Height of lattice
-    int dimensions = 2;       // 1D, 2D, 3D
-    int neighbourhood = 4;    // Von Neumann (4-way), Moore (8-way)
-    int printFrequency = 200; // MCS frequency to print snapshots
-};
-
-struct GridContext {
-    int emptyCounter;
-    int rockCounter;
-    int paperCounter;
-    int scissorsCounter;
-    int lizardCounter;
-    int spockCounter;
-
-    std::vector<double> steps;
-    std::vector<double> densityRock;
-    std::vector<double> densityPaper;
-    std::vector<double> densityScissors;
-    std::vector<double> densityLizard;
-    std::vector<double> densitySpock;
-};
-
-struct StepContext {
-    int* cells;
-    int* neighbour_dirs;
-    float* action_probabilities;
-};
 
 Params parseArgs(int argc, char* argv[]) {
     Params params; // Uses default values
 
-    // Define long options
     static struct option long_options[] = {
         {"mcs", required_argument, 0, 'm'},
         {"length", required_argument, 0, 'l'},
         {"height", required_argument, 0, 'h'},
-        {"dimensions", required_argument, 0, 'd'},
         {"printFrequency", required_argument, 0, 'p'},
         {"neighbourhood", required_argument, 0, 'n'},
-        {0, 0, 0, 0} // Terminate options
+        {"species", required_argument, 0, 's'},
+        {"mobility", required_argument, 0, 'M'},
+        {"flux", required_argument, 0, 'f'},
+        {"empty", required_argument, 0, 'w'},
+        {"dominance", required_argument, 0, 'd'},
+        {"save", required_argument, 0, 's'},
+        {"resume", required_argument, 0, 'r'},
+        {"numRandoms", required_argument, 0, 'R'},
+        {"maxStep", required_argument, 0, 'x'},
+        {0, 0, 0, 0} // End of options
     };
 
     int opt;
     int option_index = 0;
 
-    while ((opt = getopt_long(argc, argv, "m:l:h:d:p:n:", long_options, &option_index)) != -1) {
+    // Dominance refers to importing a dominance.csv as the dominance adjacency matrix
+    std::string usage = "[--mcs <MCS>] [--length <Lattice Length>] [--height <Lattice Height>] "
+                        "[--printFrequency <Print Frequency>] [--empty <Initial Empty Cell Probability >] "
+                        "[--neighbourhood <Neighbourhood 4/8>] [--mobility <Mobility>] "
+                        "[--species <int>] [--flux <true|false>] [--dominance <true|false]"
+                        "[--numRandoms <int>][--maxStep <true|false]"
+                        "[--save <true|false>] [--resume <true|false>]";
+
+    // Parse the command line arguments
+    while ((opt = getopt_long(argc, argv, "m:l:h:p:n:M:s:f:e:r:d:S:x:R:", long_options, &option_index)) != -1) {
         switch (opt) {
             case 'm':
                 params.MCS = std::stoi(optarg);
@@ -66,19 +55,108 @@ Params parseArgs(int argc, char* argv[]) {
             case 'h':
                 params.H = std::stoi(optarg);
                 break;
-            case 'd':
-                params.dimensions = std::stoi(optarg);
-                break;
             case 'p':
                 params.printFrequency = std::stoi(optarg);
                 break;
             case 'n':
                 params.neighbourhood = std::stoi(optarg);
+                if (params.neighbourhood != 4 && params.neighbourhood != 8) {
+                    std::cerr << "Error: Neighbourhood must be 4 or 8." << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+                break;
+            case 's':
+                params.species = std::stoi(optarg);
+                if (params.species < 0) {
+                    std::cerr << "Error: Number of species must be >0." << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+                break;
+            case 'M':
+                params.mobility = std::stof(optarg); // Allows scientific notation input
+                break;
+            case 'f': {
+                std::string fluxStr(optarg);
+                // Convert the argument to lowercase for easier comparison
+                for (auto& c : fluxStr) {
+                    c = tolower(c);
+                }
+                if (fluxStr == "false" || fluxStr == "0" || fluxStr == "no") {
+                    params.flux = false;
+                } else {
+                    params.flux = true;
+                }
+                break;
+            }
+            case 'd': {
+                std::string domStr(optarg);
+                // Convert the argument to lowercase for easier comparison
+                for (auto& c : domStr) {
+                    c = tolower(c);
+                }
+                if (domStr == "true" || domStr == "1" || domStr == "yes") {
+                    params.dominance = true;
+                } else {
+                    params.dominance = false;
+                }
+                break;
+            }
+            case 'e':
+                params.emptyProbability = std::stof(optarg);
+                if (params.emptyProbability <= 0 || params.emptyProbability > 1) {
+                    std::cerr << "Error: Initial empty cell probability must be 0 <= p < 1." << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+                break;
+            case 'r': {
+                std::string resumeStr(optarg);
+                // Convert the argument to lowercase for easier comparison
+                for (auto& c : resumeStr) {
+                    c = tolower(c);
+                }
+                if (resumeStr == "true" || resumeStr == "1" || resumeStr == "yes") {
+                    params.resume = true;
+                } else {
+                    params.resume = false;
+                }
+                break;
+            }
+            case 'S': {
+                std::string saveStr(optarg);
+                // Convert the argument to lowercase for easier comparison
+                for (auto& c : saveStr) {
+                    c = tolower(c);
+                }
+                if (saveStr == "true" || saveStr == "1" || saveStr == "yes") {
+                    params.save = true;
+                } else {
+                    params.save = false;
+                }
+                break;
+            }
+            case 'x': {
+                std::string maxStepStr(optarg);
+                // Convert the argument to lowercase for easier comparison
+                for (auto& c : maxStepStr) {
+                    c = tolower(c);
+                }
+                if (maxStepStr == "true" || maxStepStr == "1" || maxStepStr == "yes") {
+                    params.maxStep = true;
+                } else {
+                    params.maxStep = false;
+                }
+                break;
+            }
+            case 'R':
+                params.numRandoms = std::stof(optarg);
+                if (params.numRandoms < 1000000) {
+                    std::cout << "Entered: " << params.numRandoms << std::endl;
+                    std::cerr << "Error: Random numbers must be at least 1,000,000." << std::endl;
+                    exit(EXIT_FAILURE);
+                }
                 break;
             default:
-                std::cerr << "Usage: " << argv[0]
-                          << " [--mcs <MCS>] [--length <Lattice Length>] [--height <Lattice Height>] "
-                             "[--boundary <Boundary Type>] [--neighbourhood <Neighbourhood Type>]\n";
+                std::cerr << "Usage: " << argv[0] << usage << std::endl;
                 exit(EXIT_FAILURE);
         }
     }
@@ -86,77 +164,12 @@ Params parseArgs(int argc, char* argv[]) {
     return params;
 }
 
-void exportDensitiesToCSV(GridContext& gridCtx) {
-    std::ofstream file("densities.csv");
-    if (!file) {
-        std::cerr << "Error: Could not open file densities.csv for writing." << std::endl;
-        return;
-    }
-
-    file << "MCS,ROCK,PAPER,SCISSORS,LIZARD,SPOCK\n";
-    for (uint i = 0; i < gridCtx.steps.size(); i++) {
-        file << gridCtx.steps[i] << "," << gridCtx.densityRock[i] << "," << gridCtx.densityPaper[i] << "," << gridCtx.densityScissors[i] << "," << gridCtx.densityLizard[i] << ","
-             << gridCtx.densitySpock[i] << "\n";
-    }
-
-    file.close();
-}
-
-void exportGridToCSV(int* h_grid, Params p, int mcs) {
-    std::ostringstream filename;
-    std::string nbrhd = p.neighbourhood == 4 ? "nbrhdVN" : "nbrhdM";
-    filename << "l" << p.L << "_" << "h" << p.H << "_" << nbrhd << "_mcs" << mcs << ".csv";
-
-    std::ofstream file(filename.str());
-    if (!file) {
-        std::cerr << "Error: Could not open file " << filename.str() << " for writing." << std::endl;
-        return;
-    }
-
-    // Write grid data row-wise
-    for (int i = 0; i < p.H; i++) {
-        for (int j = 0; j < p.L; j++) {
-            file << h_grid[i * p.L + j]; // Convert 2D index to 1D
-            if (j < p.L - 1)
-                file << ",";
-        }
-        file << "\n";
-    }
-
-    file.close();
-}
-
-//------------------------------------------------------------------------------
-// CUDA Kernel: Generate random numbers for action_probabilities, cells, and neighbours
-//------------------------------------------------------------------------------
-__global__ void refreshRandomNumbers(float* action_probabilities, int* cells, int* neighbours, int numRandomNumbers, int N, bool moore) {
-    int id = blockIdx.x * blockDim.x + threadIdx.x;
-
-    if (id * 10000 >= numRandomNumbers) {
-        return; // Ensure we do not go out of bounds
-    }
-
-    // Initialise CURAND random state
-    curandState state;
-    curand_init(clock64(), id, 0, &state);
-
-    // Each thread generate 10,000 random numbers
-    for (int i = 0; i < 10000; i++) {
-        int index = id * 10000 + i;
-
-        if (index < numRandomNumbers) {
-            action_probabilities[index] = curand_uniform(&state);                // [0,1]
-            cells[index] = curand(&state) % N;                                   // [0, N-1]
-            neighbours[index] = moore ? curand(&state) % 8 : curand(&state) % 4; // [0, 7] or [0, 3]}
-        }
-    }
-}
-
 //------------------------------------------------------------------------------
 // Host function to call the CUDA kernel - Copies random numbers from device to host arrays
 //------------------------------------------------------------------------------
-void generateRandomNumbers(float* h_action_probabilities, int* h_cells, int* h_neighbours, float* d_action_probabilities, int* d_cells, int* d_neighbours, int N, int numRandomNumbers, bool moore) {
+void generateRandomNumbers(float* d_action_probabilities, int* d_cells, int* d_neighbours, int N, int numRandomNumbers, bool moore, cudaStream_t stream_numbers) {
     std::cout << "\nRefreshing random numbers..." << std::endl;
+    std::cout << std::endl;
 
     int minGridSize = 0, bestBlockSize = 0;
     cudaOccupancyMaxPotentialBlockSize(&minGridSize, &bestBlockSize, refreshRandomNumbers, 0, 0);
@@ -166,91 +179,42 @@ void generateRandomNumbers(float* h_action_probabilities, int* h_cells, int* h_n
     int threadsPerBlock = std::min(bestBlockSize, totalThreads);
     int blocksPerGrid = (totalThreads + threadsPerBlock - 1) / threadsPerBlock;
 
-    refreshRandomNumbers<<<blocksPerGrid, threadsPerBlock>>>(d_action_probabilities, d_cells, d_neighbours, numRandomNumbers, N, moore);
+    refreshRandomNumbers<<<blocksPerGrid, threadsPerBlock, 0, stream_numbers>>>(d_action_probabilities, d_cells, d_neighbours, numRandomNumbers, N, moore);
 
     cudaError_t err = cudaGetLastError();
     if (err != cudaSuccess) {
         std::cerr << "CUDA Kernel Launch Failed (refreshRandomNumbers): " << cudaGetErrorString(err) << std::endl;
     }
-
-    cudaDeviceSynchronize();
-    err = cudaGetLastError();
-    if (err != cudaSuccess) {
-        std::cerr << "CUDA Synchronization Failed (refreshRandomNumbers): " << cudaGetErrorString(err) << std::endl;
-    }
-
-    // Copy memory device -> host
-    cudaMemcpy(h_action_probabilities, d_action_probabilities, numRandomNumbers * sizeof(float), cudaMemcpyDeviceToHost);
-    cudaMemcpy(h_cells, d_cells, numRandomNumbers * sizeof(int), cudaMemcpyDeviceToHost);
-    cudaMemcpy(h_neighbours, d_neighbours, numRandomNumbers * sizeof(int), cudaMemcpyDeviceToHost);
 }
 
-//------------------------------------------------------------------------------
-// CUDA Kernel: Populate the grid with random species
-//------------------------------------------------------------------------------
-__global__ void populateGrid(int* grid, int N, unsigned long long seed) {
-    int id = blockIdx.x * blockDim.x + threadIdx.x;
+void initialiseGrid(int* h_grid, Params p) {
+    // Set up a random number generator
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(1, p.species);     // Range: 1 to 5 (RPSLS) or p.species
+    std::uniform_real_distribution<float> emptyCellProb(0, 1); // Range: 0 to 1
 
-    if (id >= N) {
-        return; // Ensure we do not go out of bounds
+    // Randomly initialise the grid with species (stored as int)
+    for (int i = 0; i < p.L * p.H; i++) {
+        if (emptyCellProb(gen) < p.emptyProbability) {
+            h_grid[i] = 0; // Randomly assign an empty cell as an integer
+        } else {
+            h_grid[i] = dist(gen); // Randomly assign a species (or EMPTY) as an integer
+        }
     }
-
-    // Initialise CURAND random state
-    curandState state;
-    curand_init(seed + id, id, 0, &state);
-
-    grid[id] = (curand(&state) % 5) + 1; // [1, 5]
-}
-
-void initialiseGrid(int* d_grid, int* h_grid, int N) {
-    unsigned long long seed = time(NULL); // Generate a unique seed based on current time
-    int threadsPerBlock = 256;
-    int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
-
-    populateGrid<<<blocksPerGrid, threadsPerBlock>>>(d_grid, N, seed);
-    cudaError_t err = cudaGetLastError();
-    if (err != cudaSuccess) {
-        std::cerr << "CUDA Kernel Launch Failed (populateGrid): " << cudaGetErrorString(err) << std::endl;
-    }
-
-    cudaDeviceSynchronize();
-    err = cudaGetLastError();
-    if (err != cudaSuccess) {
-        std::cerr << "CUDA Synchronization Failed (populateGrid): " << cudaGetErrorString(err) << std ::endl;
-    }
-
-    // Copy from device to host
-    cudaMemcpy(h_grid, d_grid, N * sizeof(int), cudaMemcpyDeviceToHost);
-}
-
-__global__ void compute_densities(const int* __restrict__ grid, int* __restrict__ result, int gridSize) {
-    int id = blockIdx.x * blockDim.x + threadIdx.x;
-    if (id >= gridSize || id < 0) {
-        return;
-    }
-
-    // Read species from grid while handling race conditions
-    int species = grid[id]; // (Fastest, since no modifications)
-
-    if (species < 0 || species > 5) {
-        printf("Error: Invalid species value %d at index %d\n", species, id);
-        return; // Skip invalid species
-    }
-
-    atomicAdd(&result[species], 1);
 }
 
 //------------------------------------------------------------------------------
 // Calculate densities of each species and add to vectors for visualisation
 //------------------------------------------------------------------------------
-void densities(int* grid, int* d_grid, int* d_speciesCounts, int N, int mcs, int printFrequency, GridContext& gridCtx) {
+void densities(int* grid, int* d_grid, int* d_speciesCounts, int N, int mcs, int printFrequency, GridContext& gridCtx, int speciesNum, std::set<int>& speciesSet) {
     cudaMemcpy(d_grid, grid, N * sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemset(d_speciesCounts, 0, 6 * sizeof(int));
+    cudaMemset(d_speciesCounts, 0, sizeof(int) * (speciesNum + 1));
 
     int threadsPerBlock = 256;
     int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
 
-    compute_densities<<<blocksPerGrid, threadsPerBlock>>>(d_grid, d_speciesCounts, N);
+    compute_densities<<<blocksPerGrid, threadsPerBlock>>>(d_grid, d_speciesCounts, N, speciesNum);
     cudaError_t err = cudaGetLastError();
     if (err != cudaSuccess) {
         std::cerr << "CUDA Kernel Launch Failed (compute_densities): " << cudaGetErrorString(err) << std ::endl;
@@ -263,186 +227,199 @@ void densities(int* grid, int* d_grid, int* d_speciesCounts, int N, int mcs, int
     }
 
     // Copy results back to host
-    int speciesCounts[6];
-    cudaMemcpy(speciesCounts, d_speciesCounts, 6 * sizeof(int), cudaMemcpyDeviceToHost);
+    int* speciesCounts = new int[speciesNum + 1]; // EMPTY + Species
+    cudaMemcpy(speciesCounts, d_speciesCounts, sizeof(int) * (speciesNum + 1), cudaMemcpyDeviceToHost);
 
     // Calculate the percentage density cells
     double emptyDensity = (static_cast<double>(speciesCounts[0]) / N) * 100;
-    double rockDensity = (static_cast<double>(speciesCounts[1]) / N) * 100;
-    double paperDensity = (static_cast<double>(speciesCounts[2]) / N) * 100;
-    double scissorsDensity = (static_cast<double>(speciesCounts[3]) / N) * 100;
-    double lizardDensity = (static_cast<double>(speciesCounts[4]) / N) * 100;
-    double spockDensity = (static_cast<double>(speciesCounts[5]) / N) * 100;
+
+    std::vector<double> densities;
+    for (int i = 1; i <= speciesNum; i++) {
+        densities.push_back((static_cast<double>(speciesCounts[i]) / N) * 100);
+
+        if (speciesCounts[i] == 0) {
+            speciesSet.erase(i);
+        }
+    }
 
     gridCtx.steps.push_back(mcs);
-    gridCtx.densityRock.push_back(rockDensity);
-    gridCtx.densityPaper.push_back(paperDensity);
-    gridCtx.densityScissors.push_back(scissorsDensity);
-    gridCtx.densityLizard.push_back(lizardDensity);
-    gridCtx.densitySpock.push_back(spockDensity);
+    gridCtx.speciesDensities.push_back(densities);
 
     // Print the densities
     if (mcs % printFrequency == 0) {
-        // Raw counts
-        // std::cout << "Population at: " << mcs << std::endl;
-        // std::cout << "EMPTY: " << speciesCounts[0] << std::endl;
-        // std::cout << "ROCK: " << speciesCounts[1] << std::endl;
-        // std::cout << "PAPER: " << speciesCounts[2] << std::endl;
-        // std::cout << "SCISSORS: " << speciesCounts[3] << std::endl;
-        // std::cout << "LIZARD: " << speciesCounts[4] << std::endl;
-        // std::cout << "SPOCK: " << speciesCounts[5] << std::endl;
-
-        std::cout << std::endl;
         std::cout << "Population Densities at: " << mcs << std::endl;
         std::cout << "EMPTY: " << emptyDensity << std::endl;
-        std::cout << "ROCK: " << rockDensity << std::endl;
-        std::cout << "PAPER: " << paperDensity << std::endl;
-        std::cout << "SCISSORS: " << scissorsDensity << std::endl;
-        std::cout << "LIZARD: " << lizardDensity << std::endl;
-        std::cout << "SPOCK: " << spockDensity << std::endl;
+
+        for (int i = 0; i < speciesNum; i++) {
+            // The vector is 0-indexed but the species starts from Species 1 (value 0 in grid refers to empty)
+            std::cout << "Species " << (i + 1) << ": " << densities[i] << std::endl;
+        }
         std::cout << std::endl;
     }
+
+    delete[] speciesCounts;
 }
 
-__device__ bool dominates(int specie, int neighbour) {
-    switch (specie) {
-        case 1:                    // ROCK (crushes 3: SCISSORS, crushes 4: LIZARD)
-            return neighbour == 4; // Absence of Rock - Scissors interaction
-        case 2:                    // PAPER (covers 1: ROCK, disproves 5: SPOCK)
-            return (neighbour == 1 || neighbour == 5);
-        case 3: // SCISSORS (cuts 2: PAPER, decapitates 4: LIZARD)
-            return (neighbour == 2 || neighbour == 4);
-        case 4: // LIZARD (poisons 5: SPOCK, eats 2: PAPER)
-            return (neighbour == 5 || neighbour == 2);
-        case 5: // SPOCK (smashes 3: SCISSORS, vaporises 1: ROCK)
-            return (neighbour == 3 || neighbour == 1);
-        default: // 0 (EMPTY) or any invalid integer
-            return false;
-    }
-}
+void maxStep(int* h_grid, int* d_grid, int* d_dominance, int* d_cells, int* d_neighbour_dirs, float* d_action_probabilities, float mu, float sigma, Params& p, cudaStream_t stream_step) {
+    int N = p.L * p.H;
 
-__device__ int action(float action_prob, float mu, float sigma) {
-    if (action_prob < mu) {
-        return 1; // Interaction
-    } else if (action_prob < mu + sigma) {
-        return 2; // Reproduction
-    } else {
-        return 3; // Migration
-    }
-}
-
-__global__ void cuda_step(int* grid, int* cells, int* neighbour_dirs, float* action_probs, float mu, float sigma, int L, int H) {
-    int N = L * H;
-    int id = blockIdx.x * blockDim.x + threadIdx.x;
-    if (id >= N || id < 0) {
-        return; // Ensure we do not go out of bounds
-    }
-
-    // Precompute offsets for neighbour directions
-    const int offsets[8][2] = {
-        {-1, 0},  // Up
-        {1, 0},   // Down
-        {0, -1},  // Left
-        {0, 1},   // Right
-        {-1, -1}, // Up-Left
-        {-1, 1},  // Up-Right
-        {1, -1},  // Down-Left
-        {1, 1}    // Down-Right
-    };
-
-    // int cellsPerThread = N / (blockDim.x * gridDim.x);
-    // for (int i = 0; i < cellsPerThread; i++) {
-    // int cell_index = cells[id + i];
-    int cell_index = cells[id];
-
-    if (cell_index < 0 || cell_index >= N) {
-        printf("Error: Invalid cell index: %d,  at index: %d\n", cell_index, id);
-    }
-
-    int specie = atomicAdd(&grid[cell_index], 0); // Read species safely
-    int act = action(action_probs[id], mu, sigma);
-    int n_dir = neighbour_dirs[id];
-
-    // Convert 1D index to 2D coordinates
-    int row = cell_index / L;
-    int col = cell_index % L;
-
-    // Compute neighbour position with wrapping
-    int n_row = (row + offsets[n_dir][0] + H) % H;
-    int n_col = (col + offsets[n_dir][1] + L) % L;
-    int neighbour_index = n_row * L + n_col;
-
-    int neighbour_specie = atomicAdd(&grid[neighbour_index], 0);
-
-    if (act == 1) { // Interaction
-        if (dominates(specie, neighbour_specie)) {
-            atomicExch(&grid[neighbour_index], 0); // Remove neighbour
-        } else if (dominates(neighbour_specie, specie)) {
-            atomicExch(&grid[cell_index], 0); // Remove self
-        }
-    } else if (act == 2) { // Reproduction
-        if (neighbour_specie == 0 && specie != 0) {
-            atomicExch(&grid[neighbour_index], specie); // Reproduce into empty neighbour
-        } else if (specie == 0 && neighbour_specie != 0) {
-            atomicExch(&grid[cell_index], neighbour_specie);
-        }
-    } else if (act == 3) { // Migration (swap species)
-        int temp = atomicExch(&grid[cell_index], neighbour_specie);
-        atomicExch(&grid[neighbour_index], temp);
-    }
-    // }
-}
-
-void step(int* h_grid, int* d_grid, int* d_cells, int* d_neighbour_dirs, float* d_action_probabilities, float mu, float sigma, int L, int H) {
-    int N = L * H;
     cudaMemcpy(d_grid, h_grid, N * sizeof(int), cudaMemcpyHostToDevice);
 
-    // int totalThreads = N / 1000; // Number of threads the process the step
-    // int threadsPerBlock = 256;
-    // int blocksPerGrid = (totalThreads + threadsPerBlock - 1) / threadsPerBlock;
-
-    int threadsPerBlock = 256;
-    int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
-
-    cuda_step<<<blocksPerGrid, threadsPerBlock>>>(d_grid, d_cells, d_neighbour_dirs, d_action_probabilities, mu, sigma, L, H);
-
+    int threadsPerBlock = 512;
+    int blocksPerGrid = (p.numRandoms + threadsPerBlock - 1) / threadsPerBlock;
+    max_cuda_step<<<blocksPerGrid, threadsPerBlock, 0, stream_step>>>(d_grid, d_dominance, d_cells, d_neighbour_dirs, d_action_probabilities, mu, sigma, p.L, p.H, p.species, p.numRandoms);
     cudaError_t err = cudaGetLastError();
     if (err != cudaSuccess) {
         std::cerr << "CUDA Kernel Launch Failed (cuda_step): " << cudaGetErrorString(err) << std::endl;
     }
 
-    cudaDeviceSynchronize();
+    cudaMemcpy(h_grid, d_grid, N * sizeof(int), cudaMemcpyDeviceToHost);
+    cudaStreamSynchronize(stream_step);
     err = cudaGetLastError();
     if (err != cudaSuccess) {
         std::cerr << "CUDA Synchronization Failed (cuda_step): " << cudaGetErrorString(err) << std ::endl;
     }
-
-    // Copy from device to host
-    cudaMemcpy(h_grid, d_grid, N * sizeof(int), cudaMemcpyDeviceToHost);
 }
 
+void step(int* h_grid, int* d_grid, int* d_dominance, int* d_cells, int* d_neighbour_dirs, float* d_action_probabilities, float mu, float sigma, Params& p, cudaStream_t stream_step) {
+    int N = p.L * p.H;
+
+    cudaMemcpy(d_grid, h_grid, N * sizeof(int), cudaMemcpyHostToDevice);
+
+    int threadsPerBlock = 256;
+    int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
+
+    cuda_step<<<blocksPerGrid, threadsPerBlock, 0, stream_step>>>(d_grid, d_dominance, d_cells, d_neighbour_dirs, d_action_probabilities, mu, sigma, p.L, p.H, p.species);
+    cudaError_t err = cudaGetLastError();
+    if (err != cudaSuccess) {
+        std::cerr << "CUDA Kernel Launch Failed (cuda_step): " << cudaGetErrorString(err) << std::endl;
+    }
+
+    cudaMemcpy(h_grid, d_grid, N * sizeof(int), cudaMemcpyDeviceToHost);
+    cudaStreamSynchronize(stream_step);
+    err = cudaGetLastError();
+    if (err != cudaSuccess) {
+        std::cerr << "CUDA Synchronization Failed (cuda_step): " << cudaGetErrorString(err) << std ::endl;
+    }
+}
+
+bool stasis(std::set<int> speciesSet) { return speciesSet.size() <= 1; }
+
 int main(int argc, const char* argv[]) {
-
     // ------------------- Parse Command Line Arguments -------------------
-
     Params params = parseArgs(argc, const_cast<char**>(argv));
+
+    int currentMCS = 0;
+    int MCS = params.MCS;
+    int L;       // Length of lattice
+    int H;       // Height of lattice
+    int N;       // Elementary time steps = total number of cells
+    bool moore;  // Moore neighbourhood if true, Von Neumann if false
+    int* h_grid; // Flattened grid size = L x H
+    int* dominance;
+
+    if (params.resume) {
+        params.dominance = true; // Also import dominance
+
+        std::cout << "Resuming simulation from previous state." << std::endl;
+        importCSVToParams(params); // Doesn't rewrite target MCS
+
+        L = params.L;
+        H = params.H;
+        N = L * H;
+        moore = params.neighbourhood == 8;
+        h_grid = new int[N];
+
+        currentMCS = importCSVToGrid(h_grid, N); // Assigns to grid and returns the current MCS
+
+        // Creating output directory
+        std::string length = "l" + std::to_string(L);
+        std::string height = "h" + std::to_string(H);
+        std::string neighbourhood = moore ? "Moore" : "VN";
+        std::ostringstream oss;
+        oss.precision(2);
+        oss << std::scientific << params.mobility;
+        std::string mobility_str = "M" + oss.str();
+        std::string flux = params.flux ? "flux" : "noflux";
+        std::string species = std::to_string(params.species) + "species";
+        params.outputDir = length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species;
+    } else {
+        std::cout << "Starting new simulation.\n" << std::endl;
+
+        L = params.L;
+        H = params.H;
+        N = L * H;
+        MCS = params.MCS;
+        moore = params.neighbourhood == 8;
+        h_grid = new int[N];
+
+        // Creating output directory
+        std::string length = "l" + std::to_string(L);
+        std::string height = "h" + std::to_string(H);
+        std::string neighbourhood = moore ? "Moore" : "VN";
+        std::ostringstream oss;
+        oss.precision(2);
+        oss << std::scientific << params.mobility;
+        std::string mobility_str = "M" + oss.str();
+        std::string flux = params.flux ? "flux" : "noflux";
+        std::string species = std::to_string(params.species) + "species";
+        params.outputDir = length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species;
+    }
+
+    if (params.dominance) {
+        params.species = importCSVToDominance(dominance);
+    } else {
+        dominance = new int[params.species * params.species];
+        generateCircularAdjacencyMatrix(dominance, params.species);
+    }
+
+    // Allocate dominance matrix to GPU
+    int* d_dominance;
+    cudaMalloc(&d_dominance, params.species * params.species * sizeof(int));
+    cudaMemcpy(d_dominance, dominance, params.species * params.species * sizeof(int), cudaMemcpyHostToDevice);
+
+    if (params.save) {
+        std::string mkdirCommand = "mkdir -p " + params.outputDir;
+        int result = std::system(mkdirCommand.c_str());
+        if (result == 0) {
+            std::cout << "Directory created (or already exists): " << params.outputDir << std::endl;
+        } else {
+            std::cout << "Failed to create directory: " << params.outputDir << std::endl;
+        }
+
+        exportParamsToCSV(params);
+        exportDominanceToCSV(dominance, params.species, params);
+    }
+
+    params.numRandoms = (params.numRandoms / N) * N;
+    // const int numRandomNumbers = 5e7; // 50 million random numbers - lowest value the the GPU does not time out
+    // const int numRandomNumbers = 5e7; // this is possible with -G off
+
+    std::cout << "------------------- Parameters -------------------\n";
     std::cout << "MCS: " << params.MCS << "\n";
     std::cout << "Lattice Length: " << params.L << "\n";
     std::cout << "Lattice Height: " << params.H << "\n";
-    std::cout << "Dimensions: " << params.dimensions << "\n";
+    std::cout << "Initial Empty Cell Probability: " << params.emptyProbability << "\n";
     std::cout << "Neighbourhood: " << params.neighbourhood << "\n";
-    std::cout << "Print Frequency: " << params.printFrequency << "\n\n";
+    std::cout << "Mobility: " << params.mobility << "\n";
+    std::cout << "Species: " << params.species << "\n";
+    std::cout << "Flux: " << params.flux << "\n";
+    std::cout << "Print Frequency: " << params.printFrequency << "\n";
+    std::cout << "Random Numbers: " << params.numRandoms << "\n";
+    std::cout << "Save: " << params.save << "\n";
+    std::cout << "Resume: " << params.resume << "\n";
+    std::cout << "Max Step: " << params.maxStep << "\n";
+    std::cout << "-------------------------------------------------\n";
 
-    int N = params.L * params.H;                           // Size of lattice and number of elementary steps per MCS
-    bool moore = params.neighbourhood == 8 ? true : false; // Moore neighbourhood if true, Von Neumann if false
+    // ------------------- CUDA Streams ------------------
 
-    // ------------------- Random Numbers -------------------
+    cudaStream_t stream_numbers, stream_steps;
+    cudaStreamCreate(&stream_numbers);
+    cudaStreamCreate(&stream_steps);
 
-    // Allocate memory on GPU
+    // ------------------- Random Numbers ------------------
+
     int index = 0;
-    // const int numRandomNumbers = 5e7; // 50 million random numbers - lowest value the the GPU does not time out
-    // const int numRandomNumbers = 5e7; // this is possible with -G off
-    const int numRandomNumbers = 5e7; // 100 million random numbers
 
     // Device pointers
     float* d_action_probabilities;
@@ -450,9 +427,9 @@ int main(int argc, const char* argv[]) {
     int* d_neighbours;
 
     // Host pointers
-    float* h_action_probabilities = new float[numRandomNumbers];
-    int* h_cells = new int[numRandomNumbers];
-    int* h_neighbours = new int[numRandomNumbers];
+    float* h_action_probabilities = new float[params.numRandoms];
+    int* h_cells = new int[params.numRandoms];
+    int* h_neighbours = new int[params.numRandoms];
 
     cudaError_t err;
 
@@ -460,58 +437,74 @@ int main(int argc, const char* argv[]) {
     cudaMemGetInfo(&freeMem, &totalMem);
     std::cout << "\nGPU Memory Available: " << freeMem / 1024 / 1024 << " MB\n";
 
-    err = cudaMalloc(&d_action_probabilities, numRandomNumbers * sizeof(float));
+    err = cudaMalloc(&d_action_probabilities, params.numRandoms * sizeof(float));
     if (err != cudaSuccess) {
         std::cerr << "CUDA malloc failed for action_probabilities: " << cudaGetErrorString(err) << std::endl;
         return -1;
     }
 
-    err = cudaMalloc(&d_cells, numRandomNumbers * sizeof(int));
+    err = cudaMalloc(&d_cells, params.numRandoms * sizeof(int));
     if (err != cudaSuccess) {
         std::cerr << "CUDA malloc failed for cells: " << cudaGetErrorString(err) << std::endl;
         return -1;
     }
 
-    err = cudaMalloc(&d_neighbours, numRandomNumbers * sizeof(int));
+    err = cudaMalloc(&d_neighbours, params.numRandoms * sizeof(int));
     if (err != cudaSuccess) {
         std::cerr << "CUDA malloc failed for neighbours: " << cudaGetErrorString(err) << std::endl;
         return -1;
     }
 
     // Generate random numbers on GPU
-    generateRandomNumbers(h_action_probabilities, h_cells, h_neighbours, d_action_probabilities, d_cells, d_neighbours, N, numRandomNumbers, moore);
+    generateRandomNumbers(d_action_probabilities, d_cells, d_neighbours, N, params.numRandoms, moore, stream_numbers);
+    cudaStreamSynchronize(stream_numbers);
+    err = cudaGetLastError();
+    if (err != cudaSuccess) {
+        std::cerr << "CUDA Synchronization Failed (refreshRandomNumbers): " << cudaGetErrorString(err) << std::endl;
+    }
+
+    // Copy memory device -> host
+    cudaMemcpy(h_action_probabilities, d_action_probabilities, params.numRandoms * sizeof(float), cudaMemcpyDeviceToHost);
+    cudaMemcpy(h_cells, d_cells, params.numRandoms * sizeof(int), cudaMemcpyDeviceToHost);
+    cudaMemcpy(h_neighbours, d_neighbours, params.numRandoms * sizeof(int), cudaMemcpyDeviceToHost);
 
     // ------------------- Lattice -------------------
 
-    int* h_grid = new int[N]; // Allocate memory on host
     int* d_grid;
     cudaMalloc(&d_grid, N * sizeof(int)); // Allocate memory on GPU
 
-    initialiseGrid(d_grid, h_grid, N);
+    initialiseGrid(h_grid, params);
+
+    if (params.save) {
+        exportGridToCSV(h_grid, params, currentMCS);
+    }
 
     // ------------------- Simulation Parameters -------------------
 
-    // The cells to be processed in the current MCS
-    StepContext stepContext;
-    stepContext.cells = new int[N];
-    stepContext.neighbour_dirs = new int[N];
-    stepContext.action_probabilities = new float[N];
+    GridContext gridCtx;
+    StepContext stepCtx;
+
+    stepCtx.cells = new int[N];
+    stepCtx.neighbour_dirs = new int[N];
+    stepCtx.action_probabilities = new float[N];
 
     int* d_step_cells;
     int* d_step_neighbour_dirs;
     float* d_step_action_probabilities;
 
     // Allocate in GPU memory to be used in kernel
-    cudaMalloc(&d_step_cells, N * sizeof(int));
-    cudaMalloc(&d_step_neighbour_dirs, N * sizeof(int));
-    cudaMalloc(&d_step_action_probabilities, N * sizeof(float));
+    if (params.maxStep) {
+        cudaMalloc(&d_step_cells, params.numRandoms * sizeof(int));
+        cudaMalloc(&d_step_neighbour_dirs, params.numRandoms * sizeof(int));
+        cudaMalloc(&d_step_action_probabilities, params.numRandoms * sizeof(float));
+    } else {
+        cudaMalloc(&d_step_cells, N * sizeof(int));
+        cudaMalloc(&d_step_neighbour_dirs, N * sizeof(int));
+        cudaMalloc(&d_step_action_probabilities, N * sizeof(float));
+    }
 
-    GridContext gridContext;
-
-    float M = 1e-6f; // Mobility 'since it is proportional to the typical area
-                     // explored by one mobile individual per unit time'
-
-    // grid is stored on h_grid
+    float M = params.mobility; // Mobility 'since it is proportional to the typical area
+                               // explored by one mobile individual per unit time'
 
     float mu = 1;              // RPSLS interaction
     float sigma = 1;           // Reproduction
@@ -523,38 +516,113 @@ int main(int argc, const char* argv[]) {
     sigma /= sum;
     epsilon /= sum;
 
+    if (params.resume) {
+        std::cout << "Resuming simulation from MCS: " << currentMCS << std::endl;
+    } else {
+        initialiseGrid(h_grid, params); // Initialise the grid
+    }
+
+    std::set<int> speciesSet;
+    for (int i = 1; i <= params.species; i++) {
+        speciesSet.insert(i);
+    }
+
     // ------------------- Simulation -------------------
+
     int* d_speciesCounts;
-    cudaMalloc(&d_speciesCounts, 6 * sizeof(int));
-    cudaMemset(d_speciesCounts, 0, 6 * sizeof(int)); // Initialise to 0
+    cudaMalloc(&d_speciesCounts, (params.species + 1) * sizeof(int));
 
-    exportGridToCSV(h_grid, params, 0);
-    for (int mcs = 0; mcs <= params.MCS; mcs++) { // Monte Carlos
-        densities(h_grid, d_grid, d_speciesCounts, N, mcs, params.printFrequency, gridContext);
+    // To avoid duplicate prints (densities is printed at start of simulation loop)
+    if (currentMCS != 0) { // Print initial densities at currentMCS
+        densities(h_grid, d_grid, d_speciesCounts, N, currentMCS, 1, gridCtx, params.species, speciesSet);
+    }
 
-        // Export grid to csv for visualisation
-        if (mcs == 2000 || mcs == 6000 || mcs == 20000 || mcs == 100000) {
-            exportGridToCSV(h_grid, params, mcs);
-        }
+    // if (params.save) {
+    //     exportGridToCSV(h_grid, params, currentMCS);
+    // }
 
-        for (int i = 0; i < N; i++) {
-            if (index >= numRandomNumbers) {
-                generateRandomNumbers(h_action_probabilities, h_cells, h_neighbours, d_action_probabilities, d_cells, d_neighbours, N, numRandomNumbers, moore);
-                index = 0;
+    if (params.maxStep) {
+        int step = params.numRandoms / N;
+        for (int mcs = currentMCS; mcs <= MCS; mcs += step) {
+            densities(h_grid, d_grid, d_speciesCounts, N, mcs, 1, gridCtx, params.species, speciesSet);
+            if ((mcs <= 10000 || (mcs > 10000 && mcs % 10000 == 0)) && params.save) {
+                exportGridToCSV(h_grid, params, mcs); // Export the grid to a csv file
             }
 
-            stepContext.cells[i] = h_cells[index];
-            stepContext.neighbour_dirs[i] = h_neighbours[index];
-            stepContext.action_probabilities[i] = h_action_probabilities[index];
-            index++;
-        }
+            if (mcs == MCS) {
+                break;
+            }
 
-        cudaMemcpy(d_step_cells, stepContext.cells, N * sizeof(int), cudaMemcpyHostToDevice);
-        cudaMemcpy(d_step_neighbour_dirs, stepContext.neighbour_dirs, N * sizeof(int), cudaMemcpyHostToDevice);
-        cudaMemcpy(d_step_action_probabilities, stepContext.action_probabilities, N * sizeof(float), cudaMemcpyHostToDevice);
-        step(h_grid, d_grid, d_step_cells, d_step_neighbour_dirs, d_step_action_probabilities, mu, sigma, params.L, params.H);
+            generateRandomNumbers(d_action_probabilities, d_cells, d_neighbours, N, params.numRandoms, moore, stream_numbers);
+
+            cudaMemcpy(d_step_action_probabilities, d_action_probabilities, params.numRandoms, cudaMemcpyDeviceToDevice);
+            cudaMemcpy(d_step_cells, d_cells, params.numRandoms, cudaMemcpyDeviceToDevice);
+            cudaMemcpy(d_step_neighbour_dirs, d_neighbours, params.numRandoms, cudaMemcpyDeviceToDevice);
+
+            // Copies back to host in function
+            maxStep(h_grid, d_grid, d_dominance, d_step_cells, d_step_neighbour_dirs, d_step_action_probabilities, mu, sigma, params, stream_steps);
+
+            if (stasis(speciesSet)) {
+                if (params.save) {
+                    exportGridToCSV(h_grid, params, mcs); // Export the grid to a csv file
+                }
+                densities(h_grid, d_grid, d_speciesCounts, N, mcs, 1, gridCtx, params.species, speciesSet);
+                break;
+            }
+
+            cudaStreamSynchronize(stream_numbers);
+        }
+    } else {                                            // 1MCS per kernel call
+        for (int mcs = currentMCS; mcs <= MCS; mcs++) { // Monte Carlos
+            densities(h_grid, d_grid, d_speciesCounts, N, mcs, params.printFrequency, gridCtx, params.species, speciesSet);
+
+            if ((mcs == 2000 || mcs == 6000 || (mcs > 6000 && mcs % 5000 == 0 && mcs <= 100000) || (mcs > 100000 && mcs % 20000 == 0)) && params.save) {
+                exportGridToCSV(h_grid, params, mcs);
+            }
+
+            if (mcs == MCS) {
+                break;
+            }
+
+            for (int i = 0; i < N; i++) {
+                if (index == 0) {
+                    generateRandomNumbers(d_action_probabilities, d_cells, d_neighbours, N, params.numRandoms, moore, stream_numbers);
+                } else if (index >= params.numRandoms) {
+                    cudaStreamSynchronize(stream_numbers);
+                    err = cudaGetLastError();
+                    if (err != cudaSuccess) {
+                        std::cerr << "CUDA Synchronization Failed (refreshRandomNumbers): " << cudaGetErrorString(err) << std::endl;
+                    }
+
+                    // Copy memory device -> host
+                    cudaMemcpy(h_action_probabilities, d_action_probabilities, params.numRandoms * sizeof(float), cudaMemcpyDeviceToHost);
+                    cudaMemcpy(h_cells, d_cells, params.numRandoms * sizeof(int), cudaMemcpyDeviceToHost);
+                    cudaMemcpy(h_neighbours, d_neighbours, params.numRandoms * sizeof(int), cudaMemcpyDeviceToHost);
+                    index = 0;
+                }
+
+                stepCtx.cells[i] = h_cells[index];
+                stepCtx.neighbour_dirs[i] = h_neighbours[index];
+                stepCtx.action_probabilities[i] = h_action_probabilities[index];
+                index++;
+            }
+
+            if (stasis(speciesSet)) {
+                if (params.save) {
+                    exportGridToCSV(h_grid, params, mcs); // Export the grid to a csv file
+                }
+                densities(h_grid, d_grid, d_speciesCounts, N, mcs, 1, gridCtx, params.species, speciesSet);
+                break;
+            }
+
+            cudaMemcpy(d_step_cells, stepCtx.cells, N * sizeof(int), cudaMemcpyHostToDevice);
+            cudaMemcpy(d_step_neighbour_dirs, stepCtx.neighbour_dirs, N * sizeof(int), cudaMemcpyHostToDevice);
+            cudaMemcpy(d_step_action_probabilities, stepCtx.action_probabilities, N * sizeof(float), cudaMemcpyHostToDevice);
+            step(h_grid, d_grid, d_dominance, d_step_cells, d_step_neighbour_dirs, d_step_action_probabilities, mu, sigma, params, stream_steps);
+        }
     }
-    exportDensitiesToCSV(gridContext);
+
+    exportDensitiesToCSV(gridCtx);
 
     // ------------------- Free Memory -------------------
 
@@ -570,16 +638,21 @@ int main(int argc, const char* argv[]) {
     cudaFree(d_cells);
     cudaFree(d_neighbours);
 
-    // Step context
-    delete[] stepContext.cells;
-    delete[] stepContext.neighbour_dirs;
-    delete[] stepContext.action_probabilities;
+    if (!params.maxStep) {
+        delete[] stepCtx.cells;
+        delete[] stepCtx.neighbour_dirs;
+        delete[] stepCtx.action_probabilities;
+    }
+
     cudaFree(d_step_cells);
     cudaFree(d_step_neighbour_dirs);
     cudaFree(d_step_action_probabilities);
 
     // Densities
     cudaFree(d_speciesCounts);
+
+    cudaStreamDestroy(stream_numbers);
+    cudaStreamDestroy(stream_steps);
 
     return 0;
 }

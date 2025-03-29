@@ -3,15 +3,15 @@ NVCC = nvcc
 CXX = g++
 
 # Compiler Flags
-CXXFLAGS = -std=c++17 -Wall -Wextra -Werror
-NVCCFLAGS = -std=c++14 -Xcompiler "-Wall -Wextra -Werror" 
-# NVCCFLAGS = -std=c++14 -Xcompiler "-Wall -Wextra -Werror" -g -G
+CXXFLAGS = -std=c++17 -Wall -Wextra -Werror -O3
+NVCCFLAGS = -std=c++14 -Xcompiler "-Wall -Wextra -Werror"  -O3
+# NVCCFLAGS = -std=c++17 -Xcompiler "-Wall -Wextra -Werror" -g -G
 
 # Executable Name
 TARGET = cuda-escg
 
 # Source Files
-SRC = cuda-escg.cu
+SRC = cuda-escg.cu io.cu kernels.cu
 
 # Default Rule
 all: $(TARGET)

@@ -54,6 +54,11 @@
         "streambuf": "cpp",
         "thread": "cpp",
         "typeinfo": "cpp",
-        "__nullptr": "cpp"
+        "__nullptr": "cpp",
+        "complex": "cpp",
+        "list": "cpp",
+        "numeric": "cpp",
+        "random": "cpp",
+        "cinttypes": "cpp"
     }
 }

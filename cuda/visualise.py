@@ -8,11 +8,11 @@ matplotlib.use('Agg')  # Use a non-interactive backend
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from os.path import splitext
+import argparse
 
 def plot_densities(csv_file, directory):
     """
-    Reads 'densities.csv' (with header: MCS, ROCK, PAPER, SCISSORS, LIZARD, SPOCK)
-    and produces a semilog-x plot of each density vs. MCS.
+    Reads 'densities.csv' (with header: MCS,s0,s1,s2,...) and produces a semilog-x plot of each density vs. MCS.
     Saves the figure to 'densities.png'.
     """
 
@@ -21,45 +21,37 @@ def plot_densities(csv_file, directory):
         print(f"File not found: {filepath}")
         return
 
-    steps = []
-    rock = []
-    paper = []
-    scissors = []
-    lizard = []
-    spock = []
-
-    # Read the CSV
     with open(filepath, 'r') as f:
         reader = csv.reader(f)
-        header = next(reader, None)  # skip the header row, e.g. MCS,ROCK,PAPER,...
-        for row in reader:
-            if len(row) < 6:
-                continue  # skip malformed rows
-            steps.append(float(row[0]))
-            rock.append(float(row[1]))
-            paper.append(float(row[2]))
-            scissors.append(float(row[3]))
-            lizard.append(float(row[4]))
-            spock.append(float(row[5]))
+        header = next(reader, None)
+        if not header or len(header) < 2:
+            print("Invalid densities.csv header.")
+            return
 
-    # Create the figure
+        rows = list(reader)
+        rows = rows[:-1]  # Skip the last line which is just the MCS number
+        species_names = header[1:]
+        steps = []
+        densities = [[] for _ in species_names]
+
+        for row in rows:
+            if len(row) < len(species_names) + 1:
+                continue
+            steps.append(float(row[0]))
+            for i, density in enumerate(row[1:]):
+                densities[i].append(float(density))
+
     plt.figure(figsize=(10, 5))
     plt.tight_layout()
 
-    # Plot each density on a semilog x-axis
-    plt.semilogx(steps, rock, label="Rock", color='b')
-    plt.semilogx(steps, paper, label="Paper", color='cyan')
-    plt.semilogx(steps, scissors, label="Scissors", color='g')
-    plt.semilogx(steps, lizard, label="Lizard", color='y')
-    plt.semilogx(steps, spock, label="Spock", color='r')
+    for i, species_density in enumerate(densities):
+        plt.semilogx(steps, species_density, label=species_names[i])
 
-    # Add legend, labels, and title
     plt.legend()
     plt.xlabel("Steps")
-    plt.ylabel(r"$\rho_i$")  # LaTeX-style label for densities
+    plt.ylabel(r"$\rho_i$")
     plt.title("Density Evolution Over Time")
 
-    # Save the figure
     output_path = os.path.join(directory, "densities.png")
     plt.savefig(output_path)
     plt.close()
@@ -74,16 +66,12 @@ def plot_matrix_snapshot(csv_file, directory):
     with open(filepath, "r") as f:
         reader = csv.reader(f)
         data_list = list(reader)
-
-    matrix = np.array(data_list, dtype=int)
-
-    # Prepare a discrete colormap for values 0..5
-    colours = ["white", "blue", "cyan", "green", "yellow", "red"]
-    cmap = ListedColormap(colours)
+        data_list = data_list[:-1]  # Skip the last line containing the MCS number
+        matrix = np.array(data_list, dtype=int)
 
     fig, ax = plt.subplots(figsize=(6, 4))
 
-    im = ax.imshow(matrix, cmap=cmap, vmin=0, vmax=5)
+    im = ax.imshow(matrix, cmap="inferno", vmin=matrix.min(), vmax=matrix.max())
     ax.set_title(csv_file, fontsize=12)
     ax.set_xlabel("Column Index")
     ax.set_ylabel("Row Index")
@@ -96,7 +84,8 @@ def plot_matrix_snapshot(csv_file, directory):
     plt.tight_layout()
 
     base, _ = splitext(csv_file)
-    output_png = base + ".png"
+    mcs_number = base.split('_')[-1]
+    output_png = f"ss_{mcs_number}.png"
     output_path = os.path.join(directory, output_png)
     plt.savefig(output_path)
     plt.close(fig)
@@ -124,14 +113,19 @@ def visualise(directory=None):
         return
 
     for csv_file in csv_files:
-        if csv_file.lower() == "densities.csv":
-            # Plot densities
-            plot_densities(csv_file, directory)
-        else:
-            # Plot as matrix snapshot
-            plot_matrix_snapshot(csv_file, directory)
+        if csv_file.lower() == "params.csv" or csv_file.lower() == "densities.csv" or csv_file.lower() == "dominance.csv":
+            continue
+        plot_matrix_snapshot(csv_file, directory)
 
 
 if __name__ == "__main__":
-    # By default, use the directory where the script is located
-    visualise()
+    parser = argparse.ArgumentParser(description="Visualise CSV matrix snapshots in a directory")
+    parser.add_argument(
+        "directory",
+        nargs="?",
+        default=None,
+        help="Directory containing CSV files (default: current script directory)"
+    )
+    args = parser.parse_args()
+
+    visualise(args.directory)
