@@ -255,8 +255,16 @@ bool initMetalContext(MetalContext& ctx, int N, int randomNums, int speciesNum) 
 // Refresh: Use existing pipeline and buffer objects to generate new random numbers
 //------------------------------------------------------------------------------
 RandomCommandBuffers refreshRandomNumbers(MetalContext& ctx, float* action_probabilities, uint32_t* cells, uint32_t* neighbours, int N, bool moore) {
-    // std::cout << "Refreshing random numbers...\n" << std::endl;
-
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(1, 1000);
+    uint32_t* seeds = new uint32_t[ctx.threads];
+    for (int i = 0; i < ctx.threads; i++) {
+        dist(gen);
+    }
+    std::memcpy(ctx.seedBuffer->contents(), seeds, sizeof(uint32_t) * ctx.threads);
+    delete[] seeds;
+    
     // Setup common dispatch parameters
     MTL::Size gridSize = MTL::Size(ctx.threads, 1, 1);
     MTL::Size threadGroupSize = MTL::Size(ctx.pipelineStateActions->maxTotalThreadsPerThreadgroup(), 1, 1);
@@ -735,7 +743,8 @@ int main(int argc, const char* argv[]) {
     }
 
     if (params.maxStep) { // Process (numRandoms / N) MCS per Metal call
-        for (int mcs = currentMCS; mcs <= MCS; mcs += params.numRandoms / N) {
+        int step = params.numRandoms / N;
+        for (int mcs = currentMCS; mcs <= MCS; mcs += step) {
             densities(grid, N, mcs, gridCtx, metalCtx, 1, params.species, speciesSet); // Every MCS, call densities to add to density vectors for visualisation after simulation
             if ((mcs <= 10000 || (mcs > 10000 && mcs % 10000 == 0)) && params.save) {
                 plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS

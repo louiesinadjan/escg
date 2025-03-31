@@ -263,8 +263,6 @@ bool initMetalContext(MetalContext& ctx, int N, int randomNums, int speciesNum) 
 // Refresh: Use existing pipeline and buffer objects to generate new random numbers
 //------------------------------------------------------------------------------
 RandomCommandBuffers refreshRandomNumbers(MetalContext& ctx, int N, bool moore) {
-    // std::cout << "Refreshing random numbers...\n" << std::endl;
-
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dist(1, 1000);
