@@ -25,8 +25,6 @@ Params parseArgs(int argc, char* argv[]) {
         {"dominance", required_argument, 0, 'd'},
         {"save", required_argument, 0, 's'},
         {"resume", required_argument, 0, 'r'},
-        {"numRandoms", required_argument, 0, 'R'},
-        {"maxStep", required_argument, 0, 'x'},
         {0, 0, 0, 0} // End of options
     };
 
@@ -38,11 +36,10 @@ Params parseArgs(int argc, char* argv[]) {
                         "[--printFrequency <Print Frequency>] [--empty <Initial Empty Cell Probability >] "
                         "[--neighbourhood <Neighbourhood 4/8>] [--mobility <Mobility>] "
                         "[--species <int>] [--flux <true|false>] [--dominance <true|false]"
-                        "[--numRandoms <int>][--maxStep <true|false]"
-                        "[--save <true|false>] [--resume <true|false>]";
+                        "[--save <true|false>]";
 
     // Parse the command line arguments
-    while ((opt = getopt_long(argc, argv, "m:l:h:p:n:M:s:f:e:r:d:S:x:R:", long_options, &option_index)) != -1) {
+    while ((opt = getopt_long(argc, argv, "m:l:h:p:n:M:s:f:e:d:S:", long_options, &option_index)) != -1) {
         switch (opt) {
             case 'm':
                 params.MCS = std::stoi(optarg);
@@ -106,19 +103,6 @@ Params parseArgs(int argc, char* argv[]) {
                     exit(EXIT_FAILURE);
                 }
                 break;
-            case 'r': {
-                std::string resumeStr(optarg);
-                // Convert the argument to lowercase for easier comparison
-                for (auto& c : resumeStr) {
-                    c = tolower(c);
-                }
-                if (resumeStr == "true" || resumeStr == "1" || resumeStr == "yes") {
-                    params.resume = true;
-                } else {
-                    params.resume = false;
-                }
-                break;
-            }
             case 'S': {
                 std::string saveStr(optarg);
                 // Convert the argument to lowercase for easier comparison
@@ -132,27 +116,6 @@ Params parseArgs(int argc, char* argv[]) {
                 }
                 break;
             }
-            case 'x': {
-                std::string maxStepStr(optarg);
-                // Convert the argument to lowercase for easier comparison
-                for (auto& c : maxStepStr) {
-                    c = tolower(c);
-                }
-                if (maxStepStr == "true" || maxStepStr == "1" || maxStepStr == "yes") {
-                    params.maxStep = true;
-                } else {
-                    params.maxStep = false;
-                }
-                break;
-            }
-            case 'R':
-                params.numRandoms = std::stof(optarg);
-                if (params.numRandoms < 1000000) {
-                    std::cout << "Entered: " << params.numRandoms << std::endl;
-                    std::cerr << "Error: Random numbers must be at least 1,000,000." << std::endl;
-                    exit(EXIT_FAILURE);
-                }
-                break;
             default:
                 std::cerr << "Usage: " << argv[0] << usage << std::endl;
                 exit(EXIT_FAILURE);
@@ -203,7 +166,7 @@ int importCSVToDominance(int*& dominates) { // `dominates` passed by reference
     return species; // Return species count
 }
 
-void generateCircularAdjacencyMatrix(int* dominance, int speciesCount) {
+void generateCirculantGraph(int* dominance, int speciesCount) {
     // Choose default offsets based on species count
     std::vector<int> offsets = (speciesCount >= 5) ? std::vector<int>{1, 3} : std::vector<int>{1};
     if (speciesCount < 2) {
@@ -270,7 +233,7 @@ int main(int argc, const char* argv[]) {
         }
     } else {
         dominance = new int[p.species * p.species]; // Dominance matrix
-        generateCircularAdjacencyMatrix(dominance, p.species);
+        generateCirculantGraph(dominance, p.species);
     }
 
     float mu = 1;              // RPSLS interaction
@@ -294,7 +257,7 @@ int main(int argc, const char* argv[]) {
     for (int mcs = 0; mcs <= MCS; mcs++) { // Monte Carlo Steps
         densities(gridCtx, grid, p, mcs);  // Every MCS, call densities to add to density vectors for visualisation after simulation
 
-        if (mcs == 0 || mcs == 2000 || mcs == 6000 || mcs == 20000 || mcs == 100000) {
+        if ((mcs == 0 || mcs == 2000 || mcs == 6000 || mcs == 20000 || mcs == 100000) && p.save) {
             plot_snapshot(grid, mcs, p);
         }
 
