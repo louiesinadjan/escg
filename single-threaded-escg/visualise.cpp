@@ -7,7 +7,7 @@ void plot_densities(GridContext g, Params p) {
     plt::tight_layout();
 
     // Define a set of colors to cycle through
-    std::vector<std::string> colors = {"b-", "c-", "g-", "y-", "r-", "m-", "k-", "orange", "pink", "purple"};
+    std::vector<std::string> colors = {"blue", "cyan", "green", "yellow", "r-", "m-", "k-", "orange", "pink", "purple"};
 
     // Ensure speciesDensities is not empty
     if (!g.speciesDensities.empty()) {
@@ -76,7 +76,7 @@ void plot_snapshot(const int* grid, int mcs, Params p) {
     std::map<std::string, std::string> keywords;
 
     if (p.species <= 5) {
-        keywords = {{"cmap", "cividis"}};
+        keywords = {{"cmap", "viridis"}};
     } else {
         keywords = {{"cmap", "tab20b"}};
     }
