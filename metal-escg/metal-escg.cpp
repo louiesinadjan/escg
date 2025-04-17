@@ -189,7 +189,7 @@ bool initMetalContext(MetalContext& ctx, int N, int randomNums, int speciesNum) 
 
     // Load the Metal library
     NS::Error* error = nullptr;
-    NS::String* libraryPath = NS::String::string("/Users/louiesinadjan/Documents/dissertation/escg/metal-escg/build/escg.metallib", NS::UTF8StringEncoding);
+    NS::String* libraryPath = NS::String::string("build/escg.metallib", NS::UTF8StringEncoding);
 
     ctx.library = ctx.device->newLibrary(libraryPath, &error);
     if (!ctx.library) {

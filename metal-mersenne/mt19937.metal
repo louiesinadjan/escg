@@ -51,7 +51,7 @@ kernel void mersenne_twister(const device uint *seeds [[ buffer(0) ]],
                              uint id [[ thread_position_in_grid ]]) {
     thread MT19937 mt; // Each thread has its own MT19937 state
     initialise(mt, seeds[id]); // Initialise the state with the seed
-    for (uint i = 0; i < 50000; ++i) { // Generate 500 random numbers per thread
+    for (uint i = 0; i < 500000; i++) { // Generate 500,000 random numbers
         results[id * 500000 + i] = extract(mt);
     }
 }

@@ -8,36 +8,40 @@ using namespace metal;
 #define MATRIX_A           0x9908b0dfUL
 #define STATE_VECTOR_LENGTH 624
 #define STATE_VECTOR_M      397
+#define MURMUR_CONST1       0x85ebca6b
+#define MURMUR_CONST2       0xc2b2ae35
+#define MT_INIT_MULTIPLIER  1812433253U
 
 struct MT19937 {
     uint state[STATE_VECTOR_LENGTH];
     uint index;
 };
 
-/// A simple 32-bit hash function (similar to a finalizer)
+// A simple 32-bit hash function (MurmurHash3) to mix the seed and thread id
 uint hash(uint x) {
     x ^= x >> 16;
-    x *= 0x85ebca6b;
+    x *= MURMUR_CONST1;
     x ^= x >> 13;
-    x *= 0xc2b2ae35;
+    x *= MURMUR_CONST2;
     x ^= x >> 16;
     return x;
 }
 
-/// Improved seeding function that combines the seed with the thread id
+// Seeding function that combines the seed with the thread id
 void seed_mt(thread MT19937 &mt, uint seed, uint id) {
+
     // Mix in the thread id using a golden-ratio constant, then hash the result.
     seed ^= id * 0x9e3779b9U;
     seed = hash(seed);
     
     mt.state[0] = seed;
     for (uint i = 1; i < STATE_VECTOR_LENGTH; ++i) {
-        mt.state[i] = (1812433253U * (mt.state[i - 1] ^ (mt.state[i - 1] >> 30)) + i);
+        mt.state[i] = (MT_INIT_MULTIPLIER * (mt.state[i - 1] ^ (mt.state[i - 1] >> 30)) + i);
     }
     mt.index = STATE_VECTOR_LENGTH;
 }
 
-/// The twist transformation as in the standard algorithm.
+// The twist transformation as in the standard algorithm.
 void twist(thread MT19937 &mt) {
     const uint mag01[2] = {0x0UL, MATRIX_A};
     uint y;
@@ -58,7 +62,7 @@ void twist(thread MT19937 &mt) {
     mt.index = 0;
 }
 
-/// Extracts a number using the standard MT19937 tempering.
+// Extracts a number using the standard MT19937 tempering.
 uint extract(thread MT19937 &mt) {
     if (mt.index >= STATE_VECTOR_LENGTH) {
         twist(mt);
@@ -75,36 +79,36 @@ uint extract(thread MT19937 &mt) {
     return y;
 }
 
-/// Returns a random integer in [0, N - 1]
+// Returns a random integer in [0, N - 1]
 uint random_cell(thread MT19937 &mt, int N) {
     return extract(mt) % N;
 }
 
-/// Returns a random integer in [0, 3]
+// Returns a random integer in [0, 3]
 uint random_int_0_3(thread MT19937 &mt) {
     return extract(mt) % 4;
 }
 
-/// Returns a random integer in [0, 7]
+// Returns a random integer in [0, 7]
 uint random_int_0_7(thread MT19937 &mt) {
     return extract(mt) % 8;
 }
 
-/// Returns a random float in [0, 1]
+// Returns a random float in [0, 1]
 float random_float_0_1(thread MT19937 &mt) {
     return static_cast<float>(extract(mt)) / 4294967295.0f;
 }
 
 
-/// Kernel for generating random cell indices
+// Kernel for generating random cell indices
 kernel void mt_random_cells(
     const device uint *seeds [[ buffer(0) ]],
     device uint *results [[ buffer(1) ]],
     constant int &N [[ buffer(2) ]], 
     uint id [[ thread_position_in_grid ]]) {
+
     thread MT19937 mt;
     seed_mt(mt, seeds[id], id);
-
     // Burn-in 
     for (uint i = 0; i < 50000; ++i) { extract(mt); }
 
@@ -113,7 +117,7 @@ kernel void mt_random_cells(
     }
 }
 
-/// Kernel for generating random neighbour directions
+// Kernel for generating random neighbour directions
 kernel void mt_random_neighbours(
     const device uint *seeds [[ buffer(0) ]],
     device uint *results [[ buffer(1) ]],
@@ -138,7 +142,7 @@ kernel void mt_random_neighbours(
     
 }
 
-/// Kernel for generating random floating-point numbers in [0, 1]
+// Kernel for generating random floating-point numbers in [0, 1]
 kernel void mt_random_actions(
     const device uint *seeds [[ buffer(0) ]],                          
     device float *results [[ buffer(1) ]],
@@ -154,3 +158,17 @@ kernel void mt_random_actions(
         results[id * 10000 + i] = random_float_0_1(mt);
     }
 }
+
+// === Explanation of Constants ===
+
+// 0x85ebca6b and 0xc2b2ae35 are constants from the finalizer of MurmurHash3,
+// a widely-used non-cryptographic hash function. These were chosen through
+// empirical testing to produce good avalanche behavior — small changes in input
+// cause large, well-distributed changes in output. They help ensure uniformity
+// and reduce collisions in the hash output.
+
+// 1812433253U is a multiplier used in the original Mersenne Twister (MT19937)
+// initialization algorithm, as defined by Matsumoto and Nishimura. This value
+// helps spread bits from the seed across the entire internal state vector
+// to ensure a high-quality initial state and maintain the RNG’s period
+// and equidistribution properties.

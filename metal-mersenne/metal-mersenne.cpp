@@ -31,7 +31,7 @@ int main() {
 
     // Load the Metal library from mt19937.metallib
     NS::Error* error = nullptr;
-    NS::String* libraryPath = NS::String::string("/Users/louiesinadjan/Documents/dissertation/escg/metal-mersenne/build/mt19937.metallib", NS::UTF8StringEncoding);
+    NS::String* libraryPath = NS::String::string("build/mt19937.metallib", NS::UTF8StringEncoding);
     MTL::Library* library = device->newLibrary(libraryPath, &error);
     if (!library) {
         std::cerr << "Error: Failed to load mt19937.metallib - " << error->localizedDescription()->utf8String() << std::endl;
@@ -57,16 +57,6 @@ int main() {
     const int numRandomNumbers = 1000000000;
 
     uint32_t seeds[numThreads];
-
-    // Use system time as a seed
-    // auto now = std::chrono::system_clock::now();
-    // auto duration = now.time_since_epoch();
-    // uint32_t timeSeed = static_cast<uint32_t>(duration.count());
-    // std::mt19937 rng(timeSeed);
-    // std::uniform_int_distribution<uint32_t> dist(1, 4294967295);
-    // for (int i = 0; i < numThreads; ++i) {
-    //     seeds[i] = dist(rng); // Use time-based random numbers as seeds
-    // }
 
     for (int i = 0; i < numThreads; ++i) {
         seeds[i] = i + 1;
