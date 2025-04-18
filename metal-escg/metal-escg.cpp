@@ -489,7 +489,7 @@ void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, i
     // Set the grid buffer
     encoder->setBuffer(ctx.stepGridBuffer, 0, 8);
 
-    MTL::Size threadsPerGrid = MTL::Size(1000, 1, 1); // 40,000 cells, 1,000 threads --> 40 cells per thread
+    MTL::Size threadsPerGrid = MTL::Size(512, 1, 1); 
     MTL::Size threadGroupSize = MTL::Size(ctx.pipelineStateStep->maxTotalThreadsPerThreadgroup(), 1, 1);
 
     encoder->dispatchThreads(threadsPerGrid, threadGroupSize);
@@ -533,7 +533,7 @@ void maxMetalStep(MetalContext& ctx, uint32_t* cells, uint32_t* neighbours, floa
     // Set the grid buffer
     encoder->setBuffer(ctx.stepGridBuffer, 0, 8);
 
-    MTL::Size threadsPerGrid = MTL::Size(1000, 1, 1); // 40,000 cells, 1,000 threads --> 40 cells per thread
+    MTL::Size threadsPerGrid = MTL::Size(512, 1, 1); 
     MTL::Size threadGroupSize = MTL::Size(ctx.pipelineStateStep->maxTotalThreadsPerThreadgroup(), 1, 1);
 
     encoder->dispatchThreads(threadsPerGrid, threadGroupSize);

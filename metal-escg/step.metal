@@ -52,13 +52,22 @@ kernel void step(
         {1, 1} // Down-Right
     };
 
-    int cellsPerThread = maxStep ? numRandoms / 1000 : N / 1000;
+    int cellsPerThread = maxStep ? numRandoms / 512 : N / 512;
 
     for (int i = 0; i < cellsPerThread; i++) {
+        if(maxStep){
+            if (id * cellsPerThread + i >= numRandoms) {
+                return; // Exit if we exceed the number of random cells
+            }
+        } else {
+            if (id * cellsPerThread + i >= N) {
+                return; // Exit if we exceed the number of random cells
+            }
+        }
 
         // Get the flattened index of the current cell.
         int cell_index = cells[id * cellsPerThread + i];
-
+ 
         if (cell_index == -1 || cell_index >= N) {
             return;
         }

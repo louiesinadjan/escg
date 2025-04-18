@@ -161,7 +161,7 @@ kernel void mt_random_actions(
 
 // === Explanation of Constants ===
 
-// 0x85ebca6b and 0xc2b2ae35 are constants from the finalizer of MurmurHash3,
+// 0x85ebca6b and 0xc2b2ae35 are constants from the finaliser of MurmurHash3,
 // a widely-used non-cryptographic hash function. These were chosen through
 // empirical testing to produce good avalanche behavior — small changes in input
 // cause large, well-distributed changes in output. They help ensure uniformity
