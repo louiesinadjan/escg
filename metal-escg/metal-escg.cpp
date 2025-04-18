@@ -225,6 +225,19 @@ bool initMetalContext(MetalContext& ctx, int N, int randomNums, int speciesNum) 
         return false;
     }
 
+    // Prepare the seed buffer
+    // random number generator
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(1, 1000);
+    uint32_t* seeds = new uint32_t[ctx.threads];
+    for (int i = 0; i < ctx.threads; i++) {
+        // seeds[i] = i;
+        dist(gen);
+    }
+    ctx.seedBuffer = ctx.device->newBuffer(seeds, sizeof(uint32_t) * ctx.threads, MTL::ResourceStorageModeShared);
+    delete[] seeds;
+
     // Create result buffers
     // Randoms
     ctx.resultBufferActions = ctx.device->newBuffer(sizeof(float) * ctx.numRandomNumbers, MTL::ResourceStorageModeShared);
@@ -577,17 +590,7 @@ int main(int argc, const char* argv[]) {
 
         currentMCS = importCSVToGrid(grid, N); // Assigns to grid and returns the current MCS
 
-        // Creating output directory
-        std::string length = "l" + std::to_string(L);
-        std::string height = "h" + std::to_string(H);
-        std::string neighbourhood = moore ? "Moore" : "VN";
-        std::ostringstream oss;
-        oss.precision(2);
-        oss << std::scientific << params.mobility;
-        std::string mobility_str = "M" + oss.str();
-        std::string flux = params.flux ? "flux" : "noflux";
-        std::string species = std::to_string(params.species) + "species";
-        params.outputDir = length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species;
+        
     } else {
         std::cout << "Starting new simulation.\n" << std::endl;
 
@@ -598,24 +601,26 @@ int main(int argc, const char* argv[]) {
         moore = params.neighbourhood == 8;
         grid = new int[N];
 
-        // Creating output directory
-        std::string length = "l" + std::to_string(L);
-        std::string height = "h" + std::to_string(H);
-        std::string neighbourhood = moore ? "Moore" : "VN";
-        std::ostringstream oss;
-        oss.precision(2);
-        oss << std::scientific << params.mobility;
-        std::string mobility_str = "M" + oss.str();
-        std::string flux = params.flux ? "flux" : "noflux";
-        std::string species = std::to_string(params.species) + "species";
-        params.outputDir = length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species;
+       
     }
+
+    // Creating output directory
+    std::string length = "l" + std::to_string(L);
+    std::string height = "h" + std::to_string(H);
+    std::string neighbourhood = moore ? "Moore" : "VN";
+    std::ostringstream oss;
+    oss.precision(2);
+    oss << std::scientific << params.mobility;
+    std::string mobility_str = "M" + oss.str();
+    std::string flux = params.flux ? "flux" : "noflux";
+    std::string species = std::to_string(params.species) + "species";
+    params.outputDir = length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species;
 
     if (params.dominance) {
         params.species = importCSVToDominance(dominance);
     } else {
         dominance = new int[params.species * params.species];
-        generateCircularAdjacencyMatrix(dominance, params.species);
+        generateCirculantAdjacencyMatrix(dominance, params.species);
     }
 
     if (params.save) {

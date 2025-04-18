@@ -201,7 +201,7 @@ void exportDominanceToCSV(int* dominates, int species, Params p) {
     file.close();
 }
 
-void generateCircularAdjacencyMatrix(int* dominance, int speciesCount) {
+void generateCirculantAdjacencyMatrix(int* dominance, int speciesCount) {
     // Choose default offsets based on species count
     std::vector<int> offsets = (speciesCount >= 5) ? std::vector<int>{1, 3} : std::vector<int>{1};
     if (speciesCount < 2) {

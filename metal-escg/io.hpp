@@ -13,4 +13,4 @@ void importCSVToParams(Params& p); // Imports the parameters from the csv file
 int importCSVToDominance(int* &dominance);
 void exportDominanceToCSV(int* dominance, int species, Params p);
 
-void generateCircularAdjacencyMatrix(int* dominance, int speciesCount);
+void generateCirculantAdjacencyMatrix(int* dominance, int speciesCount);
