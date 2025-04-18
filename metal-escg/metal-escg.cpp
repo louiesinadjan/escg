@@ -680,15 +680,6 @@ int main(int argc, const char* argv[]) {
 
     RandomCommandBuffers cmdBuffers = refreshRandomNumbers(metalCtx, action_probabilities, cells, neighbours, N, moore);
 
-    cmdBuffers.actionCommandBuffer->waitUntilCompleted();
-    cmdBuffers.cellsCommandBuffer->waitUntilCompleted();
-    cmdBuffers.neighboursCommandBuffer->waitUntilCompleted();
-
-    // Copy data to CPU memory
-    std::memcpy(action_probabilities, metalCtx.resultBufferActions->contents(), sizeof(float) * metalCtx.numRandomNumbers);
-    std::memcpy(cells, metalCtx.resultBufferCells->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
-    std::memcpy(neighbours, metalCtx.resultBufferNeighbours->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
-
     // ------------------- Simulation Parameters -------------------
 
     GridContext gridCtx;
@@ -741,6 +732,15 @@ int main(int argc, const char* argv[]) {
         plot_snapshot(grid, currentMCS, params);   // Plot snapshots at specific MCS
         exportGridToCSV(grid, params, currentMCS); // Export the grid to a csv file
     }
+
+    cmdBuffers.actionCommandBuffer->waitUntilCompleted();
+    cmdBuffers.cellsCommandBuffer->waitUntilCompleted();
+    cmdBuffers.neighboursCommandBuffer->waitUntilCompleted();
+
+    // Copy data to CPU memory
+    std::memcpy(action_probabilities, metalCtx.resultBufferActions->contents(), sizeof(float) * metalCtx.numRandomNumbers);
+    std::memcpy(cells, metalCtx.resultBufferCells->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
+    std::memcpy(neighbours, metalCtx.resultBufferNeighbours->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
 
     if (params.maxStep) { // Process (numRandoms / N) MCS per Metal call
         int step = params.numRandoms / N;
