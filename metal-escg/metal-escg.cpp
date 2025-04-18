@@ -225,19 +225,6 @@ bool initMetalContext(MetalContext& ctx, int N, int randomNums, int speciesNum) 
         return false;
     }
 
-    // Prepare the seed buffer
-    // random number generator
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dist(1, 1000);
-    uint32_t* seeds = new uint32_t[ctx.threads];
-    for (int i = 0; i < ctx.threads; i++) {
-        // seeds[i] = i;
-        dist(gen);
-    }
-    ctx.seedBuffer = ctx.device->newBuffer(seeds, sizeof(uint32_t) * ctx.threads, MTL::ResourceStorageModeShared);
-    delete[] seeds;
-
     // Create result buffers
     // Randoms
     ctx.resultBufferActions = ctx.device->newBuffer(sizeof(float) * ctx.numRandomNumbers, MTL::ResourceStorageModeShared);
