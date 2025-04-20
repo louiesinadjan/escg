@@ -1,9 +1,0 @@
-MCS,100000
-Lattice Length,200
-Lattice Height,200
-Initial Empty Cell Probability,0
-Neighbourhood,4
-Mobility,1e-06
-Species,5
-Flux,1
-Print Frequency,200

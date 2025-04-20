@@ -3,7 +3,7 @@ using namespace metal;
 
 kernel void compute_densities(
     device const int*       grid          [[ buffer(0) ]],  // Flattened grid array (L * H cells)
-    device atomic_int*      result        [[ buffer(1) ]],  // Global output: 6 atomic ints
+    device atomic_int*      result        [[ buffer(1) ]],  
     uint                    id            [[ thread_position_in_grid ]]
 ) {
     int species = grid[id];

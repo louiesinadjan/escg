@@ -476,7 +476,7 @@ void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, i
     encoder->setBuffer(ctx.actionProbabilitiesBuffer, 0, 2);
     encoder->setBuffer(ctx.dominanceBuffer, 0, 9);
 
-    // Using `setBytes()` for scalar values (floats)
+    // Using `setBytes()` for scalar values 
     encoder->setBytes(&mu, sizeof(float), 3);
     encoder->setBytes(&sigma, sizeof(float), 4);
     encoder->setBytes(&p.L, sizeof(int), 5);
@@ -520,7 +520,7 @@ void maxMetalStep(MetalContext& ctx, uint32_t* cells, uint32_t* neighbours, floa
     encoder->setBuffer(ctx.actionProbabilitiesBuffer, 0, 2);
     encoder->setBuffer(ctx.dominanceBuffer, 0, 9);
 
-    // Using `setBytes()` for scalar values (floats)
+    // Using `setBytes()` for scalar values
     encoder->setBytes(&mu, sizeof(float), 3);
     encoder->setBytes(&sigma, sizeof(float), 4);
     encoder->setBytes(&p.L, sizeof(int), 5);
