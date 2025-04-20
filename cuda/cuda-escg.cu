@@ -168,8 +168,8 @@ Params parseArgs(int argc, char* argv[]) {
 // Host function to call the CUDA kernel - Copies random numbers from device to host arrays
 //------------------------------------------------------------------------------
 void generateRandomNumbers(float* d_action_probabilities, int* d_cells, int* d_neighbours, int N, int numRandomNumbers, bool moore, cudaStream_t stream_numbers) {
-    std::cout << "\nRefreshing random numbers..." << std::endl;
-    std::cout << std::endl;
+    // std::cout << "\nRefreshing random numbers..." << std::endl;
+    // std::cout << std::endl;
 
     int minGridSize = 0, bestBlockSize = 0;
     cudaOccupancyMaxPotentialBlockSize(&minGridSize, &bestBlockSize, refreshRandomNumbers, 0, 0);
@@ -555,12 +555,12 @@ int main(int argc, const char* argv[]) {
 
             generateRandomNumbers(d_action_probabilities, d_cells, d_neighbours, N, params.numRandoms, moore, stream_numbers);
 
-            cudaMemcpy(d_step_action_probabilities, d_action_probabilities, params.numRandoms, cudaMemcpyDeviceToDevice);
-            cudaMemcpy(d_step_cells, d_cells, params.numRandoms, cudaMemcpyDeviceToDevice);
-            cudaMemcpy(d_step_neighbour_dirs, d_neighbours, params.numRandoms, cudaMemcpyDeviceToDevice);
+            // cudaMemcpy(d_step_action_probabilities, d_action_probabilities, params.numRandoms, cudaMemcpyDeviceToDevice);
+            // cudaMemcpy(d_step_cells, d_cells, params.numRandoms, cudaMemcpyDeviceToDevice);
+            // cudaMemcpy(d_step_neighbour_dirs, d_neighbours, params.numRandoms, cudaMemcpyDeviceToDevice);
 
             // Copies back to host in function
-            maxStep(h_grid, d_grid, d_dominance, d_step_cells, d_step_neighbour_dirs, d_step_action_probabilities, mu, sigma, params, stream_steps);
+            maxStep(h_grid, d_grid, d_dominance, d_cells, d_neighbours, d_action_probabilities, mu, sigma, params, stream_steps);
 
             if (stasis(speciesSet)) {
                 if (params.save) {

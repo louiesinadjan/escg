@@ -1,0 +1,11 @@
+MCS,100000
+Lattice Length,3200
+Lattice Height,3200
+Initial Empty Cell Probability,0
+Neighbourhood,4
+Mobility,1e-06
+Species,3
+Flux,1
+Print Frequency,200
+Number of Randoms,500000000
+Max Step,0
