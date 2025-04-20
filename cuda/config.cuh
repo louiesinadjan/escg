@@ -20,7 +20,7 @@ struct Params {
     int species = 5;            // Number of species (Rock, Paper, Scissors, Lizard, Spock)
     bool flux = true;           // Flux boundary conditions
     float emptyProbability = 0; // Initial empty cell probability
-    int numRandoms = 50000000;  // Number of random numbers to generate
+    int numRandoms = 500000000;  // Number of random numbers to generate
 
     bool save = false;      // Save grid and snapshots?
     bool dominance = false; // Import dominance.csv?

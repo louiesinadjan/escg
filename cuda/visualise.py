@@ -71,11 +71,12 @@ def plot_matrix_snapshot(csv_file, directory):
 
     fig, ax = plt.subplots(figsize=(6, 4))
 
-    im = ax.imshow(matrix, cmap="inferno", vmin=matrix.min(), vmax=matrix.max())
+    im = ax.imshow(matrix, cmap="Paired", vmin=matrix.min(), vmax=matrix.max())
     ax.set_title(csv_file, fontsize=12)
     ax.set_xlabel("Column Index")
     ax.set_ylabel("Row Index")
-
+    ax.vmin = 0
+    ax.vmax = 10
     # Add a colorbar
     cbar = fig.colorbar(im, ax=ax, fraction=0.02, pad=0.05)
     cbar.set_ticks(range(6))  # 0 through 5
