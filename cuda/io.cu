@@ -227,21 +227,23 @@ void generateCircularAdjacencyMatrix(int* dominance, int speciesCount) {
     }
 }
 
-void exportDensitiesToCSV(GridContext& gridCtx) {
-    std::ofstream file("densities.csv");
+void exportDensitiesToCSV(GridContext& gridCtx, Params p) {
+    std::ofstream file("./" + p.outputDir + "/densities.csv");    
     if (!file) {
         std::cerr << "Error: Could not open file densities.csv for writing." << std::endl;
         return;
     }
 
-    file << "MCS,";
+    file << "mcs";
     for (uint i = 0; i < gridCtx.speciesDensities[0].size(); i++) {
-        file << "s" << i << ",";
+        file << "," << "s" << i + 1;
     }
+    file << "\n";
+
     for (uint i = 0; i < gridCtx.steps.size(); i++) {
-        file << gridCtx.steps[i] << ",";
+        file << gridCtx.steps[i];
         for (double density : gridCtx.speciesDensities[i]) {
-            file << density << ",";
+            file << "," << density;
         }
         file << "\n";
     }

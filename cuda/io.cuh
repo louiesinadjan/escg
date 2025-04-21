@@ -15,4 +15,4 @@ void exportDominanceToCSV(int* dominance, int species, Params p);
 
 void generateCircularAdjacencyMatrix(int* dominance, int speciesCount);
 
-void exportDensitiesToCSV(GridContext& gridCtx);
+void exportDensitiesToCSV(GridContext& gridCtx, Params p);

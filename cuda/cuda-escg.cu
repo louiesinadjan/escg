@@ -622,7 +622,7 @@ int main(int argc, const char* argv[]) {
         }
     }
 
-    exportDensitiesToCSV(gridCtx);
+    exportDensitiesToCSV(gridCtx, params);
 
     // ------------------- Free Memory -------------------
 

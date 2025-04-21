@@ -35,6 +35,7 @@ def plot_densities(csv_file, directory):
         densities = [[] for _ in species_names]
 
         for row in rows:
+            row = [val for val in row if val.strip() != '']  # Strip empty trailing entries
             if len(row) < len(species_names) + 1:
                 continue
             steps.append(float(row[0]))
@@ -72,7 +73,6 @@ def plot_matrix_snapshot(csv_file, directory):
     fig, ax = plt.subplots(figsize=(6, 4))
 
     im = ax.imshow(matrix, cmap="Paired", vmin=matrix.min(), vmax=matrix.max())
-    ax.set_title(csv_file, fontsize=12)
     ax.set_xlabel("Column Index")
     ax.set_ylabel("Row Index")
     ax.vmin = 0
@@ -87,6 +87,7 @@ def plot_matrix_snapshot(csv_file, directory):
     base, _ = splitext(csv_file)
     mcs_number = base.split('_')[-1]
     output_png = f"ss_{mcs_number}.png"
+    ax.set_title(mcs_number, fontsize=12)
     output_path = os.path.join(directory, output_png)
     plt.savefig(output_path)
     plt.close(fig)
@@ -114,9 +115,12 @@ def visualise(directory=None):
         return
 
     for csv_file in csv_files:
-        if csv_file.lower() == "params.csv" or csv_file.lower() == "densities.csv" or csv_file.lower() == "dominance.csv":
+        if csv_file.lower() == "params.csv" or csv_file.lower() == "dominance.csv":
             continue
-        plot_matrix_snapshot(csv_file, directory)
+        elif csv_file.lower() == "densities.csv":
+            plot_densities(csv_file, directory)
+        else:
+            plot_matrix_snapshot(csv_file, directory)
 
 
 if __name__ == "__main__":
