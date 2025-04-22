@@ -10,25 +10,28 @@ def run_and_time(command):
 
 def benchmark(executable, label, runs, lattice_length, maxstep, writer):
     for i in range(1, runs + 1):
-        duration = run_and_time(f"./{executable} -l {lattice_length} -x {maxstep}")
+        duration = run_and_time(f"./{executable} -l {lattice_length} -h {lattice_length} -x {maxstep}")
         writer.writerow([label, i, lattice_length, f"{duration:.9f}"])
         print(f"{label},{i},{lattice_length},{duration:.9f}")
 
 with open("results.csv", mode="a", newline="") as file:
     writer = csv.writer(file)
-    # writer.writerow(["implementation", "run", "length", "time_seconds"])
+    writer.writerow(["implementation", "run", "length", "time_seconds"])
     
-    # benchmark("cuda-escg", "cuda", 10, 200, "false", writer)
-    # benchmark("cuda-escg", "cuda-max", 10, 200, "true", writer)
+    benchmark("cuda-escg", "cuda", 10, 100, "false", writer)
+    benchmark("cuda-escg", "cuda-max", 10, 100, "true", writer)
     
-    # benchmark("cuda-escg", "cuda", 10, 300, "false", writer)
-    # benchmark("cuda-escg", "cuda-max", 10, 300, "true", writer)
+    benchmark("cuda-escg", "cuda", 10, 200, "false", writer)
+    benchmark("cuda-escg", "cuda-max", 10, 200, "true", writer)
     
-    # benchmark("cuda-escg", "cuda", 10, 400, "false", writer)
-    # benchmark("cuda-escg", "cuda-max", 10, 400, "true", writer)
+    benchmark("cuda-escg", "cuda", 10, 300, "false", writer)
+    benchmark("cuda-escg", "cuda-max", 10, 300, "true", writer)
     
-    # benchmark("cuda-escg", "cuda", 10, 600, "false", writer)
-    # benchmark("cuda-escg", "cuda-max", 10, 600, "true", writer)
+    benchmark("cuda-escg", "cuda", 10, 400, "false", writer)
+    benchmark("cuda-escg", "cuda-max", 10, 400, "true", writer)
+    
+    benchmark("cuda-escg", "cuda", 10, 600, "false", writer)
+    benchmark("cuda-escg", "cuda-max", 10, 600, "true", writer)
     
     benchmark("cuda-escg", "cuda-max", 10, 800, "false", writer)
     benchmark("cuda-escg", "cuda-max", 10, 800, "true", writer)

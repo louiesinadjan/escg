@@ -72,7 +72,7 @@ def plot_matrix_snapshot(csv_file, directory):
 
     fig, ax = plt.subplots(figsize=(6, 4))
 
-    im = ax.imshow(matrix, cmap="Paired", vmin=matrix.min(), vmax=matrix.max())
+    im = ax.imshow(matrix, cmap="viridis", vmin=matrix.min(), vmax=matrix.max())
     ax.set_xlabel("Column Index")
     ax.set_ylabel("Row Index")
     ax.vmin = 0
