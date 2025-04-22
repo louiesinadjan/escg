@@ -54,8 +54,9 @@ void plot_densities(GridContext g, Params p) {
 void plot_snapshot(const int* grid, int mcs, Params p) {
     bool moore = p.neighbourhood == 8;
 
-    plt::figure_size(2000, 2000);
+    plt::figure_size(1500, 400);
     plt::tight_layout();
+    plt::rcparams({{"xtick.labelsize", "32"}, {"ytick.labelsize", "32"}});
 
     plt::axis("off"); // disables the axis labels and ticks
 
