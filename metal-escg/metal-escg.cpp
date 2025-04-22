@@ -507,9 +507,9 @@ void maxMetalStep(MetalContext& ctx, uint32_t* cells, uint32_t* neighbours, floa
     MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
 
     // Assign to the buffers
-    std::memcpy(ctx.cellsBuffer->contents(), cells, sizeof(int) * p.numRandoms);
-    std::memcpy(ctx.neighboursDirsBuffer->contents(), neighbours, sizeof(int) * p.numRandoms);
-    std::memcpy(ctx.actionProbabilitiesBuffer->contents(), action_probs, sizeof(float) * p.numRandoms);
+    std::memcpy(ctx.cellsBuffer->contents(), ctx.resultBufferCells->contents(), sizeof(int) * p.numRandoms);
+    std::memcpy(ctx.neighboursDirsBuffer->contents(), ctx.resultBufferNeighbours->contents(), sizeof(int) * p.numRandoms);
+    std::memcpy(ctx.actionProbabilitiesBuffer->contents(), ctx.resultBufferActions->contents(), sizeof(float) * p.numRandoms);
     std::memcpy(ctx.stepGridBuffer->contents(), grid, sizeof(int) * N);
     std::memcpy(ctx.dominanceBuffer->contents(), dominance, sizeof(int) * p.species * p.species);
 
@@ -758,10 +758,6 @@ int main(int argc, const char* argv[]) {
             cmdBuffers.actionCommandBuffer->waitUntilCompleted();
             cmdBuffers.cellsCommandBuffer->waitUntilCompleted();
             cmdBuffers.neighboursCommandBuffer->waitUntilCompleted();
-
-            std::memcpy(action_probabilities, metalCtx.resultBufferActions->contents(), sizeof(float) * metalCtx.numRandomNumbers);
-            std::memcpy(cells, metalCtx.resultBufferCells->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
-            std::memcpy(neighbours, metalCtx.resultBufferNeighbours->contents(), sizeof(uint32_t) * metalCtx.numRandomNumbers);
 
             if (stasis(speciesSet)) {
                 if (params.save) {
