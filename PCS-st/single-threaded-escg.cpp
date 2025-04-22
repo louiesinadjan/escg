@@ -226,11 +226,7 @@ int main(int argc, const char* argv[]) {
             step(p, grid, dominance);
         }
     }
-
-    plot_densities(gridCtx, p);
-
-    // std::cout << "Simulation Complete." << std::endl;
-
+    
     delete[] grid;
     delete[] prevGrid;
     delete[] dominance;

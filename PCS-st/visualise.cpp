@@ -3,7 +3,7 @@
 
 void plot_densities(GridContext g, Params p) {
 
-    plt::figure_size(2000, 800);
+    plt::figure_size(2000, 400);
     plt::tight_layout();
 
     // Define a set of colors to cycle through
@@ -30,6 +30,8 @@ void plot_densities(GridContext g, Params p) {
     // Axis labels and title
     plt::xlabel("Steps");
     plt::ylabel("$\\rho_i$"); // LaTeX style for rho_i
+
+
     plt::title("Density Evolution Over Time");
 
     bool moore = p.neighbourhood == 8;

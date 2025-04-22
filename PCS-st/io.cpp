@@ -61,7 +61,7 @@ void writeResults(int* grid, int L, int mcs, float alpha, float beta, bool stabl
     }
 
     std::ofstream results;
-    results.open("results2.csv", std::ios::app);
+    results.open("results4.csv", std::ios::app);
     results << alpha << "," << beta << "," << mcs << "," << sp[0] << "," << sp[1] << "," << sp[2] << "," << sp[3] << "," << sp[4] << "," << sp[5] << "," << sp[6] << "," << sp[7] << "," << L << ","
             << (stable ? "true" : "false") << "\n";
     results.close();
