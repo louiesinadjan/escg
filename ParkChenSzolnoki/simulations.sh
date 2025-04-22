@@ -20,7 +20,7 @@ for ((trial=1; trial<=num_trials; trial++)); do
             fi
 
             echo "Running simulation with alpha=$alpha, beta=$beta, trial=$trial"
-            ./build/metal -a $alpha -b $beta -l 100
+            ./build/metal -a $alpha -b $beta -l 100 -m 10000
         done
     done
 done
