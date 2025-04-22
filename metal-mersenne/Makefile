@@ -1,7 +1,7 @@
 # Compiler and flags
 CXX = clang++
-CXXFLAGS = -std=c++17 -Wall -Wextra -I./metal-cpp -fobjc-arc
-LDFLAGS = -framework Metal -framework Foundation -framework CoreGraphics
+CXXFLAGS = -O3 -std=c++17 -Wall -Wextra -I./metal-cpp -fobjc-arc
+LDFLAGS = -O3 -framework Metal -framework Foundation -framework CoreGraphics
 
 # Directories
 SRC_DIR = .
@@ -42,7 +42,7 @@ $(METAL_TARGET): $(METAL_OBJ) $(METAL_LIB)
 # Rule to compile Metal shader to metallib
 $(METAL_LIB): $(METAL_SHADER)
 	@mkdir -p $(BUILD_DIR)
-	xcrun -sdk macosx metal -c $< -o $(BUILD_DIR)/mt19937.air
+	xcrun -sdk macosx metal -O3 -c $< -o $(BUILD_DIR)/mt19937.air
 	xcrun -sdk macosx metallib $(BUILD_DIR)/mt19937.air -o $@
 	@echo "Compiled Metal shader $< -> $@"
 

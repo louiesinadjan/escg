@@ -54,7 +54,7 @@ int main() {
 
     // Prepare buffers
     const int numThreads = 2000;
-    const int numRandomNumbers = 1000000000;
+    const int numRandomNumbers = 1'000'000'000;
 
     uint32_t seeds[numThreads];
 

@@ -25,9 +25,11 @@ int main() {
     static std::mt19937 gen(rd());                    // Mersenne Twister
     std::uniform_int_distribution<int> dist(1, INT_MAX); // Uniform distribution
 
-    int* x = new int[1000000000];          // Array to store random numbers
+    int numRandoms = 1'000'000'000; // Number of random numbers to generate
+
+    int* x = new int[numRandoms];          // Array to store random numbers
                                            // for (int run = 0; run < 100; run++) {
-    for (int j = 0; j < 1000000000; j++) { // Generate 1,000,000,000 random numbers
+    for (int j = 0; j < numRandoms; j++) { // Generate 1,000,000,000 random numbers
         x[j] = dist(gen);
     }
     // }
