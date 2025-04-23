@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${default}",
+                "/usr/local/cuda/include",         // CUDA Headers
+                "/usr/include",                    // Standard C++ Headers
+                "/usr/include/python3.6m",         // Python headers (needed for matplotlibcpp)
+                "/usr/local/include",              // Additional Libraries
+                "${workspaceFolder}/matplotlib-cpp", // Path to your matplotlib-cpp folder
+                 "/usr/include/aarch64-linux-gnu"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/local/cuda/bin/nvcc",
+            "cStandard": "c11",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-arm64"
+        }
+    ],
+    "version": 4
+}

@@ -1,0 +1,302 @@
+MCS: 6000
+Lattice Length: 200
+Lattice Height: 200
+Dimensions: 2
+Neighbourhood: 4
+Print Frequency: 200
+
+
+GPU Memory Available: 1232 MB
+
+Refreshing random numbers...
+Launching populateGrid with 157 blocks and 256 threads per block
+
+Population Densities at: 0
+EMPTY: 0
+ROCK: 19.975
+PAPER: 20.075
+SCISSORS: 20.0025
+LIZARD: 19.7575
+SPOCK: 20.19
+
+
+Population Densities at: 200
+EMPTY: 1.6075
+ROCK: 3.315
+PAPER: 7.885
+SCISSORS: 25.215
+LIZARD: 28.6725
+SPOCK: 33.305
+
+
+Population Densities at: 400
+EMPTY: 1.3575
+ROCK: 3.095
+PAPER: 2.12
+SCISSORS: 29.8025
+LIZARD: 27.7675
+SPOCK: 35.8575
+
+
+Population Densities at: 600
+EMPTY: 1.4275
+ROCK: 2.34
+PAPER: 0.575
+SCISSORS: 31.1
+LIZARD: 33.4525
+SPOCK: 31.105
+
+
+Population Densities at: 800
+EMPTY: 1.3375
+ROCK: 1.605
+PAPER: 0.125
+SCISSORS: 29.8425
+LIZARD: 32.0525
+SPOCK: 35.0375
+
+
+Population Densities at: 1000
+EMPTY: 1.2825
+ROCK: 1.79
+PAPER: 0.015
+SCISSORS: 33.9275
+LIZARD: 31.895
+SPOCK: 31.09
+
+
+Population Densities at: 1200
+EMPTY: 1.29
+ROCK: 1.365
+PAPER: 0
+SCISSORS: 31.4275
+LIZARD: 35.395
+SPOCK: 30.5225
+
+
+Refreshing random numbers...
+
+Population Densities at: 1400
+EMPTY: 1.305
+ROCK: 0.85
+PAPER: 0
+SCISSORS: 32.81
+LIZARD: 32.1775
+SPOCK: 32.8575
+
+
+Population Densities at: 1600
+EMPTY: 1.265
+ROCK: 1.095
+PAPER: 0
+SCISSORS: 31.76
+LIZARD: 31.37
+SPOCK: 34.51
+
+
+Population Densities at: 1800
+EMPTY: 1.2675
+ROCK: 0.96
+PAPER: 0
+SCISSORS: 33.9025
+LIZARD: 32.1025
+SPOCK: 31.7675
+
+
+Population Densities at: 2000
+EMPTY: 1.38
+ROCK: 1.04
+PAPER: 0
+SCISSORS: 30.0425
+LIZARD: 34.535
+SPOCK: 33.0025
+
+
+Population Densities at: 2200
+EMPTY: 1.32
+ROCK: 0.89
+PAPER: 0
+SCISSORS: 33.1625
+LIZARD: 29.99
+SPOCK: 34.6375
+
+
+Population Densities at: 2400
+EMPTY: 1.17
+ROCK: 0.78
+PAPER: 0
+SCISSORS: 33.0275
+LIZARD: 32.9825
+SPOCK: 32.04
+
+
+Refreshing random numbers...
+
+Population Densities at: 2600
+EMPTY: 1.3925
+ROCK: 0.5975
+PAPER: 0
+SCISSORS: 31.815
+LIZARD: 31.9475
+SPOCK: 34.2475
+
+
+Population Densities at: 2800
+EMPTY: 1.2375
+ROCK: 0.635
+PAPER: 0
+SCISSORS: 30.67
+LIZARD: 34.7325
+SPOCK: 32.725
+
+
+Population Densities at: 3000
+EMPTY: 1.4
+ROCK: 0.5275
+PAPER: 0
+SCISSORS: 32.655
+LIZARD: 29.975
+SPOCK: 35.4425
+
+
+Population Densities at: 3200
+EMPTY: 1.2325
+ROCK: 0.37
+PAPER: 0
+SCISSORS: 34.58
+LIZARD: 35.0225
+SPOCK: 28.795
+
+
+Population Densities at: 3400
+EMPTY: 1.6525
+ROCK: 0.4325
+PAPER: 0
+SCISSORS: 29.2575
+LIZARD: 33.9375
+SPOCK: 34.72
+
+
+Population Densities at: 3600
+EMPTY: 1.375
+ROCK: 0.2975
+PAPER: 0
+SCISSORS: 32.1075
+LIZARD: 32.015
+SPOCK: 34.205
+
+
+Refreshing random numbers...
+
+Population Densities at: 3800
+EMPTY: 1.275
+ROCK: 0.2275
+PAPER: 0
+SCISSORS: 33.5575
+LIZARD: 31.8475
+SPOCK: 33.0925
+
+
+Population Densities at: 4000
+EMPTY: 1.1175
+ROCK: 0.34
+PAPER: 0
+SCISSORS: 33.2225
+LIZARD: 32.225
+SPOCK: 33.095
+
+
+Population Densities at: 4200
+EMPTY: 1.1225
+ROCK: 0.68
+PAPER: 0
+SCISSORS: 33.67
+LIZARD: 32.945
+SPOCK: 31.5825
+
+
+Population Densities at: 4400
+EMPTY: 1.2325
+ROCK: 0.48
+PAPER: 0
+SCISSORS: 32.8925
+LIZARD: 32.69
+SPOCK: 32.705
+
+
+Population Densities at: 4600
+EMPTY: 1.5275
+ROCK: 0.7075
+PAPER: 0
+SCISSORS: 32.585
+LIZARD: 32.3925
+SPOCK: 32.7875
+
+
+Population Densities at: 4800
+EMPTY: 1.3875
+ROCK: 1.015
+PAPER: 0
+SCISSORS: 32.1075
+LIZARD: 33.7375
+SPOCK: 31.7525
+
+
+Population Densities at: 5000
+EMPTY: 1.435
+ROCK: 0.9575
+PAPER: 0
+SCISSORS: 30.375
+LIZARD: 34.46
+SPOCK: 32.7725
+
+
+Refreshing random numbers...
+
+Population Densities at: 5200
+EMPTY: 1.345
+ROCK: 1.2925
+PAPER: 0
+SCISSORS: 31.0775
+LIZARD: 33.3425
+SPOCK: 32.9425
+
+
+Population Densities at: 5400
+EMPTY: 1.4875
+ROCK: 1.36
+PAPER: 0
+SCISSORS: 30.8425
+LIZARD: 32.845
+SPOCK: 33.465
+
+
+Population Densities at: 5600
+EMPTY: 1.2225
+ROCK: 1.1275
+PAPER: 0
+SCISSORS: 32.75
+LIZARD: 31.8425
+SPOCK: 33.0575
+
+
+Population Densities at: 5800
+EMPTY: 1.39
+ROCK: 0.6675
+PAPER: 0
+SCISSORS: 32.32
+LIZARD: 33.7475
+SPOCK: 31.875
+
+
+Population Densities at: 6000
+EMPTY: 1.3025
+ROCK: 1.2475
+PAPER: 0
+SCISSORS: 31.44
+LIZARD: 30.565
+SPOCK: 35.445
+
+real    0m35.147s
+user    0m12.076s
+sys     0m3.068s

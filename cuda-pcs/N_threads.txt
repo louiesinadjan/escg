@@ -1,0 +1,302 @@
+MCS: 6000
+Lattice Length: 200
+Lattice Height: 200
+Dimensions: 2
+Neighbourhood: 4
+Print Frequency: 200
+
+
+GPU Memory Available: 1140 MB
+
+Refreshing random numbers...
+Launching populateGrid with 157 blocks and 256 threads per block
+
+Population Densities at: 0
+EMPTY: 0
+ROCK: 20.35
+PAPER: 19.6525
+SCISSORS: 20.3
+LIZARD: 19.7175
+SPOCK: 19.98
+
+
+Population Densities at: 200
+EMPTY: 6.03
+ROCK: 1.085
+PAPER: 2.2975
+SCISSORS: 21.0425
+LIZARD: 27.3375
+SPOCK: 42.2075
+
+
+Population Densities at: 400
+EMPTY: 5.79
+ROCK: 1.175
+PAPER: 0.2275
+SCISSORS: 32.7025
+LIZARD: 37.665
+SPOCK: 22.44
+
+
+Population Densities at: 600
+EMPTY: 6.0025
+ROCK: 1.1675
+PAPER: 0
+SCISSORS: 31.4275
+LIZARD: 29.315
+SPOCK: 32.0875
+
+
+Population Densities at: 800
+EMPTY: 6.3325
+ROCK: 0.185
+PAPER: 0
+SCISSORS: 28.4025
+LIZARD: 34.3275
+SPOCK: 30.7525
+
+
+Population Densities at: 1000
+EMPTY: 6.3725
+ROCK: 0.3175
+PAPER: 0
+SCISSORS: 30.4525
+LIZARD: 30.4525
+SPOCK: 32.405
+
+
+Population Densities at: 1200
+EMPTY: 6.2525
+ROCK: 0
+PAPER: 0
+SCISSORS: 35.0275
+LIZARD: 30.4725
+SPOCK: 28.2475
+
+
+Refreshing random numbers...
+
+Population Densities at: 1400
+EMPTY: 6.0075
+ROCK: 0
+PAPER: 0
+SCISSORS: 31.645
+LIZARD: 29.1025
+SPOCK: 33.245
+
+
+Population Densities at: 1600
+EMPTY: 6.19
+ROCK: 0
+PAPER: 0
+SCISSORS: 28.5075
+LIZARD: 36.2925
+SPOCK: 29.01
+
+
+Population Densities at: 1800
+EMPTY: 6.0675
+ROCK: 0
+PAPER: 0
+SCISSORS: 34.825
+LIZARD: 29.3825
+SPOCK: 29.725
+
+
+Population Densities at: 2000
+EMPTY: 6.0625
+ROCK: 0
+PAPER: 0
+SCISSORS: 28.59
+LIZARD: 31.62
+SPOCK: 33.7275
+
+
+Population Densities at: 2200
+EMPTY: 5.88
+ROCK: 0
+PAPER: 0
+SCISSORS: 31.4825
+LIZARD: 32.5425
+SPOCK: 30.095
+
+
+Population Densities at: 2400
+EMPTY: 5.955
+ROCK: 0
+PAPER: 0
+SCISSORS: 31.8575
+LIZARD: 31.3925
+SPOCK: 30.795
+
+
+Refreshing random numbers...
+
+Population Densities at: 2600
+EMPTY: 5.6525
+ROCK: 0
+PAPER: 0
+SCISSORS: 30.755
+LIZARD: 30.8875
+SPOCK: 32.705
+
+
+Population Densities at: 2800
+EMPTY: 5.8225
+ROCK: 0
+PAPER: 0
+SCISSORS: 30.9775
+LIZARD: 28.9975
+SPOCK: 34.2025
+
+
+Population Densities at: 3000
+EMPTY: 6.0475
+ROCK: 0
+PAPER: 0
+SCISSORS: 31.32
+LIZARD: 32.8925
+SPOCK: 29.74
+
+
+Population Densities at: 3200
+EMPTY: 6.07
+ROCK: 0
+PAPER: 0
+SCISSORS: 31.305
+LIZARD: 29.3
+SPOCK: 33.325
+
+
+Population Densities at: 3400
+EMPTY: 6.105
+ROCK: 0
+PAPER: 0
+SCISSORS: 31.9975
+LIZARD: 31.685
+SPOCK: 30.2125
+
+
+Population Densities at: 3600
+EMPTY: 6.0975
+ROCK: 0
+PAPER: 0
+SCISSORS: 33.9625
+LIZARD: 32.8125
+SPOCK: 27.1275
+
+
+Refreshing random numbers...
+
+Population Densities at: 3800
+EMPTY: 6.1525
+ROCK: 0
+PAPER: 0
+SCISSORS: 31.69
+LIZARD: 27.8775
+SPOCK: 34.28
+
+
+Population Densities at: 4000
+EMPTY: 6.06
+ROCK: 0
+PAPER: 0
+SCISSORS: 30.8925
+LIZARD: 32.6625
+SPOCK: 30.385
+
+
+Population Densities at: 4200
+EMPTY: 6.32
+ROCK: 0
+PAPER: 0
+SCISSORS: 32.44
+LIZARD: 30.535
+SPOCK: 30.705
+
+
+Population Densities at: 4400
+EMPTY: 5.9675
+ROCK: 0
+PAPER: 0
+SCISSORS: 30.0175
+LIZARD: 34.88
+SPOCK: 29.135
+
+
+Population Densities at: 4600
+EMPTY: 6.0525
+ROCK: 0
+PAPER: 0
+SCISSORS: 32.765
+LIZARD: 31.52
+SPOCK: 29.6625
+
+
+Population Densities at: 4800
+EMPTY: 6.1475
+ROCK: 0
+PAPER: 0
+SCISSORS: 31.17
+LIZARD: 32.78
+SPOCK: 29.9025
+
+
+Population Densities at: 5000
+EMPTY: 5.975
+ROCK: 0
+PAPER: 0
+SCISSORS: 32.26
+LIZARD: 29.66
+SPOCK: 32.105
+
+
+Refreshing random numbers...
+
+Population Densities at: 5200
+EMPTY: 5.9525
+ROCK: 0
+PAPER: 0
+SCISSORS: 29.055
+LIZARD: 31.24
+SPOCK: 33.7525
+
+
+Population Densities at: 5400
+EMPTY: 6.0025
+ROCK: 0
+PAPER: 0
+SCISSORS: 31.035
+LIZARD: 29.72
+SPOCK: 33.2425
+
+
+Population Densities at: 5600
+EMPTY: 6.16
+ROCK: 0
+PAPER: 0
+SCISSORS: 28.9625
+LIZARD: 29.46
+SPOCK: 35.4175
+
+
+Population Densities at: 5800
+EMPTY: 6.0025
+ROCK: 0
+PAPER: 0
+SCISSORS: 30.775
+LIZARD: 32.4125
+SPOCK: 30.81
+
+
+Population Densities at: 6000
+EMPTY: 6.11
+ROCK: 0
+PAPER: 0
+SCISSORS: 32.9875
+LIZARD: 30.7525
+SPOCK: 30.15
+
+real    0m36.123s
+user    0m13.384s
+sys     0m3.044s
