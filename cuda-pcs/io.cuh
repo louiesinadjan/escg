@@ -13,4 +13,4 @@ void exportDominanceToCSV(float* dominance, int species, Params p);
 
 void generateDominance(float* dominance, float alpha, float beta, float gamma);
 
-void writeResults(int* grid, int L, int mcs, float alpha, float beta, float gamma, bool stable);
+void writeResults(int* grid, int L, int mcs, float alpha, float beta, float gamma, int stable);

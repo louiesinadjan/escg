@@ -233,11 +233,11 @@ bool compareGrid(int* grid, int* prev, int L, int mcs, Params p) {
         // if (thresholds.empty() || thresholds.back() < upper) {
         //     thresholds.push_back(upper);
         // }
-        thresholds = {1000, 10000, 50000, 100000, 250000, 500000};
+        thresholds = {1000, 2000, 3000, 5000, 7000, 10000, 25000, 50000, 100000, 250000, 500000};
 
         for (int t : thresholds) {
             if (mcs < t)
-                writeResults(grid, L, t, p.alpha, p.beta, p.gamma, true);
+                writeResults(grid, L, t, p.alpha, p.beta, p.gamma, mcs);
         }
     }
 
@@ -515,7 +515,7 @@ int main(int argc, const char* argv[]) {
                 break;
             }
 
-            if(mcs == 1000 || mcs == 10000 || mcs == 50000 || mcs == 100000 || mcs == 250000 || mcs == 500000){
+            if(mcs == 1000 || mcs == 2000 || mcs == 3000 || mcs == 5000 ||mcs == 7000 || mcs == 10000 || mcs == 25000 || mcs == 50000 || mcs == 100000 || mcs == 250000 || mcs == 500000){
                 writeResults(h_grid, L, mcs, params.alpha, params.beta, params.gamma, false);
                 if(params.save){
                     exportGridToCSV(h_grid, params, mcs); 
@@ -538,12 +538,12 @@ int main(int argc, const char* argv[]) {
             }
 
             if(mcs == 1000 || mcs == 3000 || mcs == 5000 || mcs == 10000){
-                writeResults(h_grid, L, mcs, params.alpha, params.beta, params.gamma, false);
+                writeResults(h_grid, L, mcs, params.alpha, params.beta, params.gamma, -1);
                 if(params.save){
                     exportGridToCSV(h_grid, params, mcs); 
                 }
             } else if ((mcs <= 100000) && (mcs % 25000 == 0)){
-                writeResults(h_grid, L, mcs, params.alpha, params.beta, params.gamma, false);
+                writeResults(h_grid, L, mcs, params.alpha, params.beta, params.gamma, -1);
                 if(params.save){
                     exportGridToCSV(h_grid, params, mcs); 
                 }
