@@ -223,7 +223,18 @@ bool compareGrid(int* grid, int* prev, int L, int mcs, Params p) {
     bool same = std::memcmp(grid, prev, sizeof(int) * L * L) == 0;
 
     if (same) {
-        std::vector<int> thresholds = {1000, 5000, 10000, 20000, 50000, 100000, 200000, 300000, 400000, 500000};
+        std::vector<int> thresholds;
+        // int step = p.numRandoms / (L * L);
+        // step = step * 10;
+        // for (int t = step; t <= 500000; t += step) {
+        //     thresholds.push_back(t);
+        // }
+        // int upper = ((500000 + step - 1) / step) * step;
+        // if (thresholds.empty() || thresholds.back() < upper) {
+        //     thresholds.push_back(upper);
+        // }
+        thresholds = {1000, 10000, 50000, 100000, 250000, 500000};
+
         for (int t : thresholds) {
             if (mcs < t)
                 writeResults(grid, L, t, p.alpha, p.beta, p.gamma, true);
@@ -379,13 +390,13 @@ int main(int argc, const char* argv[]) {
 
     params.numRandoms = (params.numRandoms / N) * N;
 
-    std::cout << "------------------- Parameters -------------------\n";
-    std::cout << "MCS: " << params.MCS << "\n";
-    std::cout << "Lattice Length: " << params.L << "\n";
-    std::cout << "Alpha: " << params.alpha << "\n";
-    std::cout << "Beta: " << params.beta << "\n";
-    std::cout << "Gamma: " << params.gamma << "\n";
-    std::cout << "-------------------------------------------------\n";
+    // std::cout << "------------------- Parameters -------------------\n";
+    // std::cout << "MCS: " << params.MCS << "\n";
+    // std::cout << "Lattice Length: " << params.L << "\n";
+    // std::cout << "Alpha: " << params.alpha << "\n";
+    // std::cout << "Beta: " << params.beta << "\n";
+    // std::cout << "Gamma: " << params.gamma << "\n";
+    // std::cout << "-------------------------------------------------\n";
 
     // ------------------- CUDA Streams ------------------
 
@@ -408,11 +419,6 @@ int main(int argc, const char* argv[]) {
     int* h_neighbours = new int[params.numRandoms];
 
     cudaError_t err;
-
-    size_t freeMem, totalMem;
-    cudaMemGetInfo(&freeMem, &totalMem);
-    std::cout << "\nGPU Memory Available: " << freeMem / 1024 / 1024 << " MB\n";
-
     err = cudaMalloc(&d_invasion_probabilities, params.numRandoms * sizeof(float));
     if (err != cudaSuccess) {
         std::cerr << "CUDA malloc failed for invasion probabilities: " << cudaGetErrorString(err) << std::endl;
@@ -506,11 +512,14 @@ int main(int argc, const char* argv[]) {
         for (int mcs = 0; mcs <= MCS; mcs += step) {
             if (compareGrid(h_grid, prev, L, mcs, params)) {
                 std::cout << "Stasis reached at MCS: " << mcs << std::endl;
+                break;
             }
 
-            writeResults(h_grid, L, mcs, params.alpha, params.beta, params.gamma, false);
-            if(params.save){
-                exportGridToCSV(h_grid, params, mcs); 
+            if(mcs == 1000 || mcs == 10000 || mcs == 50000 || mcs == 100000 || mcs == 250000 || mcs == 500000){
+                writeResults(h_grid, L, mcs, params.alpha, params.beta, params.gamma, false);
+                if(params.save){
+                    exportGridToCSV(h_grid, params, mcs); 
+                }
             }
 
             if (mcs == MCS) {
