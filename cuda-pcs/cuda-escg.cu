@@ -31,6 +31,8 @@ Params parseArgs(int argc, char* argv[]) {
         {"numRandoms", required_argument, 0, 'R'},
         {"maxStep", required_argument, 0, 'x'},
 
+        {"resultsFile", required_argument, 0, 'o'},
+
         {"alpha", required_argument, 0, 'a'},
         {"beta", required_argument, 0, 'b'},
         {"gamma", required_argument, 0, 'g'},
@@ -48,10 +50,11 @@ Params parseArgs(int argc, char* argv[]) {
                         "[--species <int>] [--flux <true|false>] [--dominance <true|false]"
                         "[--numRandoms <int>][--maxStep <true|false]"
                         "[--save <true|false>] [--resume <true|false>]"
-                        "[--alpha <float>] [--beta <float>] [--gamma <float>]";
+                        "[--alpha <float>] [--beta <float>] [--gamma <float>]"
+                        "[--resultsFile <file.csv>]";
 
     // Parse the command line arguments
-    while ((opt = getopt_long(argc, argv, "m:l:h:p:n:s:f:e:r:d:S:x:R:a:b:g:", long_options, &option_index)) != -1) {
+    while ((opt = getopt_long(argc, argv, "m:l:h:p:n:s:f:e:r:d:S:x:R:a:b:g:o:", long_options, &option_index)) != -1) {
         switch (opt) {
             case 'm':
                 params.MCS = std::stoi(optarg);
@@ -178,6 +181,11 @@ Params parseArgs(int argc, char* argv[]) {
             case 'g':
                 params.gamma = std::stof(optarg);
                 break;
+            case 'o': {
+                std::string resultsFile(optarg);
+                params.resultsFile = resultsFile;
+                break;
+            }
             default:
                 std::cerr << "Usage: " << argv[0] << usage << std::endl;
                 exit(EXIT_FAILURE);
@@ -233,8 +241,9 @@ bool compareGrid(int* grid, int* prev, int L, int mcs, Params p) {
         // if (thresholds.empty() || thresholds.back() < upper) {
         //     thresholds.push_back(upper);
         // }
-        thresholds = {1000, 2000, 3000, 5000, 7000, 10000, 25000, 50000, 100000, 250000, 500000};
+        // thresholds = {1000, 2000, 3000, 5000, 7000, 10000, 25000, 50000, 100000, 250000, 500000};
 
+        thresholds = {1000, 2000, 3000, 5000, 7000, 10000, 25000, 50000, 160000};
         for (int t : thresholds) {
             if (mcs < t)
                 writeResults(grid, L, t, p.alpha, p.beta, p.gamma, mcs);
@@ -515,7 +524,7 @@ int main(int argc, const char* argv[]) {
                 break;
             }
 
-            if(mcs == 1000 || mcs == 2000 || mcs == 3000 || mcs == 5000 ||mcs == 7000 || mcs == 10000 || mcs == 25000 || mcs == 50000 || mcs == 100000 || mcs == 250000 || mcs == 500000){
+            if(mcs == 0 || mcs == 1000 || mcs == 2000 || mcs == 3000 || mcs == 5000 ||mcs == 7000 || mcs == 10000 || mcs == 25000 || mcs == 50000 || mcs == 100000 || mcs == 160000 || mcs == 250000 || mcs == 500000){
                 writeResults(h_grid, L, mcs, params.alpha, params.beta, params.gamma, false);
                 if(params.save){
                     exportGridToCSV(h_grid, params, mcs); 
@@ -533,8 +542,11 @@ int main(int argc, const char* argv[]) {
         }
     } else {                                   // 1MCS per kernel call
         for (int mcs = 0; mcs <= MCS; mcs++) { // Monte Carlos
+            // densities(h_grid, d_grid, d_speciesCounts, N, mcs, params.printFrequency, gridCtx, params.species, speciesSet);
+
             if (compareGrid(h_grid, prev, L, mcs, params)) {
                 std::cout << "Stasis reached at MCS: " << mcs << std::endl;
+                break;
             }
 
             if(mcs == 1000 || mcs == 3000 || mcs == 5000 || mcs == 10000){
@@ -584,6 +596,8 @@ int main(int argc, const char* argv[]) {
         }
     }
 
+    // ------------------- Write Results -------------------
+    writeAllResultsToFile(params.resultsFile);
     // ------------------- Free Memory -------------------
 
     // Grids

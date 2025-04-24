@@ -1,4 +1,9 @@
 #include "io.cuh"
+#include <vector>
+#include <string>
+#include <sstream>
+
+std::vector<std::string> resultsBuffer;
 
 void exportGridToCSV(int* grid, Params p, int mcs) {
     std::ostringstream filename;
@@ -132,9 +137,23 @@ void writeResults(int* grid, int L, int mcs, float alpha, float beta, float gamm
         sp[i] /= (L * L);
     }
 
-    std::ofstream results;
-    results.open("pcs_fig5.csv", std::ios::app);
-    results << alpha << "," << beta << "," << gamma << "," << mcs << "," << sp[0] << "," << sp[1] << "," << sp[2] << "," << sp[3] << "," 
-    << sp[4] << "," << sp[5] << "," << sp[6] << "," << sp[7] << "," << L << "," << stable << "\n";
+    std::ostringstream oss;
+    oss << alpha << "," << beta << "," << gamma << "," << mcs << "," << sp[0] << "," << sp[1] << "," << sp[2] << "," << sp[3] << "," 
+        << sp[4] << "," << sp[5] << "," << sp[6] << "," << sp[7] << "," << L << "," << stable;
+    resultsBuffer.push_back(oss.str());
+}
+
+void writeAllResultsToFile(std::string resultsFile) {
+    std::ofstream results(resultsFile, std::ios::app);
+    if (!results) {
+        std::cerr << "Error: Could not open results file for writing." << std::endl;
+        return;
+    }
+
+    for (const auto& line : resultsBuffer) {
+        results << line << "\n";
+    }
+
     results.close();
+    resultsBuffer.clear();
 }

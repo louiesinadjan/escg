@@ -19,7 +19,7 @@ struct Params {
     int species = 8;            // Number of species (Rock, Paper, Scissors, Lizard, Spock)
     bool flux = true;           // Flux boundary conditions
     float emptyProbability = 0; // Initial empty cell probability
-    int numRandoms = 320'000'000;  // Number of random numbers to generate
+    int numRandoms = 40'000'000;  // Number of random numbers to generate
 
     bool save = false;      // Save grid and snapshots?
     bool dominance = false; // Import dominance.csv?
@@ -32,7 +32,8 @@ struct Params {
     
     bool maxStep = false; // Process numRandoms number of MCS per metal call 
 
-    std::string outputDir; // Output directory for simulation files
+    std::string resultsFile; // File to save results
+    std::string outputDir = "results.csv"; // Output directory for simulation files
 };
 
 struct GridContext {

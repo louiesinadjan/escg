@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import os
 
 # Load your CSV
-df = pd.read_csv("pcs.csv")
+df = pd.read_csv("pcs_fig5.csv")
 
 # Ensure output directory exists
 os.makedirs("plots_per_mcs", exist_ok=True)
@@ -12,20 +12,24 @@ os.makedirs("plots_per_mcs", exist_ok=True)
 markers = ['^', 'o', 'o', 's', 's']
 colors = ['red', 'green', 'blue', 'grey', 'black']
 
+print("Rows where MCS = 0:")
+print(df[df['mcs'] == 0])
+print()
 # Iterate through each unique MCS value
 for mcs_val in sorted(df['mcs'].unique()):
     mcs_df = df[df['mcs'] == mcs_val]
 
     # Group by system size (length) and alpha
-    grouped = mcs_df.groupby(['length', 'alpha'])['s5'].mean().reset_index()
-    grouped['1-rho_5'] = 1 - grouped['s5']
-    system_sizes = sorted(grouped['length'].unique())
+    grouped = mcs_df.groupby(['length', 'alpha'])
+    ext_prob = grouped['s5'].apply(lambda x: (x == 0).sum() / len(x)).reset_index()
+    ext_prob.rename(columns={'s5': 'extinction_prob'}, inplace=True)
+    system_sizes = sorted(ext_prob['length'].unique())
 
     # Plot
     plt.figure(figsize=(10, 6))
     for i, size in enumerate(system_sizes):
-        data = grouped[grouped['length'] == size]
-        plt.plot(data['alpha'], data['1-rho_5'],
+        data = ext_prob[ext_prob['length'] == size]
+        plt.plot(data['alpha'], data['extinction_prob'],
                  label=str(size),
                  marker=markers[i % len(markers)],
                  color=colors[i % len(colors)],
@@ -38,11 +42,11 @@ for mcs_val in sorted(df['mcs'].unique()):
 
     # Labels and formatting
     plt.xlabel(r"$\alpha$")
-    plt.ylabel(r"$1 - \rho_5$")
+    plt.ylabel("Extinction probability of Species 5")
     plt.legend(title="System size")
-    plt.ylim(0.75, 1.01)
+    plt.ylim(-0.01, 1.01)
     plt.grid(True)
-    plt.title(f"Absence of Species 5 vs Alpha at MCS={mcs_val}")
+    plt.title(f"Extinction Probability of Species 5 at MCS={mcs_val}")
     plt.tight_layout()
-    plt.savefig(f"plots_per_mcs/absence_species5_mcs_{mcs_val}.png")
+    plt.savefig(f"plots_per_mcs/fig5_mcs_{mcs_val}.png")
     plt.close()
