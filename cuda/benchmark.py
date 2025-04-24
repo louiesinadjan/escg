@@ -10,7 +10,7 @@ def run_and_time(command):
 
 def benchmark(executable, label, runs, lattice_length, maxstep, writer):
     for i in range(1, runs + 1):
-        duration = run_and_time(f"./{executable} -l {lattice_length} -h {lattice_length} -x {maxstep}")
+        duration = run_and_time(f"./{executable} -l {lattice_length} -h {lattice_length} -x {maxstep} -R 40000000")
         writer.writerow([label, i, lattice_length, f"{duration:.9f}"])
         print(f"{label},{i},{lattice_length},{duration:.9f}")
 
