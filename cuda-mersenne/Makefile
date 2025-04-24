@@ -3,8 +3,8 @@ NVCC = nvcc
 CXX = g++
 
 # Compiler Flags
-CXXFLAGS = -std=c++17 -Wall -Wextra -Werror
-NVCCFLAGS = -std=c++14 -Xcompiler "-Wall -Wextra -Werror" -g -G
+CXXFLAGS = -std=c++17 -Wall -Wextra -Werror -O3
+NVCCFLAGS = -std=c++14 -Xcompiler "-Wall -Wextra -Werror" -O3
 
 # Executable Names
 TARGETS = cuda-mersenne curand serial-mersenne

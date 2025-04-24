@@ -135,7 +135,7 @@ void printNumbers(uint* h_results, int totalNumbers) {
 
 // Main Function
 int main() {
-    int totalNumbers = 1000000; // Generate exactly 1,000,000 random numbers
+    int totalNumbers = 1'000'000'000; 
     uint* h_results = new uint[totalNumbers];
     memset(h_results, 0, totalNumbers * sizeof(uint));
 
