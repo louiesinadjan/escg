@@ -1,5 +1,5 @@
 implementation,time_seconds
-cuRAND,0.0009085207600000003
-cuda-mersenne,0.0009124068399999998
-mersenne-twister,6.890816324570002
-metal-mersenne,0.9921567804599996
+cuRAND,0.565691205
+cuda-mersenne,0.8926191969999999
+mersenne-twister,6.890816324569999
+metal-mersenne,0.9921567804599999
