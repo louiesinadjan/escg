@@ -20,7 +20,11 @@ with open("results.csv", mode="a", newline="") as file:
 
     # benchmark("escg", "single-threaded", 10, 100, writer)
     # benchmark("escg", "single-threaded", 10, 200, writer)
-    benchmark("escg", "single-threaded", 10, 300, writer)
+    # benchmark("escg", "single-threaded", 10, 300, writer)
     
     # benchmark("escg", "single-threaded", 10, 400, writer)
     # benchmark("escg", "single-threaded", 10, 800, writer)
+    benchmark("escg", "single-threaded", 1, 500, writer)
+    benchmark("escg", "single-threaded", 1, 600, writer)
+    benchmark("escg", "single-threaded", 1, 700, writer)
+    

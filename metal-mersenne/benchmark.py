@@ -18,5 +18,5 @@ with open("results.csv", mode="w", newline="") as file:
     writer = csv.writer(file)
     writer.writerow(["implementation", "run", "time_seconds"])
 
-    benchmark("metal-mersenne", "metal", 100, writer)
-    benchmark("serial-mersenne", "serial", 100, writer)
+    benchmark("metal-mersenne", "metal", 10, writer)
+    benchmark("serial-mersenne", "serial", 10, writer)

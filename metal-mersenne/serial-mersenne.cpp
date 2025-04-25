@@ -21,18 +21,22 @@ void printNumbers(int* numbers, int totalNumbers) {
 
 int main() {
     // Serial Mersenne Twister
-    static std::random_device rd;                     // Random number generator
-    static std::mt19937 gen(rd());                    // Mersenne Twister
+    static std::random_device rd;                        // Random number generator
+    static std::mt19937 gen(rd());                       // Mersenne Twister
     std::uniform_int_distribution<int> dist(1, INT_MAX); // Uniform distribution
 
-    int numRandoms = 1'000'000'000; // Number of random numbers to generate
+    int numRandoms = 100'000'000; // Number of random numbers to generate
 
-    int* x = new int[numRandoms];          // Array to store random numbers
-                                           // for (int run = 0; run < 100; run++) {
-    for (int j = 0; j < numRandoms; j++) { // Generate 1,000,000,000 random numbers
-        x[j] = dist(gen);
+    int* x = new int[numRandoms]; // Array to store random numbers
+    int* target = new int[numRandoms]; // Array to store target numbers
+
+    for (int i = 0; i < 10; i++) { // Generate 1,000,000,000 random numbers
+        for (int j = 0; j < numRandoms; j++) {
+            x[j] = dist(gen);
+        }
+        std::memcpy(target, x, numRandoms * sizeof(int)); // Copy the generated numbers to target
     }
-    // }
+
 
     // validateRandomNumbers(x, 1000000);
     // printNumbers(x, 1000000);

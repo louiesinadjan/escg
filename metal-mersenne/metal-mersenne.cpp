@@ -52,43 +52,43 @@ int main() {
         return -1;
     }
 
-    // Prepare buffers
-    const int numThreads = 2000;
-    const int numRandomNumbers = 1'000'000'000;
+    for (int i = 0; i < 10; i++) { // Generate 1,000,000,000 random numbers
+        // Prepare buffers
+        const int numThreads = 2000;
+        const int numRandomNumbers = 100'000'000;
+        int* randoms = new int[numRandomNumbers];
 
-    uint32_t seeds[numThreads];
+        uint32_t seeds[numThreads];
 
-    for (int i = 0; i < numThreads; ++i) {
-        seeds[i] = i + 1;
+        for (int i = 0; i < numThreads; ++i) {
+            seeds[i] = i + 1;
+        }
+
+        MTL::Buffer* seedBuffer = device->newBuffer(seeds, sizeof(seeds), MTL::ResourceStorageModeShared);
+        uint32_t* results = new uint32_t[numRandomNumbers];
+        MTL::Buffer* resultBuffer = device->newBuffer(sizeof(uint32_t) * numRandomNumbers, MTL::ResourceStorageModeShared);
+
+        // Create command buffer and encoder
+        MTL::CommandBuffer* commandBuffer = commandQueue->commandBuffer();
+        MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
+        encoder->setComputePipelineState(pipelineState); //
+        encoder->setBuffer(seedBuffer, 0, 0);
+        encoder->setBuffer(resultBuffer, 0, 1);
+
+        // Dispatch threads
+        MTL::Size gridSize = MTL::Size(numThreads, 1, 1);
+        MTL::Size threadGroupSize = MTL::Size(pipelineState->maxTotalThreadsPerThreadgroup(), 1, 1);
+        encoder->dispatchThreads(gridSize, threadGroupSize);
+        encoder->endEncoding();
+
+        // Commit command buffer and wait for completion
+        commandBuffer->commit();
+        commandBuffer->waitUntilCompleted();
+
+        // Retrieve results
+        results = static_cast<uint32_t*>(resultBuffer->contents());
+        std::memcpy(randoms, resultBuffer->contents(), sizeof(uint32_t) * numRandomNumbers);
     }
-
-    MTL::Buffer* seedBuffer = device->newBuffer(seeds, sizeof(seeds), MTL::ResourceStorageModeShared);
-    uint32_t* results = new uint32_t[numRandomNumbers];
-    MTL::Buffer* resultBuffer = device->newBuffer(sizeof(uint32_t) * numRandomNumbers, MTL::ResourceStorageModeShared);
-
-    // Create command buffer and encoder
-    MTL::CommandBuffer* commandBuffer = commandQueue->commandBuffer();
-    MTL::ComputeCommandEncoder* encoder = commandBuffer->computeCommandEncoder();
-    encoder->setComputePipelineState(pipelineState); //
-    encoder->setBuffer(seedBuffer, 0, 0);
-    encoder->setBuffer(resultBuffer, 0, 1);
-
-    // Dispatch threads
-    MTL::Size gridSize = MTL::Size(numThreads, 1, 1);
-    MTL::Size threadGroupSize = MTL::Size(pipelineState->maxTotalThreadsPerThreadgroup(), 1, 1);
-    encoder->dispatchThreads(gridSize, threadGroupSize);
-    encoder->endEncoding();
-
-    // Commit command buffer and wait for completion
-    commandBuffer->commit();
-    commandBuffer->waitUntilCompleted();
-
-    // Retrieve results
-    results = static_cast<uint32_t*>(resultBuffer->contents());
-
-    // validateRandomNumbers(results, numRandomNumbers);
-
-    // printNumbers(results, numRandomNumbers);
 
     autoreleasePool->release();
 

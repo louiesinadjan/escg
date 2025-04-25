@@ -26,6 +26,9 @@ with open("results.csv", mode="a", newline="") as file:
     # benchmark("metal", "metal-max", 10, 300, "true", writer)
     # benchmark("metal", "metal-max", 10, 400, "true", writer)
     
-    benchmark("metal", "metal", 5, 600, "true", writer)
-    benchmark("metal", "metal-max", 5, 600, "true", writer)
+    benchmark("metal", "metal", 2, 500, "true", writer)
+    benchmark("metal", "metal-max", 2, 500, "true", writer)
+    
+    # benchmark("metal", "metal", 5, 600, "true", writer)
+    # benchmark("metal", "metal-max", 5, 600, "true", writer)
     
