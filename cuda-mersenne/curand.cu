@@ -4,7 +4,6 @@
 #include <device_launch_parameters.h>
 #include <iostream>
 
-// CUDA Kernel: Generate Random Numbers Using cuRAND
 __global__ void curand_numbers(uint* results, int numPerThread) {
     int id = blockIdx.x * blockDim.x + threadIdx.x;
     if (id >= (gridDim.x * blockDim.x))
@@ -20,7 +19,6 @@ __global__ void curand_numbers(uint* results, int numPerThread) {
     }
 }
 
-// Host Function: Allocate Memory & Launch Kernel
 void generateRandomNumbers(int totalNumbers, uint* h_results) {
     int threadsPerBlock = 256;
     int numThreads = (totalNumbers + threadsPerBlock - 1) / threadsPerBlock;
@@ -53,7 +51,6 @@ void generateRandomNumbers(int totalNumbers, uint* h_results) {
     cudaFree(d_results);
 }
 
-// Host Function: Validate Random Numbers
 void validateRandomNumbers(uint* h_results, int totalNumbers) {
     // Check there are no 0s in the results
     for (int i = 0; i < totalNumbers; i++) {
@@ -63,20 +60,18 @@ void validateRandomNumbers(uint* h_results, int totalNumbers) {
     }
 }
 
-// Host Function: Print Random Numbers
 void printNumbers(uint* h_results, int totalNumbers) {
     for (int i = 0; i < totalNumbers; i++) {
         std::cout << h_results[i] << std::endl;
     }
 }
 
-// Main Function
 int main() {
-    int totalNumbers = 1'000'000'000; // Generate exactly 1,000,000 random numbers
+    int totalNumbers = 10'000'000; 
     uint* h_results = new uint[totalNumbers];
     memset(h_results, 0, totalNumbers * sizeof(uint));
 
-    for (int i = 0; i < 100; i++) {
+    for(int i = 0; i < 100; i++) {
         generateRandomNumbers(totalNumbers, h_results);
     }
 

@@ -29,12 +29,18 @@ with open("results.csv", mode="a", newline="") as file:
     
     # benchmark("cuda-escg", "cuda", 10, 400, "false", writer)
     # benchmark("cuda-escg", "cuda-max", 10, 400, "true", writer)
+
+    benchmark("cuda-escg", "cuda", 1, 500, "false", writer)
+    benchmark("cuda-escg", "cuda-max", 1, 500, "true", writer)
     
     # benchmark("cuda-escg", "cuda", 10, 600, "false", writer)
     # benchmark("cuda-escg", "cuda-max", 10, 600, "true", writer)
+
+    benchmark("cuda-escg", "cuda", 1, 700, "false", writer)
+    benchmark("cuda-escg", "cuda-max", 1, 700, "true", writer)
     
     # benchmark("cuda-escg", "cuda", 10, 800, "false", writer)
 
     # benchmark("cuda-escg", "cuda-max", 5, 1600, "true", writer)
 
-    benchmark("cuda-escg", "cuda-max", 1, 3200, "true", writer)
+    # benchmark("cuda-escg", "cuda-max", 1, 3200, "true", writer)

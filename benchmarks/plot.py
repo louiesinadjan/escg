@@ -14,7 +14,7 @@ palette = {
 
 # -------------------Combined Results-------------------
 
-df = pd.read_csv("combined-escgs.csv")
+df = pd.read_csv("csvs/combined-escgs.csv")
 
 # Convert 'time_seconds' to numeric, forcing errors to NaN
 df['time_seconds'] = pd.to_numeric(df['time_seconds'], errors='coerce')
@@ -40,11 +40,11 @@ plt.ylabel('Execution Time (seconds)')
 plt.grid(True)
 plt.legend(title='Implementation')
 plt.tight_layout()
-plt.savefig("comparisons.png")
+plt.savefig("figs/comparisons.png")
 
 # -------------------Implementation-------------------
 
-df = pd.read_csv("combined-escgs.csv")
+df = pd.read_csv("csvs/combined-escgs.csv")
 df['time_seconds'] = pd.to_numeric(df['time_seconds'], errors='coerce')
 df['length'] = pd.to_numeric(df['length'], errors='coerce')
 
@@ -88,5 +88,5 @@ for impl in grouped['implementation'].unique():
     plt.ylabel('Execution Time (seconds)')
     plt.subplots_adjust(top=0.85)  # Move title slightly down to avoid overlap
     plt.tight_layout()
-    plt.savefig(f"{impl}.png")
+    plt.savefig(f"figs/{impl}.png")
     plt.close()

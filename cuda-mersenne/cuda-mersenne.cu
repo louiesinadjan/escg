@@ -135,11 +135,11 @@ void printNumbers(uint* h_results, int totalNumbers) {
 
 // Main Function
 int main() {
-    int totalNumbers = 1'000'000'000; 
+    int totalNumbers = 10'000'000; 
     uint* h_results = new uint[totalNumbers];
     memset(h_results, 0, totalNumbers * sizeof(uint));
 
-    for (int i = 0; i < 100; i++) {
+    for(int i = 0; i < 100; i++) {
         generateRandomNumbers(totalNumbers, h_results);
     }
 
