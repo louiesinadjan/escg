@@ -18,11 +18,9 @@ with open("results.csv", mode="a", newline="") as file:
     writer = csv.writer(file)
     # writer.writerow(["implementation", "run", "length", "time_seconds"])
 
-    # benchmark("single-threaded", "escg", 20, 100, writer)
-    # benchmark("single-threaded", "single-threaded", 20, 200, writer)
-    benchmark("escg", "single-threaded", 10, 100, writer)
-    benchmark("escg", "single-threaded", 10, 200, writer)
+    # benchmark("escg", "single-threaded", 10, 100, writer)
+    # benchmark("escg", "single-threaded", 10, 200, writer)
     benchmark("escg", "single-threaded", 10, 300, writer)
     
-    benchmark("escg", "single-threaded", 10, 400, writer)
-    benchmark("escg", "single-threaded", 10, 800, writer)
+    # benchmark("escg", "single-threaded", 10, 400, writer)
+    # benchmark("escg", "single-threaded", 10, 800, writer)
