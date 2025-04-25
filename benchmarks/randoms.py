@@ -1,31 +1,32 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
+from matplotlib.ticker import FuncFormatter
 
-# Load CSV
-df = pd.read_csv("csvs/combined-numbers.csv")
+# Load and clean the data
+df = pd.read_csv("csvs/randoms.csv")
+df.columns = df.columns.str.strip()
 
-# Compute average time per implementation
-avg_times = df.groupby("implementation")["time_seconds"].mean().sort_values()
+df['time_seconds'] = pd.to_numeric(df['time_seconds'], errors='coerce')
+df['numRandoms'] = pd.to_numeric(df['numRandoms'], errors='coerce')
+df['length'] = pd.to_numeric(df['length'], errors='coerce')
+df = df.dropna(subset=['time_seconds'])
 
-# Plotting
+# Group by both numRandoms and length
+grouped = df.groupby(['numRandoms', 'length']).agg({'time_seconds': 'mean'}).reset_index()
+
+# Plot
 plt.figure(figsize=(10, 6))
-bar_colour = "#4A90E2"
-bars = avg_times.plot(kind="bar", color=bar_colour)
+sns.lineplot(data=grouped, x='numRandoms', y='time_seconds', hue='length', marker='o')
 
-plt.title("Average Time per Implementation (Log Scale)")
-plt.ylabel("Time (seconds, log scale)")
-plt.xlabel("Implementation")
-plt.xticks(rotation=45, ha="right")
+plt.title('Execution Time with Different --numRandoms (Grouped by Length)')
+plt.xlabel('numRandoms')
+plt.ylabel('Execution Time (seconds)')
+plt.grid(True)
 
-# Padding the y-axis limit
-y_max = avg_times.max()
-plt.ylim(top=y_max * 1.2)  # Add 20% headroom
-
-# Add value labels
-for i, value in enumerate(avg_times):
-    plt.text(i, value * 1.05, f"{value:.6f}", ha="center", va="bottom", fontsize=9)
+# Format x-axis with commas
+plt.gca().xaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{int(x):,}"))
 
 plt.tight_layout()
-plt.savefig("figs/mersenne.png")
+plt.savefig("figs/numRandoms.png")
 plt.show()
-plt.close()
