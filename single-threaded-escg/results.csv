@@ -63,3 +63,6 @@ single-threaded,7,300,416.540224708
 single-threaded,8,300,416.092027292
 single-threaded,9,300,415.878589584
 single-threaded,10,300,414.301354916
+single-threaded,1,500,970.440152625
+single-threaded,1,600,1768.874207042
+single-threaded,1,700,2034.921004375
