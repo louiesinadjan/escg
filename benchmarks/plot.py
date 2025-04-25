@@ -86,6 +86,7 @@ for impl in grouped['implementation'].unique():
     plt.title(f'Execution Time vs Lattice Size ({impl})')
     plt.xlabel('Lattice Size (length)')
     plt.ylabel('Execution Time (seconds)')
+    plt.grid(True)
     plt.subplots_adjust(top=0.85)  # Move title slightly down to avoid overlap
     plt.tight_layout()
     plt.savefig(f"figs/{impl}.png")
