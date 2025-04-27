@@ -2,19 +2,26 @@
 #include <sstream>
 
 void plot_densities(GridContext g, Params p) {
-
-    plt::figure_size(2000, 800);
+    plt::rcparams({
+        {"axes.labelsize", "28"},
+        {"xtick.labelsize", "24"},
+        {"ytick.labelsize", "24"},
+        {"legend.fontsize", "28"},
+        {"axes.titlesize", "30"}
+        
+    });
+    plt::figure_size(1800, 800);
     plt::tight_layout();
 
     // Define a set of colors to cycle through
-    std::vector<std::string> colors = {"blue", "cyan", "green", "yellow", "r-", "m-", "k-", "orange", "pink", "purple"};
+    // std::vector<std::string> colors = {"blue", "cyan", "green", "yellow", "r-", "m-", "k-", "orange", "pink", "purple"};
 
     // Ensure speciesDensities is not empty
     if (!g.speciesDensities.empty()) {
         size_t speciesCount = g.speciesDensities[0].size(); // Get number of species
 
         for (size_t i = 0; i < speciesCount; i++) {
-            std::string color = colors[i % colors.size()]; // Cycle through colors
+            // std::string color = colors[i % colors.size()]; // Cycle through colors
             std::vector<double> speciesDensity;
 
             // Extract the density evolution for species `i`
@@ -22,7 +29,7 @@ void plot_densities(GridContext g, Params p) {
                 speciesDensity.push_back(g.speciesDensities[step][i]);
             }
 
-            plt::semilogx(g.steps, speciesDensity, color);
+            plt::semilogx(g.steps, speciesDensity);
         }
 
         plt::legend();
@@ -30,7 +37,7 @@ void plot_densities(GridContext g, Params p) {
     // Axis labels and title
     plt::xlabel("Steps");
     plt::ylabel("$\\rho_i$"); // LaTeX style for rho_i
-    plt::title("Density Evolution Over Time");
+    // plt::title("Density Evolution Over Time");
 
     bool moore = p.neighbourhood == 8;
     std::string length = "l" + std::to_string(p.L);
@@ -42,10 +49,9 @@ void plot_densities(GridContext g, Params p) {
     oss.precision(2);
     oss << std::scientific << p.mobility;
     std::string mobility_str = "M" + oss.str();
-    std::string flux = p.flux ? "flux" : "noflux";
     std::string species = std::to_string(p.species) + "species";
 
-    plt::title(length + "_" + height + "_" + neighbourhood + "_" + mobility_str + "_" + flux + "_" + species);
+    plt::title("Population Density Over Time");
     plt::save("./" + p.outputDir + "/densities.png");
     plt::close();
 }
@@ -54,9 +60,8 @@ void plot_densities(GridContext g, Params p) {
 void plot_snapshot(const int* grid, int mcs, Params p) {
     bool moore = p.neighbourhood == 8;
 
-    plt::figure_size(1500, 400);
+    plt::figure_size(2000, 2000);
     plt::tight_layout();
-    plt::rcparams({{"xtick.labelsize", "32"}, {"ytick.labelsize", "32"}});
 
     plt::axis("off"); // disables the axis labels and ticks
 
@@ -76,7 +81,9 @@ void plot_snapshot(const int* grid, int mcs, Params p) {
     // Change colormap as desired
     std::map<std::string, std::string> keywords;
 
-    if (p.species <= 5) {
+    if(p.species == 3){
+        keywords = {{"cmap", "Accent"}};
+    } else if (p.species <= 5) {
         keywords = {{"cmap", "viridis"}};
     } else {
         keywords = {{"cmap", "tab20b"}};

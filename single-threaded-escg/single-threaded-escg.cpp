@@ -21,9 +21,9 @@ Params parseArgs(int argc, char* argv[]) {
         {"species", required_argument, 0, 's'},
         {"mobility", required_argument, 0, 'M'},
         {"flux", required_argument, 0, 'f'},
-        {"empty", required_argument, 0, 'w'},
+        {"empty", required_argument, 0, 'e'},
         {"dominance", required_argument, 0, 'd'},
-        {"save", required_argument, 0, 's'},
+        {"save", required_argument, 0, 'S'},
         {"resume", required_argument, 0, 'r'},
         {0, 0, 0, 0} // End of options
     };
