@@ -32,7 +32,7 @@ Params parseArgs(int argc, char* argv[]) {
         {"flux", required_argument, 0, 'f'},
         {"empty", required_argument, 0, 'w'},
         {"dominance", required_argument, 0, 'd'},
-        {"save", required_argument, 0, 's'},
+        {"save", required_argument, 0, 'S'},
         {"resume", required_argument, 0, 'r'},
         {"numRandoms", required_argument, 0, 'R'},
         {"maxStep", required_argument, 0, 'x'},
