@@ -33,4 +33,7 @@ single-threaded,100.0,37.65794661455
 single-threaded,200.0,152.476133554
 single-threaded,300.0,415.75652451670004
 single-threaded,400.0,670.1960724583
+single-threaded,500.0,970.440152625
+single-threaded,600.0,1568.874207042
+single-threaded,700.0,2034.921004375
 single-threaded,800.0,3511.172491917
