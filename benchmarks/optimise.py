@@ -11,35 +11,28 @@ df['length'] = pd.to_numeric(df['length'], errors='coerce')
 df['run'] = pd.to_numeric(df['run'], errors='coerce')
 
 # Filter for 'metal' and 'metal-max' implementations
-df_filtered = df[df['implementation'].isin(['metal', 'metal-max'])]
+df_metal = df[df['implementation'].isin(['metal', 'metal-max'])]
 
-# Plot using seaborn
-plt.figure(figsize=(10, 6))
-sns.lineplot(data=df_filtered, x='run', y='time_seconds', hue='implementation', marker='o')
+# Filter for 'cuda' and 'cuda-max' implementations
+df_cuda = df[df['implementation'].isin(['cuda', 'cuda-max'])]
 
-# Add titles and labels
-plt.title('Metal Execution Time for L = 300')
-plt.xlabel('Trial')
-plt.ylabel('Execution Time (seconds)')
-plt.grid(True)
+# Create side-by-side subplots
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
+
+# Plot metal data
+sns.scatterplot(data=df_metal, x='run', y='time_seconds', hue='implementation', ax=ax1)
+ax1.set_title('Metal Execution Time for L = 300', fontsize=14)
+ax1.set_xlabel('Trial', fontsize=12)
+ax1.set_ylabel('Execution Time (seconds)', fontsize=12)
+ax1.grid(True)
+
+# Plot cuda data
+sns.scatterplot(data=df_cuda, x='run', y='time_seconds', hue='implementation', ax=ax2)
+ax2.set_title('CUDA Execution Time for L = 300', fontsize=14)
+ax2.set_xlabel('Trial', fontsize=12)
+ax2.set_ylabel('Execution Time (seconds)', fontsize=12)
+ax2.grid(True)
+
 plt.tight_layout()
-
-# Save the plot
-plt.savefig("figs/metal-warmup.png")
-
-df_filtered = df[df['implementation'].isin(['cuda', 'cuda-max'])]
-
-# Plot using seaborn
-plt.figure(figsize=(10, 6))
-sns.lineplot(data=df_filtered, x='run', y='time_seconds', hue='implementation', marker='o')
-
-# Add titles and labels
-plt.title('CUDA Execution Time for L = 300')
-plt.xlabel('Trial')
-plt.ylabel('Execution Time (seconds)')
-plt.grid(True)
-plt.tight_layout()
-
-# Save the plot
-plt.savefig("figs/cuda-no-warmup.png")
-
+plt.savefig("figs/metal_cuda_warmup.png")
+plt.show()

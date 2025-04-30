@@ -50,3 +50,21 @@ for mcs_val in sorted(df['mcs'].unique()):
     plt.tight_layout()
     plt.savefig(f"plots_per_mcs/fig5_mcs_{mcs_val}.png")
     plt.close()
+
+# Print standard deviation of extinction probabilities for each system size and MCS
+for mcs_val in sorted(df['mcs'].unique()):
+    mcs_df = df[df['mcs'] == mcs_val]
+    grouped = mcs_df.groupby(['length', 'alpha'])
+    ext_prob = grouped['s5'].apply(lambda x: (x == 0).sum() / len(x)).reset_index()
+    ext_prob.rename(columns={'s5': 'extinction_prob'}, inplace=True)
+    system_sizes = sorted(ext_prob['length'].unique())
+
+    print(f"Standard deviations at MCS={mcs_val}:")
+    for size in system_sizes:
+        data = ext_prob[ext_prob['length'] == size]
+        std_dev = data['extinction_prob'].std()
+        print(f"  System size {size}: {std_dev}")
+    print()
+    
+count = len(df[(df['length'] == 100) & (df['mcs'] == 1000)])
+print(f"Number of trials where length=100 and mcs=1000: {count}")
