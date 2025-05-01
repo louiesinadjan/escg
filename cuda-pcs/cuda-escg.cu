@@ -243,7 +243,9 @@ bool compareGrid(int* grid, int* prev, int L, int mcs, Params p) {
         // }
         // thresholds = {1000, 2000, 3000, 5000, 7000, 10000, 25000, 50000, 100000, 250000, 500000};
 
-        thresholds = {1000, 2000, 3000, 5000, 7000, 10000, 25000, 50000, 160000};
+        // thresholds = {1000, 2000, 3000, 5000, 7000, 10000, 25000, 50000, 160000};
+        thresholds = {1000, 2000, 3000, 5000, 7000, 10000, 25000, 50000};
+
         for (int t : thresholds) {
             if (mcs < t)
                 writeResults(grid, L, t, p.alpha, p.beta, p.gamma, mcs);

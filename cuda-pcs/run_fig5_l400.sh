@@ -1,8 +1,7 @@
 #!/bin/bash
 
 step=0.05
-num_trials=10
-
+num_trials=500
 skip_trial=false
 trap 'echo -e "\nSkipping current trial..."; skip_trial=true' SIGINT
 
@@ -14,7 +13,7 @@ trap 'echo -e "\nSkipping current trial..."; skip_trial=true' SIGINT
 #         fi
 
 #         echo "Running simulation with alpha=$alpha, trial=$trial, length = 100"
-#         ./cuda-escg -a $alpha --beta 0.75 --gamma 1 -l 100 -m 50000 -x true --numRandoms 10000000
+#         ./cuda-escg -a $alpha --beta 0.75 --gamma 1 -l 100 -m 50000 -x true --numRandoms 10000000 -o fig5_l100.csv
 #     done
 # done
 
