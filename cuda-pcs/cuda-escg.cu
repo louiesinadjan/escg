@@ -380,7 +380,7 @@ int main(int argc, const char* argv[]) {
     // Allocate dominance matrix to GPU
     float* dominance = new float[64];
     generateDominance(dominance, params.alpha, params.beta, params.gamma);
-    exportDominanceToCSV(dominance, params.species, params);
+    // exportDominanceToCSV(dominance, params.species, params);
 
     float* d_dominance;
     cudaMalloc(&d_dominance, params.species * params.species * sizeof(float));
