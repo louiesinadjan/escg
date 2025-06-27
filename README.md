@@ -1,4 +1,4 @@
-# ESCG: GPU-Accelerated Evolutionary Spatial Cyclic Games
+# GPU Acceleration for Evolutionary Spatial Cyclic Games
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
