@@ -1,0 +1,16 @@
+# build artifacts
+build/
+*.o
+*.air
+*.metallib
+
+# snapshot images
+ss_*
+ss_*.png
+
+# raw grid output csv (keep densities.csv, dominance.csv, params.csv)
+grid.csv
+grid_*.csv
+
+# macOS
+.DS_Store

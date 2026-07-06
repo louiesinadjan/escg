@@ -264,7 +264,7 @@ RandomCommandBuffers refreshRandomNumbers(MetalContext& ctx, float* action_proba
     }
     std::memcpy(ctx.seedBuffer->contents(), seeds, sizeof(uint32_t) * ctx.threads);
     delete[] seeds;
-    
+
     // Setup common dispatch parameters
     MTL::Size gridSize = MTL::Size(ctx.threads, 1, 1);
     MTL::Size threadGroupSize = MTL::Size(ctx.pipelineStateActions->maxTotalThreadsPerThreadgroup(), 1, 1);
@@ -476,7 +476,7 @@ void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, i
     encoder->setBuffer(ctx.actionProbabilitiesBuffer, 0, 2);
     encoder->setBuffer(ctx.dominanceBuffer, 0, 9);
 
-    // Using `setBytes()` for scalar values 
+    // Using `setBytes()` for scalar values
     encoder->setBytes(&mu, sizeof(float), 3);
     encoder->setBytes(&sigma, sizeof(float), 4);
     encoder->setBytes(&p.L, sizeof(int), 5);
@@ -489,7 +489,7 @@ void metalStep(MetalContext& ctx, StepContext& stepCtx, float mu, float sigma, i
     // Set the grid buffer
     encoder->setBuffer(ctx.stepGridBuffer, 0, 8);
 
-    MTL::Size threadsPerGrid = MTL::Size(512, 1, 1); 
+    MTL::Size threadsPerGrid = MTL::Size(512, 1, 1);
     MTL::Size threadGroupSize = MTL::Size(ctx.pipelineStateStep->maxTotalThreadsPerThreadgroup(), 1, 1);
 
     encoder->dispatchThreads(threadsPerGrid, threadGroupSize);
@@ -533,7 +533,7 @@ void maxMetalStep(MetalContext& ctx, uint32_t* cells, uint32_t* neighbours, floa
     // Set the grid buffer
     encoder->setBuffer(ctx.stepGridBuffer, 0, 8);
 
-    MTL::Size threadsPerGrid = MTL::Size(512, 1, 1); 
+    MTL::Size threadsPerGrid = MTL::Size(512, 1, 1);
     MTL::Size threadGroupSize = MTL::Size(ctx.pipelineStateStep->maxTotalThreadsPerThreadgroup(), 1, 1);
 
     encoder->dispatchThreads(threadsPerGrid, threadGroupSize);
@@ -590,7 +590,6 @@ int main(int argc, const char* argv[]) {
 
         currentMCS = importCSVToGrid(grid, N); // Assigns to grid and returns the current MCS
 
-        
     } else {
         std::cout << "Starting new simulation.\n" << std::endl;
 
@@ -600,8 +599,6 @@ int main(int argc, const char* argv[]) {
         MCS = params.MCS;
         moore = params.neighbourhood == 8;
         grid = new int[N];
-
-       
     }
 
     // Creating output directory
@@ -771,9 +768,18 @@ int main(int argc, const char* argv[]) {
     } else { // Process 1 MCS per Metal Call
         for (int mcs = currentMCS; mcs <= MCS; mcs++) {
             densities(grid, N, mcs, gridCtx, metalCtx, params.printFrequency, params.species, speciesSet); // Every MCS, call densities to add to density vectors for visualisation after simulation
-            if ((mcs == 2000 || mcs == 6000 || (mcs > 6000 && mcs % 5000 == 0 && mcs <= 100000) || (mcs > 100000 && mcs % 20000 == 0)) && params.save) {
-                plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
-                exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
+            // if ((mcs == 2000 || mcs == 6000 || (mcs > 6000 && mcs % 5000 == 0 && mcs <= 100000) || (mcs > 100000 && mcs % 20000 == 0)) && params.save) {
+            //     plot_snapshot(grid, mcs, params);   // Plot snapshots at specific MCS
+            //     exportGridToCSV(grid, params, mcs); // Export the grid to a csv file
+            // }
+
+            // if (mcs < 100 || (mcs < 1000 && (mcs % 100 == 0)) || mcs % 1000 == 0) {
+            //     plot_snapshot(grid, mcs, params);
+            //     // exportGridToCSV(grid, params, mcs);
+            // }
+            if (((mcs % 10 == 0) && mcs <= 1000) || (mcs % 50 == 0 && mcs <= 20000 && mcs > 1000)) {
+                plot_snapshot(grid, mcs, params);
+                // exportGridToCSV(grid, params, mcs);
             }
 
             // Fill the arrays with the next N cells, neighbour directions, and action probabilities
